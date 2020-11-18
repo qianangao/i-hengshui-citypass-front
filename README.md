@@ -2,10 +2,10 @@
 
 ```bash
 # 克隆项目
-git clone https://gitee.com/y_project/RuoYi-Vue
+git clone http://10.92.120.136:8088/generalBusiness/innovativeBusiness/innovationBusiness/i-city/i-hengshui-citypass-front.git
 
 # 进入项目目录
-cd ruoyi-ui
+cd i-hengshui-citypass-front
 
 # 安装依赖
 npm install
@@ -17,7 +17,7 @@ npm install --registry=https://registry.npm.taobao.org
 npm run dev
 ```
 
-浏览器访问 http://localhost:80
+浏览器访问 http://localhost:9090
 
 ## 发布
 
