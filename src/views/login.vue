@@ -54,7 +54,8 @@
 <script>
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
-import { encrypt, decrypt } from '@/utils/jsencrypt'
+import { encrypt, decrypt } from '@/utils/jsencrypt';
+import md5 from "md5";
 
 export default {
   name: "Login",
@@ -63,8 +64,8 @@ export default {
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -97,8 +98,8 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = "data:image/gif;base64," + res.img;
-        this.loginForm.uuid = res.uuid;
+        this.codeUrl = "data:image/gif;base64," + res.data.img;
+        this.loginForm.uuid = res.data.uuid;
       });
     },
     getCookie() {
@@ -124,15 +125,13 @@ export default {
             Cookies.remove("password");
             Cookies.remove('rememberMe');
           }
-          this.$store
-            .dispatch("Login", this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-            })
-            .catch(() => {
-              this.loading = false;
-              this.getCode();
-            });
+          this.loginForm.password = md5(this.loginForm.password);
+          this.$store.dispatch("Login", this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || "/" });
+          }).catch(() => {
+            this.loading = false;
+            this.getCode();
+          });
         }
       });
     }
