@@ -7,7 +7,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    isFirst:""
   },
 
   mutations: {
@@ -28,6 +29,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_FIRST:(state,isFirst)=>{
+      state.isFirst=isFirst
     }
   },
 
@@ -56,8 +60,10 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(res => {
+          console.log(res)
           const user = res.user
           const avatar = user.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          const isFirst =user.isFirst;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
@@ -66,6 +72,7 @@ const user = {
           }
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
+          commit('SET_FIRST',isFirst)
           resolve(res)
         }).catch(error => {
           reject(error)
