@@ -117,6 +117,20 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
+  },
+  // 菜单管理
+  {
+    path: '/menumanage',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'menumanage',
+        component: (resolve) => require(['@/views/system/menumanage/index'], resolve),
+        name: 'GenEdit',
+        meta: { title: '菜单管理' }
+      }
+    ]
   }
 ]
 
