@@ -1,32 +1,41 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-form-item label="菜单名称" prop="menuName">
-        <el-input
-          v-model="queryParams.menuName"
-          placeholder="请输入菜单名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+      <el-row >
+        <el-col :span="8">
+          <el-form-item label="菜单名称" prop="menuName">
+            <el-input
+              v-model="queryParams.menuName"
+              placeholder="请输入菜单名称"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small">
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row > 
+        <el-col :span="24">   
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+         </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="8" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -45,16 +54,16 @@
       row-key="menuId"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
-      <el-table-column prop="icon" label="图标" align="center" width="100">
+      <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" class = 'menuName'></el-table-column>
+      <el-table-column prop="icon" label="图标" align="center" class="icon">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
+      <el-table-column prop="orderNum" label="排序" class="orderNum"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="80"></el-table-column>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" class="status"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -125,7 +134,6 @@
                     slot="prefix"
                     :icon-class="form.icon"
                     class="el-input__icon"
-                    style="height: 32px;width: 16px;"
                   />
                   <i v-else slot="prefix" class="el-icon-search el-input__icon" />
                 </el-input>
@@ -206,7 +214,7 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menu";
+import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menumanage";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -383,7 +391,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-        console.log("-----row",row.menuId);
       this.$confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -398,3 +405,33 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+  .app-container{
+
+      .menuName{
+        width: 160px;
+      }
+      .icon {
+        width: 100px;
+      }
+      .orderNum {
+        width: 60px;
+      }
+      .status {
+         width: 80px;
+      }
+
+      .addTitle {
+        width: 600px;
+        .bootomStart {
+          width: 460px;
+        }
+        .el-input__icon{
+          width: 16px;
+          height: 32px;
+        }
+      }
+  }
+
+</style>

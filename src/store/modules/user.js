@@ -45,8 +45,8 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
           let data = res.data
-          setToken(data.access_token)
-          commit('SET_TOKEN', data.access_token)
+          setToken(data.accessToken)
+          commit('SET_TOKEN', data.accessToken)
           setExpiresIn(data.expires_in)
           commit('SET_EXPIRES_IN', data.expires_in)
           resolve()
