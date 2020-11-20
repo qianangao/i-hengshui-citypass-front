@@ -16,7 +16,7 @@ const user = {
       state.token = token
     },
     SET_EXPIRES_IN: (state, time) => {
-      state.expires_in = time
+      state.expiresIn = time
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -45,10 +45,10 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
           let data = res.data
-          setToken(data.access_token)
-          commit('SET_TOKEN', data.access_token)
-          setExpiresIn(data.expires_in)
-          commit('SET_EXPIRES_IN', data.expires_in)
+          setToken(data.accessToken)
+          commit('SET_TOKEN', data.accessToken)
+          setExpiresIn(data.expiresIn)
+          commit('SET_EXPIRES_IN', data.expiresIn)
           resolve()
         }).catch(error => {
           reject(error)
@@ -60,10 +60,10 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(res => {
-          console.log(res)
+         
           const user = res.user
           const avatar = user.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
-          const isFirst =user.isFirst;
+          const isFirst =res.user.isFirst;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
