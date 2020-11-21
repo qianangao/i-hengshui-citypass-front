@@ -1,61 +1,49 @@
 <template>
-  <div class="app-container" style="width:100%">
-    <el-row :gutter="20" style="width:100%">
-      <!--部门数据-->
-      <!-- <el-col :span="4" :xs="24">
-        <div class="head-container">
-          <el-input
-            v-model="deptName"
-            placeholder="请输入部门名称"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="deptOptions"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-col> -->
+  <div class="app-container" >
+    <el-row class="elCenter" :gutter="20">
+     
       <!--用户数据-->
-      <el-col :span="20" :xs="24" style="width:100%">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" >
-          <el-form-item label="用户名称" prop="userName">
+      <el-col class="userDataCenter" :span="20" :xs="24" >
+        
+        <el-form  :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch"  >
+          <el-row>
+            <el-col :span="8">
+          <el-form-item :span="8" label="用户名称" prop="userName">
             <el-input
+             class="inputQuery"
               v-model="queryParams.userName"
               placeholder="请输入用户名称"
               clearable
               size="small"
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
+            
+            
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
+          </el-col>
+           <el-col :span="8">
+          <el-form-item :span="8" label="手机号码" prop="phonenumber">
             <el-input
+             class="inputQuery"
               v-model="queryParams.phonenumber"
               placeholder="请输入手机号码"
               clearable
               size="small"
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
+            
+           
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+           </el-col>
+           <el-col :span="8">
+          <el-form-item :span="8" label="状态" prop="status">
             <el-select
+             class="inputQuery"
               v-model="queryParams.status"
               placeholder="用户状态"
               clearable
               size="small"
-              style="width: 240px"
+        
             >
+           
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -64,11 +52,17 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间">
+          </el-col>
+           </el-row>
+
+            <el-row> 
+               <el-col :span="8">
+          <el-form-item :span="8" label="创建时间">
             <el-date-picker
+             class="inputQuery"
               v-model="dateRange"
               size="small"
-              style="width: 240px"
+            
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -76,10 +70,12 @@
               end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
+           </el-col>
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
+          </el-row>
         </el-form>
 
         <el-row :gutter="10" class="mb8">
@@ -92,7 +88,7 @@
               v-hasPermi="['system:user:add']"
             >新增</el-button>
           </el-col>
-          <el-col :span="1.5">
+          <!-- <el-col :span="1.5">
             <el-button
               type="success"
               icon="el-icon-edit"
@@ -101,7 +97,7 @@
               @click="handleUpdate"
               v-hasPermi="['system:user:edit']"
             >修改</el-button>
-          </el-col>
+          </el-col> -->
           <el-col :span="1.5">
             <el-button
               type="danger"
@@ -110,7 +106,7 @@
               :disabled="multiple"
               @click="handleDelete"
               v-hasPermi="['system:user:remove']"
-            >删除</el-button>
+            >批量删除</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button
@@ -133,7 +129,7 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange" style="width:100%" >
+        <el-table class="userForm" v-loading="loading" :data="userList" @selection-change="handleSelectionChange"  >
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="用户编号" align="center" prop="userId" />
           <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" />
@@ -207,11 +203,12 @@
               <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />
+           <el-col :span="12">
+            <el-form-item  label="用户名称" prop="userName">
+              <el-input :disabled="form.userId !== undefined" v-model="form.userName" placeholder="请输入用户名称" />
             </el-form-item>
           </el-col>
+         
         </el-row>
         <el-row>
           <el-col :span="12">
@@ -219,23 +216,33 @@
               <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
             </el-form-item>
           </el-col>
+            <el-col :span="12">
+            <el-form-item label="归属部门" prop="deptId">
+              <el-input v-model="form.deptName" placeholder="请选择归属部门"  :show-count="true"  />
+              <!-- <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" /> -->
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+        
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户名称" />
+           <el-col :span="12">
+            <el-form-item label="角色">
+              <el-select v-model="form.roleIds" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入用户密码" type="password" />
-            </el-form-item>
-          </el-col> -->
         </el-row>
         <el-row>
           <el-col :span="12">
@@ -251,19 +258,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择">
                 <el-option
@@ -276,19 +270,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择">
-                <el-option
-                  v-for="item in roleOptions"
-                  :key="item.roleId"
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  :disabled="item.status == 1"
-                ></el-option>
-              </el-select>
+        </el-row>
+        <el-row>
+           <el-col :span="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
+          
+      
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -325,9 +321,9 @@
         </div>
         <div class="el-upload__tip" slot="tip">
           <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据
-          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+          <el-link class="templateDownload" type="info" @click="importTemplate">下载模板</el-link>
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip"  slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -340,13 +336,13 @@
 <script>
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
-import { treeselect } from "@/api/system/dept";
-import Treeselect from "@riophae/vue-treeselect";
+// import { treeselect } from "@/api/system/dept";
+// import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-
+// import {mapState} from "vuex"
 export default {
   name: "User",
-  components: { Treeselect },
+  // components: { Treeselect },
   data() {
     return {
       // 遮罩层
@@ -434,12 +430,12 @@ export default {
           
         
         ],
-        deptId: [
-          { required: true, message: "归属部门不能为空", trigger: "blur" }
-        ],
+        // deptId: [
+        //   { required: true, message: "归属部门不能为空", trigger: "blur" }
+        // ],
        
         email: [
-          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
+        
           {
             type: "email",
             message: "'请输入正确的邮箱地址",
@@ -457,15 +453,15 @@ export default {
       }
     };
   },
-  watch: {
-    // 根据名称筛选部门树
-    deptName(val) {
-      this.$refs.tree.filter(val);
-    }
-  },
+  // watch: {
+  //   // 根据名称筛选部门树
+  //   deptName(val) {
+  //     this.$refs.tree.filter(val);
+  //   }
+  // },
   created() {
     this.getList();
-    this.getTreeselect();
+    // this.getTreeselect();
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
@@ -477,22 +473,24 @@ export default {
     });
   },
   methods: {
+    
     /** 查询用户列表 */
     getList() {
       this.loading = true;
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.userList = response.rows;
-          this.total = response.total;
+     
+          this.userList = response.data.rows;
+          this.total = response.data.total;
           this.loading = false;
         }
       );
     },
     /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then(response => {
-        this.deptOptions = response.data;
-      });
-    },
+    // getTreeselect() {
+    //   treeselect().then(response => {
+    //     this.deptOptions = response.data;
+    //   });
+    // },
     // 筛选节点
     filterNode(value, data) {
       if (!value) return true;
@@ -537,7 +535,8 @@ export default {
         status: "0",
         remark: undefined,
         postIds: [],
-        roleIds: []
+        roleIds: [],
+        deptName:undefined
       };
       this.resetForm("form");
     },
@@ -551,6 +550,7 @@ export default {
       this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
+  //  console.log(this.user.isFirst)
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -561,7 +561,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.getTreeselect();
+      // this.getTreeselect();
       getUser().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -573,9 +573,10 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.getTreeselect();
+      // this.getTreeselect();
       const userId = row.userId || this.ids;
       getUser(userId).then(response => {
+        
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -583,7 +584,9 @@ export default {
         this.form.roleIds = response.roleIds;
         this.open = true;
         this.title = "修改用户";
-        this.form.password = "";
+        // this.form.password = "";
+        // console.log( this.form.deptName)
+        this.form.deptName = response.data.deptName;
       });
     },
     /** 重置密码按钮操作 */
@@ -609,6 +612,7 @@ export default {
             });
           } else {
             addUser(this.form).then(response => {
+              // console.log(this.form)
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -664,9 +668,23 @@ export default {
     submitFileForm() {
       this.$refs.upload.submit();
     }
-  }
+  },
+  // computed:{
+  //    ...mapState(["user"])
+  // }
 };
 </script>
 <style  scoped>
-
+.app-container,.elCenter,.userDataCenter, .userForm{
+  width: 100%;
+}
+.inputQuery{
+  width: 240px;
+}
+.el-upload__tip{
+  color: red;
+}
+.templateDownload{
+  font-size: 12px;
+}
 </style>

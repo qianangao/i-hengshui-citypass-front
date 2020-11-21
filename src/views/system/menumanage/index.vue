@@ -383,7 +383,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-        console.log("-----row",row.menuId);
+        // console.log("-----row",row.menuId);
       this.$confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
