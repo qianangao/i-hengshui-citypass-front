@@ -47,8 +47,8 @@ const user = {
           let data = res.data
           setToken(data.accessToken)
           commit('SET_TOKEN', data.accessToken)
-          setExpiresIn(data.expiresIn)
-          commit('SET_EXPIRES_IN', data.expiresIn)
+          setExpiresIn(data.expires_in)
+          commit('SET_EXPIRES_IN', data.expires_in)
           resolve()
         }).catch(error => {
           reject(error)
