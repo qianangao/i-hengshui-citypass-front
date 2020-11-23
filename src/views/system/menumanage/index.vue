@@ -9,24 +9,24 @@
               placeholder="请输入菜单名称"
               clearable
               size="small"
+              class = 'roleInput'
             />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small">
+            <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small" class='roleInput'>
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
+                class = 'roleInput'
               />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row > 
-        <el-col :span="24">   
+        <el-col :span="8">   
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -69,7 +69,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="optaion">
         <template slot-scope="scope">
           <el-button size="mini" 
             type="text" 
@@ -409,6 +409,9 @@ export default {
 
 <style lang="scss" scoped>
   .app-container{
+      .roleInput{
+        width: 240px;
+      }
 
       .menuName{
         width: 160px;
@@ -432,6 +435,9 @@ export default {
           width: 16px;
           height: 32px;
         }
+      }
+      .cell{
+        width: 200px;
       }
   }
 
