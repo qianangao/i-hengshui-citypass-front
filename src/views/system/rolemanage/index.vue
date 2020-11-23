@@ -9,7 +9,7 @@
               placeholder="请输入角色名称"
               clearable
               size="small"
-              style="width: 240px"
+              class="roleInput"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
@@ -21,7 +21,8 @@
                 placeholder="请输入权限字符"
                 clearable
                 size="small"
-                style="width: 240px"
+                class="roleInput"
+               
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
@@ -33,7 +34,8 @@
                 placeholder="角色状态"
                 clearable
                 size="small"
-                style="width: 240px"
+                class="roleInput"
+               
               >
                 <el-option
                   v-for="dict in statusOptions"
@@ -51,7 +53,7 @@
             <el-date-picker
               v-model="dateRange"
               size="small"
-              style="width: 240px"
+              class="roleInput"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -60,11 +62,14 @@
             ></el-date-picker>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
       </el-row>
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+      
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -600,3 +605,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+    .app-container{
+
+      .roleInput{
+        width: 240px;
+      }
+    }
+
+</style>
