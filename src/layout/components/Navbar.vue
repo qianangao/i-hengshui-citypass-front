@@ -1,18 +1,13 @@
 <template>
-  <div class="navbar" :class="[navBarFixed ? 'fix-nav' : '']">
-    <hamburger
-      id="hamburger-container"
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+  <div class="navbar">
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device !== 'mobile'">
+      <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-
+        
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -26,14 +21,12 @@
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
+
       </template>
 
-      <el-dropdown
-        class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -53,14 +46,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
-import Screenfull from "@/components/Screenfull";
-import SizeSelect from "@/components/SizeSelect";
-import Search from "@/components/HeaderSearch";
-import RuoYiGit from "@/components/RuoYi/Git";
-import RuoYiDoc from "@/components/RuoYi/Doc";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
+import Screenfull from '@/components/Screenfull'
+import SizeSelect from '@/components/SizeSelect'
+import Search from '@/components/HeaderSearch'
+import RuoYiGit from '@/components/RuoYi/Git'
+import RuoYiDoc from '@/components/RuoYi/Doc'
 
 export default {
   components: {
@@ -72,98 +65,61 @@ export default {
     RuoYiGit,
     RuoYiDoc
   },
-  data() {
-    return {
-      navBarFixed: false,
-    };
-  },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters([
+      'sidebar',
+      'avatar',
+      'device'
+    ]),
     setting: {
       get() {
-        return this.$store.state.settings.showSettings;
+        return this.$store.state.settings.showSettings
       },
       set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "showSettings",
-          value: val,
-        });
-      },
-    },
-  },
-  mounted() {
-    // 事件监听滚动条
-    window.addEventListener("scroll", this.watchScroll);
-  },
-
-  destroyed() {
-    // 移除事件监听
-    window.removeEventListener("scroll", this.watchScroll);
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
+          value: val
+        })
+      }
+    }
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      this.$confirm("确定注销并退出系统吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        this.$store.dispatch("LogOut").then(() => {
-          location.href = "/index";
-        });
-      });
-    },
-    watchScroll() {
-      // 滚动的距离
-      var scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-
-      // 容器的高度
-      var offsetTop = document.querySelector(".navbar").offsetHeight;
-
-     
-      //  滚动的距离如果大于了元素到顶部的距离时，实现吸顶效果
-      if (scrollTop > offsetTop) {
-        this.navBarFixed = true;
-      } else {
-        this.navBarFixed = false;
-      }
-    },
-  },
-};
+        this.$store.dispatch('LogOut').then(() => {
+          location.href = '/index';
+        })
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-.fix-nav {
-  position: fixed;
-  /* !important;  */
-  top: 0;
-
-  z-index: 999;
-  width: calc(100% - 200px);
-}
-
 .navbar {
   height: 50px;
   overflow: hidden;
-
+  position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background 0.3s;
-    -webkit-tap-highlight-color: transparent;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.025);
+      background: rgba(0, 0, 0, .025)
     }
   }
 
@@ -195,10 +151,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background 0.3s;
+        transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: rgba(0, 0, 0, .025)
         }
       }
     }
