@@ -382,7 +382,7 @@ export default {
         sex: undefined,
         status: "0",
         remark: undefined,
-        roleIds: [],
+        roleIds: undefined,
         deptName: undefined
       };
       this.resetForm("form");
@@ -439,14 +439,15 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      console.log("row>>>>>>>",row);
+      
       this.handleReset();
       const userId = row.userId || this.ids;
       getUser(userId).then(response => {
-        console.log("response>>>>>>>",response);
+      
         this.form = response.data.userInfo;
         this.roleOptions = response.data.roles;
-        this.form.roleIds = response.data.roleIds;
+        this.form.roleIds = response.data.roleIds[0];
+        
         this.open = true;
         this.title = "修改用户";
         // console.log( this.form.deptName)
