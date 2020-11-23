@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function listTable (query){
     return request({
         url:"/system/sc/menu/list",
-        path:"get",
+        method:"get",
         pamarms:query
     })
 }
@@ -13,7 +13,7 @@ export function listTable (query){
 export function listMenu(){
     return request({
         url:'/system/sc/menu/tree/list',
-        path:'get'
+        method:'get'
     })
 }
 
@@ -21,7 +21,8 @@ export function listMenu(){
 export function addMenu(data){
     return request({
         url:'/system/sc/menu',
-        path:'post',
+        // path:'post',
+        method: 'post',
         data:data
     })
 }
