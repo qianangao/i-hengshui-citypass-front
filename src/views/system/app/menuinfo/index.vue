@@ -50,7 +50,7 @@
                   <span>{{ parseTime(scope.row.updateTime) }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="菜单状态"   v-model="queryParams.status"  class="status" align="center">
+            <el-table-column prop="status" label="菜单状态"  v-model="queryParams.status"  class="status" align="center">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.status) }}</span>
               </template>
@@ -76,7 +76,7 @@
 
         <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
@@ -89,15 +89,6 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="菜单类型" prop="menuType">
-              <el-radio-group v-model="form.menuType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="菜单名称" prop="menuName">
               <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
@@ -108,7 +99,6 @@
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
-          
           <el-col :span="24">
             <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
               <el-popover
@@ -204,7 +194,7 @@ export default {
   },
     created() {
         this.getList();
-        this.getTreeselect();
+        // this.getTreeselect();
     },
     methods:{
     // 选择图标
@@ -214,10 +204,10 @@ export default {
       /** 查询菜单列表 */
       getList() {
         this.loading = true;
-        listTable(this.queryParams).then(response => {
-            // console.log("------",response)
-            // this.menuList = this.handleTree(response.data.rows, "id");
-            // this.loading = false;
+        listMenu(this.queryParams).then(response => {
+          console.log("-kjhbgvfds",response);
+            this.menuList = this.handleTree(response.data, "menuId");
+            this.loading = false;
         });
       },
       /** 转换菜单数据结构 */
@@ -235,13 +225,11 @@ export default {
       reset() {
         this.form = {
           id: undefined,
-          parentId: 0,
+          parentId: "0",
           menuName: undefined,
+          sortNum: undefined,
           icon: undefined,
           menuType: "M",
-          sortNum: undefined,
-          isFrame: "1",
-          isCache: "0",
           visible: "0",
           status: "0"
         };
@@ -250,27 +238,24 @@ export default {
     /** 查询菜单下拉树结构 */
     getTreeselect() {
       listMenu().then(response => {
-        console.log("lllll-----",response.data)
-        this.menuList = this.handleTree(response.data, "id");
-            this.loading = false;
+        // this.menuList = this.handleTree(response.data, "id");
+        // this.loading = false;
+
         this.menuOptions = [];
-        const menu = { id: 0, menuName: '主类目', children: [] };
-        menu.children = this.handleTree(response.data, "id");
+        const menu = { menuId: 0, menuName: '主类目', children: [] };
+        menu.children = this.handleTree(response.data, "menuId");
         this.menuOptions.push(menu);
       });
     },
     /** 新增按钮操作 */
     handleAdd(row) {
-      console.log(row)
       this.reset();
-    //  addMenu().then(response =>{
-    //     console.log("++++++",response.data)
-    //   })
-
+      // addMenu().then(response =>{
+      // })
       if (row != null && row.menuId) {
         this.form.parentId = row.menuId;
       } else {
-        this.form.parentId = 0;
+        this.form.parentId = "0";
       }
       this.title = "添加菜单";
       this.open = true;
@@ -278,7 +263,7 @@ export default {
     },
     // 角色状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
+      let text = row.status === "0" ? "启用" : "禁用";
       this.$confirm('确认要"' + text + '""' + row.menuName + '"角色吗?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -292,11 +277,11 @@ export default {
         });
     },
 
-    // /** 搜索按钮操作 */
+    /** 搜索按钮操作 */
     // handleQuery() {
     //   this.getList();
     // },
-    // /** 重置按钮操作 */
+    /** 重置按钮操作 */
     // resetQuery() {
     //   this.resetForm("queryForm");
     //   this.handleQuery();
@@ -304,9 +289,8 @@ export default {
 
     /** 修改按钮操作 */
     handleUpdate(row) {
-
       this.reset();
-      // this.getTreeselect();
+      this.getTreeselect()
         this.open = true;
         this.title = "修改菜单";
       // getMenu(row.menuId).then(response => {
@@ -316,10 +300,10 @@ export default {
       // });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.menuId != undefined) {
+          if (this.form.id != undefined) {
             updateMenu(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -342,7 +326,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-    //     // console.log("-----row",row.menuId);
     //   this.$confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "警告", {
     //       confirmButtonText: "确定",
     //       cancelButtonText: "取消",
