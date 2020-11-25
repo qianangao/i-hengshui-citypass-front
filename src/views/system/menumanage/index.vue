@@ -69,7 +69,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="optaion">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="optaion" width="160px">
         <template slot-scope="scope">
           <el-button size="mini" 
             type="text" 
@@ -96,7 +96,10 @@
     </el-table>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" 
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+    append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -437,6 +440,9 @@ export default {
         }
       }
       .cell{
+        width: 200px;
+      }
+      .optaion{
         width: 200px;
       }
   }
