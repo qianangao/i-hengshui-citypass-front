@@ -348,11 +348,11 @@ export default {
         editorOption: {},
         num: "",
         // 是否首页轮播
-        ifBanner: "",
+        ifBanner: 0,
         // 是否外联
-        ifLink: "",
+        ifLink: 0,
         // 弹出框单选按钮参数
-        msgType: "",
+        msgType: 1,
       };
       this.resetForm("form");
     },

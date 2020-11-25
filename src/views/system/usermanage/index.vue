@@ -3,22 +3,11 @@
     <el-row class="elCenter" :gutter="20">
       <!--用户数据-->
       <el-col class="userDataCenter" :span="20" :xs="24">
-        <el-form
-          :model="queryParams"
-          ref="queryForm"
-          :inline="true"
-          v-show="showSearch"
-        >
+        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
           <el-row>
             <el-col :span="8">
               <el-form-item :span="8" label="用户名称" prop="userName">
-                <el-input
-                  class="inputQuery"
-                  v-model="queryParams.userName"
-                  placeholder="请输入用户名称"
-                  clearable
-                  size="small"
-                />
+                <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -273,19 +262,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色" prop="roleIds">
-              <el-select
-                class="inputContent"
-                v-model="form.roleIds"
-                placeholder="请选择"
-              >
+            <el-form-item label="角色" prop="roleId">
+              <el-select class="inputContent" v-model="form.roleId" placeholder="请选择">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.roleId"
                   :label="item.roleName"
                   :value="item.roleId"
-                  :disabled="item.status == 1"
-                ></el-option>
+                  :disabled="item.status == 1">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -445,7 +430,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 部门名称
-      deptName: undefined,
+      // deptName: undefined,
       // 默认密码
       initPassword: undefined,
       // 日期范围
@@ -487,6 +472,7 @@ export default {
         status: undefined,
         deptId: undefined,
       },
+      // roleId:"",
       // 表单校验
       rules: {
         userName: [
@@ -508,8 +494,8 @@ export default {
             trigger: ["blur", "change"],
           },
         ],
-        roleIds: [
-          { required: false, message: "角色不能为空", trigger: "blur" },
+        roleId: [
+          { required: true, message: "角色不能为空", trigger: "blur" },
         ],
         phonenumber: [
           { required: true, message: "手机号码不能为空", trigger: "blur" },
@@ -565,7 +551,8 @@ export default {
         sex: undefined,
         status: "0",
         remark: undefined,
-        roleIds: undefined,
+        roleId:undefined,
+        roleIds: [],
         deptName: undefined,
       };
       this.resetForm("form");
@@ -626,16 +613,20 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.handleReset();
+      this.form.roleIds = [];
       const userId = row.userId || this.ids;
       getUser(userId).then((response) => {
         this.form = response.data.userInfo;
         this.roleOptions = response.data.roles;
-        this.form.roleIds = response.data.roleIds[0];
-
+        // this.form.roleId = response.data.roleIds[0];
+        if(this.form.roleIds !== null){
+           this.form.roleIds.map(item => {
+            this.form.roleId = item;
+          });
+        }
+       
         this.open = true;
         this.title = "修改用户";
-        // console.log( this.form.deptName)
-        this.form.deptName = response.data.deptName;
       });
     },
     /** 重置密码按钮操作 */
@@ -643,18 +634,22 @@ export default {
       this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-      })
-        .then(({ value }) => {
-          resetUserPwd(row.userId, value).then((response) => {
-            this.msgSuccess("修改成功，新密码是：" + value);
-          });
-        })
-        .catch(() => {});
+      }).then(({ value }) => {
+        resetUserPwd(row.userId, value).then((response) => {
+          this.msgSuccess("修改成功，新密码是：" + value);
+        });
+      }).catch(() => {});
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if(this.form.roleIds.length != 0){
+            this.form.roleIds = [];
+            this.form.roleIds.push(this.form.roleId);
+          }else {
+            this.form.roleIds.push(this.form.roleId);
+          }
           if (this.form.userId != undefined) {
             updateUser(this.form).then((response) => {
               this.msgSuccess("修改成功");
@@ -665,9 +660,10 @@ export default {
             addUser(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
+              this.form.roleIds = [];
               this.getList();
             });
-          }
+          };
         }
       });
     },
