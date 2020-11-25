@@ -15,7 +15,7 @@
               <el-form-item label="标题查询" prop="articleName">
                 <el-input
                   class="inputQuery"
-                  v-model="queryParams.articleName"
+                  v-model="queryParams.title"
                   placeholder="请输入标题"
                   clearable
                   size="small"
@@ -24,13 +24,16 @@
             </el-col>
             <el-col :span="13">
               <el-form-item>
-                <el-button type="primary" icon="el-icon-search" size="mini"
+                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
                   >查询</el-button
                 >
-                <el-button icon="el-icon-refresh" size="mini">重置</el-button>
+                <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
+           
+          </el-row>
+          <el-row>
+          <el-col :span="2">
               <el-button
                 type="primary"
                 icon="el-icon-plus"
@@ -43,7 +46,7 @@
           <!-- 文章表格数据 -->
           <el-table class="articlerForm" :data="articleList">
             <el-table-column label="文章编号" align="center" prop="id" />
-            <el-table-column label="文章类型" align="center" prop="msgType" />
+            <el-table-column label="文章类型" :formatter="articleType"  align="center" prop="msgType" />
             <el-table-column
               label="标题"
               align="center"
@@ -58,13 +61,13 @@
             />
             <el-table-column label="图片">
               <template slot-scope="scope">
-                <img style="margin-left: 10px" :src="scope.row.image" />
+                <img style="margin-left: 10px" :src="scope.row.pic" />
               </template>
             </el-table-column>
             <el-table-column
               label="创建日期 "
               align="center"
-              prop="updateTime"
+              prop="createTime"
               width="120"
             />
             <el-table-column label="权重" align="center" prop="Weights" />
@@ -109,9 +112,12 @@
                 <el-col :span="24">
                   <el-form-item label="类别：">
                     <el-radio-group v-model="form.msgType">
-                      <el-radio :label="1">衡水热点</el-radio>
-                      <el-radio :label="2">周边资讯</el-radio>
-                      <el-radio :label="3">政策动态</el-radio>
+                      <el-radio
+                  v-for="dict in aceType"
+                  :key="dict.dictSort"
+                  :label="dict.dictSort"
+                  >{{ dict.dictLabel }}</el-radio
+                >
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
@@ -131,15 +137,19 @@
                 <el-col :span="24">
                   <el-form-item label="是否链接:">
                     <el-radio-group v-model="form.ifLink">
-                      <el-radio :label="1">是</el-radio>
-                      <el-radio :label="2">否</el-radio>
+                          <el-radio
+                  v-for="dict in dictionaryLink"
+                  :key="dict.dictSort"
+                  :label="dict.dictSort"
+                  >{{ dict.dictLabel }}</el-radio
+                >
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="20">
-                  <el-form-item label="链接:" v-if="form.ifLink === 1">
+                  <el-form-item label="链接:" v-if="form.ifLink === 0">
                     <el-input
                       class="modal"
                       v-model="form.url"
@@ -165,12 +175,13 @@
                   <el-form-item label="图片上传:">
                     <el-upload
                       class="upload-demo"
-                      action="https://jsonplaceholder.typicode.com/posts/"
-                      :on-preview="handlePreview"
+                      :headers="headers"
+                      :action="url"
+                      :on-success="handlePreview"
                       :on-remove="handleRemove"
                       :before-remove="beforeRemove"
                       multiple
-                      :limit="3"
+                      :limit="1"
                       :on-exceed="handleExceed"
                       :file-list="fileList"
                     >
@@ -185,14 +196,18 @@
                 <el-col>
                   <el-form-item label="首页是否轮播">
                     <el-radio-group v-model="form.ifBanner">
-                      <el-radio :label="1">是</el-radio>
-                      <el-radio :label="2">否</el-radio>
+                      <el-radio
+                  v-for="dict in dictionaryBanner"
+                  :key="dict.dictSort"
+                  :label="dict.dictSort"
+                  >{{ dict.dictLabel }}</el-radio
+                >
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
               </el-row>
-              <el-row v-if="form.ifLink !== 1">
-                <Editor :min-height="80" />
+              <el-row v-if="form.ifLink !== 0">
+                <Editor v-model="form.content" :min-height="80" />
               </el-row>
               <el-row>
                 <el-col class="okbutton">
@@ -211,16 +226,27 @@
 
 <script>
 import Editor from "@/components/Editor";
-import { listArticle, addArticle, getArticle } from "@/api/system/article";
+import { getToken } from "@/utils/auth";
+import {
+  listArticle,
+  addArticle,
+  getArticle,
+  updateArticle,
+  delArticle,
+  uploadAvatar,
+} from "@/api/system/article";
 export default {
   components: {
     Editor,
   },
+
   data() {
     return {
       // 模态框标题
       title: "",
-
+      headers: { Authorization: "Bearer " + getToken() },
+      // 图片上传
+      url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
       // 上传图片
       fileList: undefined,
       // 弹出框计数器
@@ -231,23 +257,17 @@ export default {
       // 文章表格数据
       articleList: null,
       // 表单模态框参数
-      form: {
-        // 富文本框
-        content: "",
-        editorOption: {},
-        num: 999,
-        // 是否首页轮播
-        ifBanner: 1,
-        // 是否外联
-        ifLink: 1,
-        // 弹出框单选按钮参数
-        msgType: 1,
-      },
+      form: {},
       defaultProps: {
         children: "children",
         label: "label",
       },
-
+      // 文章类型字典
+      aceType:[],
+      // 项目是否链接
+      dictionaryLink:[],
+      // s是否轮播
+      dictionaryBanner:[],
       // 是否显示弹出层
       open: false,
       // 总条数
@@ -258,6 +278,7 @@ export default {
       showSearch: true,
       // 查询参数
       queryParams: {
+        title:undefined,
         pageNum: 1,
         pageSize: 10,
         articleName: undefined,
@@ -266,8 +287,43 @@ export default {
   },
   created() {
     this.getList();
+    // 类型字典
+      this.getDicts("sc_msg_type").then((response) => {
+        console.log(response)
+      this.aceType = response.data;
+    }),
+     this.getList();
+    // 类型字典
+      this.getDicts("project_status").then((response) => {
+        console.log(response)
+      this.dictionaryLink = response.data;
+      this.dictionaryBanner=response.data
+    })
   },
   methods: {
+    // 表格格式化数据
+    articleType(row, column){
+       let msgType=row.msgType;
+       if(msgType==1){
+            return "衡水热点"
+       }else if(msgType==2){
+             return "周边资讯"
+       }else{
+         return "政策动态"
+       }
+
+    },
+    // 查询按钮
+    handleQuery(){
+      this.queryParams.page = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.queryParams.title = undefined;
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
     /** 添加表单重置 */
     addHandleReset() {
       this.form = {
@@ -276,11 +332,11 @@ export default {
         editorOption: {},
         num: 999,
         // 是否首页轮播
-        ifBanner: 1,
+        ifBanner: 0,
         // 是否外联
-        ifLink: 1,
+        ifLink: 0,
         // 弹出框单选按钮参数
-        msgType: 1,
+        msgType:1 ,
       };
       this.resetForm("form");
     },
@@ -305,7 +361,7 @@ export default {
       this.loading = true;
       listArticle(this.addDateRange(this.queryParams, this.dateRange)).then(
         (response) => {
-          console.log(response);
+          // console.log(response);
           this.articleList = response.data.rows;
           this.total = response.data.total;
           this.loading = false;
@@ -313,14 +369,15 @@ export default {
       );
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePreview(file) {
       console.log(file);
+      this.form.pic = "http://10.92.119.10/" + file.data;
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+        `当前限制选择 1个文件，本次选择了 ${files.length} 个文件，共选择了 ${
           files.length + fileList.length
         } 个文件`
       );
@@ -342,23 +399,20 @@ export default {
       this.updataHandleReset();
       this.open = true;
       const id = row.id || this.id;
-
       getArticle(id).then((response) => {
-        this.form = response.data.userInfo;
-        this.roleOptions = response.data.roles;
-        // this.form.roleIds = response.data.roleIds[0];
-
+        this.form = response.data;
+        this.form.ifBanner = Number(response.data.ifBanner);
+        this.form.ifLink = Number(response.data.ifLink);
+        this.form.msgType = Number(response.data.msgType);
         this.open = true;
         this.title = "修改文章";
-        // console.log( this.form.deptName)
-        this.form.deptName = response.data.deptName;
       });
     },
     oksubmi() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.userId != undefined) {
-            updateUser(this.form).then((response) => {
+          if (this.form.id != undefined) {
+            updateArticle(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -374,6 +428,26 @@ export default {
           }
         }
       });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const userIds = row.id || this.ids;
+      this.$confirm(
+        '是否确认删除用户编号为"' + userIds + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return delArticle(userIds);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        });
     },
   },
 };

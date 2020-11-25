@@ -28,11 +28,11 @@ export function getArticle(id) {
     })
   }
   
-  // 修改用户
+  // 修改文章
   export function updateArticle(data) {
     return request({
-      url: '/system/user',
-      method: 'put',
+      url: '/system/sc/message/update',
+      method: 'post',
       data: data
     })
   }
@@ -40,12 +40,18 @@ export function getArticle(id) {
   // 删除用户
   export function delArticle(userId) {
     return request({
-      url: '/system/sc/message/{messageIds}' + userId,
-      method: 'delete'
+      url: '/system/sc/message/' + userId,
+      method: 'post'
     })
   }
   
-
+  // 文章图片上传上传
+  // export function uploadAvatar(data) {
+  //   return request({
+  //     url: '/file/ftpUpload',
+  //     method: 'post',
+  //     data: data
+  //   })}
   
   
   // 查询文章单个信息
@@ -67,10 +73,3 @@ export function getArticle(id) {
   
   
   
-//   // 用户头像上传
-//   export function uploadAvatar(data) {
-//     return request({
-//       url: '/system/user/profile/avatar',
-//       method: 'post',
-//       data: data
-//     })}
