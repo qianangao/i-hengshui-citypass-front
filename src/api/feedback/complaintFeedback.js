@@ -8,3 +8,24 @@ export function listMenu (query){
         params: query
     })
 }
+
+// 点击查看调取详情按钮
+export function getFrom (id){
+    return request({
+        url:"/system/sc/feedback/detail/" + id,
+        method:"get"
+    })
+}
+
+// 回复接口
+export function replyMenu(id, replyContent) {
+    const data = {
+      id,
+      replyContent
+    }
+    return request({
+        url:"/system/sc/feedback/reply" ,
+        method: 'put',
+        data: data
+    })
+  }

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="queryParams" ref="queryForm">
       <el-row >
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="标题" prop="title">
             <el-input
               v-model="queryParams.title"
@@ -13,7 +13,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
             <el-form-item label="反馈状态" prop="replyStatus">
               <el-select
                 v-model="queryParams.replyStatus"
@@ -32,8 +32,8 @@
               </el-select>
             </el-form-item>
         </el-col>
-        <el-col :span="8">
-            <el-form-item>
+        <el-col :span="6">
+            <el-form-item style="width:'220px'">
                 <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
@@ -46,36 +46,47 @@
             :data="menuList"
             row-key="id"
             >
-            <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
-            <el-table-column prop="title" label="标题" :show-overflow-tooltip="true" class = 'menuName ' v-model="queryParams.replyStatus">
+            <el-table-column label="反馈人" align="center" prop="userName" width="100">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.userName }}</span>
+                </template>
+            </el-table-column>
+            
+            <el-table-column label="部门名称" align="center" prop="deptName">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.deptName }}</span>
+                </template>
+            </el-table-column>
+
+            <el-input-number v-model="form.orderNum" controls-position="center" :min="0" />
+            <el-table-column prop="title" label="标题" :show-overflow-tooltip="true" class = 'menuName' align="center" v-model="queryParams.replyStatus">
                 <template slot-scope="scope">
                   <span>{{ scope.row.title }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="内容" align="center" prop="content">
+            <el-table-column label="内容" align="center" prop="content" :show-overflow-tooltip='true'>
                 <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.content) }}</span>
+                  <span>{{ scope.row.content }}</span>
                 </template>
             </el-table-column>
+             
             <el-table-column label="反馈时间" align="center" prop="createTime">
                 <template slot-scope="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="反馈人" align="center" prop="createBy">
-                <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.createBy) }}</span>
-                </template>
-            </el-table-column>
+           
             <el-table-column prop="replyStatus" label="反馈状态"  v-model="queryParams.replyStatus"  class="status" align="center">
               <template slot-scope="scope">
                 <span>{{ scope.row.replyStatus === "0" ?"已回复":"未回复" }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-                <template >
-                  <el-button size="mini" 
-                    @click = 'handleShow'>查看</el-button>
+                <template slot-scope="scope">
+                   <el-button
+                      size="mini"
+                      type="text"
+                    @click = 'handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
                 </template>
         </el-table-column>
     </el-table>
@@ -93,57 +104,97 @@
       :close-on-click-modal="false"
     append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+       
+        <el-row>
+           <el-col :span="22">
+            <el-form-item label="反馈人"  prop="userName">
+              <el-input   :disabled="true" v-model="showFrom.userName"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      
         <el-row>
           <el-col :span="22">
+            <el-form-item label="联系方式"  prop="contactPhone">
+                <el-input  :disabled="true" v-model="showFrom.contactPhone"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-row>
+          <el-col :span="22">
+              <el-table-column label="创建时间" align="center" prop="contactPhone">
+              <template slot-scope="scope">
+                <span>{{scope.row.contactPhone }}</span>
+              </template>
+            </el-table-column>
+            </el-col>
+        </el-row> -->
+        <el-row>
+          <el-col :span="22">
+            <el-form-item label="身份证号"  prop="identityNum">
+                <el-input  :disabled="true" v-model="showFrom.identityNum"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="22">
+            <el-form-item label="部门名称"  prop="deptName" :show-overflow-tooltip='true'>
+               <el-input   :disabled="true" v-model="showFrom.deptName"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="反馈时间"  prop="createTime">
+                <el-input   :disabled="true" v-model="showFrom.createTime"/>
+              </el-form-item>
+            </el-col>
+        </el-row>
+         <el-row>
+          <el-col :span="22">
             <el-form-item label="标题" prop="title">
-              <el-input  placeholder="请输入反馈时间" v-model="form.title"/>
+              <el-input   :disabled="true" v-model="showFrom.title"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="22">
             <el-form-item label="内容" prop="content">
-               <el-input  placeholder="请输入反馈时间" v-model="form.content"/>
+               <el-input   :disabled="true" type="textarea" v-model="showFrom.content" rows='6'/>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-           <el-col :span="22">
-            <el-form-item label="反馈时间"  prop="createTime">
-              <el-input  placeholder="请输入反馈时间" v-model="form.createTime"/>
+        <el-row  v-if="showFrom.replyStatus == '0'&&'1'">
+          <el-col :span="22">
+            <el-form-item label="反馈回复"  prop="replyContent">
+              <el-input  type="textarea" :disabled="true" v-model="showFrom.replyContent"/>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-           <el-col :span="22">
-            <el-form-item label="反馈人"  prop="createBy">
-              <el-input  placeholder="请输入反馈人" v-model="form.createBy"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
+        <el-row v-if="showFrom.replyStatus == '1' ">
           <el-col :span="22">
             <el-form-item label="反馈回复"  prop="replyContent">
                 <el-input
                     type="textarea"
-                    autosize
                     placeholder="请输入反馈回复内容"
-                    v-model="form.replyContent">
+                    v-model="showFrom.replyContent"
+                    rows='6'
+                    >
                 </el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">回复</el-button>
-        <el-button @click="cancel">返回</el-button>
+        <el-button type="primary" @click="submitForm()" v-if="showFrom.replyStatus == '1' " >回复</el-button>
+        <el-button @click="cancel" v-if="showFrom.replyStatus == '0'||'1'">返回</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listMenu } from "@/api/feedback/complaintFeedback";
+import { listMenu, getFrom, replyMenu } from "@/api/feedback/complaintFeedback";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -167,6 +218,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 查看from列表数据
+      showFrom: [],
     //状态
         statusOptions: [
             {
@@ -180,13 +233,13 @@ export default {
       // 查询参数
       queryParams: {
         title: '',
-        isAsc: "desc",
         pageNum: 1,
         pageSize: 10,
-        orderByColumn: '',
-        replyStatus: ""
+        replyStatus: "",
         },
       form:{},
+      // 查看表单
+      showFrom :[],
       // 表单校验
       rules: {
         menuName: [
@@ -198,16 +251,11 @@ export default {
         path: [
           { required: true, message: "路由地址不能为空", trigger: "blur" }
         ],
-        createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
-        ],
-       phone: [
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
+        replyContent:[
+            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
         ]
+      ,id:''
+
       }
       
     }
@@ -220,11 +268,12 @@ export default {
       getList() {
         this.loading = true;
         listMenu(this.queryParams).then(response => {
-            console.log('------',response);
+            // console.log('------',response);
             this.menuList = response.data.rows;
             this.total = response.data.total;
+            this.id = response.data.rows.id
             this.loading = false;
-        });
+        }).catch(() =>{})
       },
       // 表单重置
       reset() {
@@ -235,38 +284,10 @@ export default {
           sortNum: undefined,
           icon: undefined,
           menuType: "M",
-          status: "0",
-          level: undefined,
-
+          replyStatus: undefined
         };
         this.resetForm("form");
       },
-    /** 查询菜单下拉树结构 */
-    getTreeselect() {
-      listMenu().then(response => {
-        this.menuOptions = [];
-        const menu = { menuId: 0, menuName: '主类目', children: [] };
-        console.log("menu-----",menu)
-        this.menuOptions = this.handleTree(response.data, "id");
-      });
-    },
-
-    // 反馈状态状态修改
-    // handleStatusChange(row) {
-    //   let text = row.replyStatus === "0" ? "禁用": "启用" ;
-    //   this.$confirm('确认要"' + text + '""' + row.menuName + '"菜单吗?', "警告", {
-    //       confirmButtonText: "确定",
-    //       cancelButtonText: "取消",
-    //       type: "warning"
-    //     }).then(function() {
-    //       row.replyStatus = row.replyStatus === "0" ? "1" : "0"
-    //       return changeMenuStatus(row.id,row.replyStatus);
-    //     }).then(() => {
-    //       this.msgSuccess(text + "成功");
-    //     }).catch(function() {
-    //       row.replyStatus = row.replyStatus === "0" ? "1" : "0";
-    //     });
-    // },
     /** 查询按钮操作 */
     handleQuery() {
     this.queryParams.pageNum = 1;
@@ -278,49 +299,25 @@ export default {
       this.handleQuery();
     },
     // 查看操作按钮
-    handleShow(){
+    handleShow(row){
         this.open = true;
-        this.title = "添加菜单";
+        this.title = "查看菜单";
+        getFrom(row.id).then(response =>{
+          this.showFrom = response.data;
+        })
     },
-    /** 修改按钮操作 */
-    // handleShow(row, level) {
-    //     // console.log(level)
-    //   this.reset();
-    //   this.getTreeselect()
-    //   getMenu(row.id).then(response => {
-    //     this.form = response.data;
-    //     if(level === 3){
-    //     //   this.addOpen = true
-    //     }
-    //     else{
-    //       this.open = true;
-    //     }
-    //     this.title = "查看";
-    //   })
-    // },
-    /** 提交按钮 */
+    /** 回复按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          console.log("valid-----",valid);
-          console.log(this.form)
-          if (this.form.id != undefined) {
-            // updataMenu(this.form).then(response => {
-            //   this.msgSuccess("修改成功");
-            //   this.open = false;
-            // //   this.addOpen = false
-            //   this.getList();
-            // });
+          if (!this.showFrom.replyContent) {
+              this.msgError("请填写回复内容");
           } else {
-            // addMenu(this.form).then(response => {
-            //   this.msgSuccess("新增成功");
-            //   this.open = false;
-            // //   this.addOpen = false
-            //   this.getList();
-            // });
+           replyMenu(this.showFrom.id,this.showFrom.replyContent).then( response =>{
+             console.log('replyContent',this.showFrom.replyContent);
+              this.msgSuccess("回复成功");
+              this.getList();
+              this.open = false;
+           }).catch( ()=>{})
           }
-        }
-      });
     },
     // 取消按钮
     cancel(){
@@ -329,14 +326,12 @@ export default {
     }
   }
 }
-
 </script>
-
 <style lang="scss" scoped>
     .app-container{
 
       .roleInput{
-        width: 240px;
+        width: 220px;
       }
       .el-dialog{
         overflow-x: auto;

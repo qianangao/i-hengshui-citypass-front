@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-row >
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="角色名称" prop="roleName">
             <el-input
               v-model="queryParams.roleName"
@@ -14,20 +14,19 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
             <el-form-item label="权限字符" prop="roleKey">
-              <el-input
-                v-model="queryParams.roleKey"
-                placeholder="请输入权限字符"
-                clearable
-                size="small"
-                class="roleInput"
-               
-                @keyup.enter.native="handleQuery"
-              />
+              <el-select v-model="form.roleKey" placeholder="请选择权限字符" class="roleInput">
+                    <el-option
+                    v-for="dict in permissionType"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                    :value="dict.dictValue"
+                  />
+            </el-select>
             </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
             <el-form-item label="状态" prop="status">
               <el-select
                 v-model="queryParams.status"
@@ -46,23 +45,23 @@
               </el-select>
             </el-form-item>
         </el-col>
+         <!-- <el-col :span="6">
+            <el-form-item label="创建时间">
+              <el-date-picker
+                v-model="dateRange"
+                size="small"
+                class="roleInput"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+        </el-col> -->
       </el-row>
       <el-row>
-        <el-col :span="8">
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              class="roleInput"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -71,7 +70,6 @@
       </el-row>
       
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -171,47 +169,79 @@
     />
 
     <!-- 添加或修改角色配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" 
+    <el-dialog :title="title" :visible.sync="open" width="600px" 
     :close-on-press-escape="false"
     :close-on-click-modal="false"
     append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" placeholder="请输入角色名称" />
-        </el-form-item>
-        <el-form-item label="权限字符" prop="roleKey">
-          <el-input v-model="form.roleKey" placeholder="请输入权限字符" />
-        </el-form-item>
-        <el-form-item label="角色顺序" prop="roleSort">
-          <el-input-number v-model="form.roleSort" controls-position="right" :min="0" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="菜单权限">
-          <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
-          <el-tree
-            class="tree-border"
-            :data="menuOptions"
-            show-checkbox
-            ref="menu"
-            node-key="id"
-            :check-strictly="!form.menuCheckStrictly"
-            empty-text="加载中，请稍后"
-            :props="defaultProps"
-          ></el-tree>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-row>
+        <el-col :span="22">
+          <el-form-item label="角色名称" prop="roleName">
+            <el-input v-model="form.roleName" placeholder="请输入角色名称" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="22">
+          <el-form-item label="权限字符" prop="roleKey">
+            <el-select v-model="form.roleKey" placeholder="请选择权限字符" style="100%">
+                    <el-option
+                    v-for="dict in permissionType"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                    :value="dict.dictValue"
+                  />
+            </el-select>
+          </el-form-item>
+          </el-col>
+      </el-row>
+      <!-- <el-row>
+        <el-col :span="22">
+          <el-form-item label="角色顺序" prop="roleSort">
+            <el-input-number v-model="form.roleSort" controls-position="right" :min="0" />
+          </el-form-item>
+         </el-col>
+      </el-row> -->
+      <el-row>
+        <el-col :span="22">
+          <el-form-item label="状态">
+            <el-radio-group v-model="form.status">
+              <el-radio
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+              >{{dict.dictLabel}}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+         </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="22">
+          <el-form-item label="菜单权限">
+            <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
+            <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
+            <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
+            <el-tree
+              class="tree-border"
+              :data="menuOptions"
+              show-checkbox
+              ref="menu"
+              node-key="id"
+              :check-strictly="!form.menuCheckStrictly"
+              empty-text="加载中，请稍后"
+              :props="defaultProps"
+            ></el-tree>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="22">
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          </el-col>
+      </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -229,7 +259,14 @@
           <el-input v-model="form.roleName" :disabled="true" />
         </el-form-item>
         <el-form-item label="权限字符">
-          <el-input v-model="form.roleKey" :disabled="true" />
+          <el-select v-model="form.roleKey" placeholder="请选择权限字符" style="100%">
+                    <el-option
+                    v-for="dict in permissionType"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                    :value="dict.dictValue"
+                  />
+            </el-select>
         </el-form-item>
         <el-form-item label="权限范围">
           <el-select v-model="form.dataScope">
@@ -295,7 +332,7 @@ export default {
       open: false,
       // 是否显示弹出层（数据权限）
       openDataScope: false,
-	  menuExpand: false,
+	    menuExpand: false,
       menuNodeAll: false,
       deptExpand: true,
       deptNodeAll: false,
@@ -328,7 +365,7 @@ export default {
       ],
       // 菜单列表
       menuOptions: [],
-      // 部门列表
+      // 部门列表p
       deptOptions: [],
       // 查询参数
       queryParams: {
@@ -338,6 +375,8 @@ export default {
         roleKey: undefined,
         status: undefined
       },
+    // 权限字符数据字典
+      permissionType: [],
       // 表单参数
       form: {},
       defaultProps: {
@@ -350,7 +389,10 @@ export default {
           { required: true, message: "角色名称不能为空", trigger: "blur" }
         ],
         roleKey: [
-          { required: true, message: "权限字符不能为空", trigger: "blur" }
+          { required: true, message: "权限字符不能为空", trigger: "blur" },
+          { pattern: "/[^_a-zA-Z]/g,''",
+            message: "请输入权限字符",
+            trigger: "blur"}
         ],
         roleSort: [
           { required: true, message: "角色顺序不能为空", trigger: "blur" }
@@ -363,6 +405,9 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("sys_permission_type").then(response => {
+      this.permissionType = response.data;
+    }).catch( ()=>{})
   },
   methods: {
     /** 查询角色列表 */
@@ -626,4 +671,10 @@ export default {
       height: 142px;
         overflow: auto;
       }
+    .el-select{
+    width: 100%;
+  }
+  .el-input-number--medium{
+    width: 100%;
+  }
 </style>
