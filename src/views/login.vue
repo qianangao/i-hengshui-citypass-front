@@ -130,7 +130,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/image/background.png");
+  background-image: url("../assets/image/background.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-size: cover;
@@ -184,7 +184,7 @@ export default {
   text-align: center;
   color: #fff;
   font-family: Arial;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 1px;
 }
 .login-code-img {

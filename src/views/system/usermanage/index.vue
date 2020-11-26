@@ -5,17 +5,17 @@
       <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
           <el-col :span="6">
             <el-form-item label="用户名称" prop="userName">
-              <el-input class="input-query" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
+              <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="手机号码" prop="phonenumber">
-              <el-input class="input-query" v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"/>
+              <el-input class="inputQuery" v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="状态" prop="status">
-              <el-select class="input-query" v-model="queryParams.status" placeholder="用户状态" clearable size="small">
+              <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择用户状态" clearable size="small">
                 <el-option
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
@@ -48,8 +48,8 @@
       </el-col>
     </el-row>
     <!-- table 展示 -->
-    <el-table class="userForm" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="50" align="center" />
+    <el-table class="table-list" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50" align="center"/>
       <el-table-column label="用户编号" align="center" prop="userId" />
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
@@ -214,7 +214,7 @@ export default {
       // 总条数
       total: 0,
       // 用户表格数据
-      userList: null,
+      userList: [],
       // 弹出层标题
       title: "",
       // 部门树选项
@@ -311,8 +311,7 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
+      listUser(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
           this.userList = response.data.rows;
           this.total = response.data.total;
           this.loading = false;
@@ -349,16 +348,13 @@ export default {
           cancelButtonText: "取消",
           type: "warning",
         }
-      )
-        .then(function () {
-          return changeUserStatus(row.userId, row.status);
-        })
-        .then(() => {
-          this.msgSuccess(text + "成功");
-        })
-        .catch(function () {
-          row.status = row.status === "0" ? "1" : "0";
-        });
+      ).then(function () {
+        return changeUserStatus(row.userId, row.status);
+      }).then(() => {
+        this.msgSuccess(text + "成功");
+      }).catch(function () {
+        row.status = row.status === "0" ? "1" : "0";
+      });
     },
     /** 取消按钮 */
     handleCancel() {
@@ -406,7 +402,6 @@ export default {
             this.form.roleId = item;
           });
         }
-       
         this.open = true;
         this.title = "修改用户";
       });
@@ -460,14 +455,12 @@ export default {
           cancelButtonText: "取消",
           type: "warning",
         }
-      )
-        .then(function () {
-          return delUser(userIds);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        });
+      ).then(function () {
+        return delUser(userIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -510,20 +503,11 @@ export default {
 };
 </script>
 <style  scoped>
-.app-container,
-.el-center,
-.userDataCenter,
-.userForm {
-  width: 100%;
-}
-.input-query {
-  width: 70%;
-}
-.inputButton {
-  float: right;
-}
 .el-upload__tip {
   color: red;
+}
+.inputQuery {
+  width: 70%;
 }
 .templateDownload {
   font-size: 12px;
