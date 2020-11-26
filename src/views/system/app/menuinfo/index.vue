@@ -365,7 +365,6 @@ import IconSelect from "@/components/IconSelect";
 import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
 
 const baseUrl = "http://10.92.119.10/";
-// console.log("baseUrl>>>",baseUrl);
 export default {
   name: "Menu",
   components: { Treeselect, IconSelect },
@@ -473,15 +472,6 @@ export default {
       this.imageUrl = "";
       this.resetForm("form");
     },
-    // /** 查询菜单下拉树结构 */
-    // getTreeselect() {
-    //   listMenu().then((response) => {
-    //     this.menuOptions = [];
-    //     const menu = { menuId: 0, menuName: "主类目", children: [] };
-    //     // console.log("menu-----", menu);
-    //     this.menuOptions = this.handleTree(response.data, "id");
-    //   });
-    // },
     /** 新增按钮操作 */
     handleAdd(row, level) {
       this.reset();
@@ -542,7 +532,6 @@ export default {
         if(this.form.icon != null) {
           this.imageUrl = baseUrl + this.form.icon;
         }
-        // console.log("this.form",this.imageUrl);
         if (level === 3) {
           this.addOpen = true;
         } else {
@@ -556,8 +545,6 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          // console.log("valid-----", valid);
-          console.log(this.form.level);
           if (this.form.id != undefined) {
             updataMenu(this.form).then((response) => {
               this.msgSuccess("修改成功");
@@ -611,7 +598,6 @@ export default {
 };
 // 上传图标
 //  handlePreview(file) {
-//     // console.log(file);
 //   },
 //   handleExceed(files, fileList) {
 //     this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -639,7 +625,6 @@ export default {
 // },
 //上传菜单图片
 // beforeAvatarUpload(file) {
-//   // console.log('file--------',file);
 //   this.uploadFile(file);
 // },
 </script>

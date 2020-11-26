@@ -5,12 +5,12 @@
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="部门名称" prop="deptName">
-            <el-input class="input-query" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>
+            <el-input class="inputQuery" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="状态" prop="status">
-            <el-select class="input-query" v-model="queryParams.status" placeholder="部门状态" clearable size="small">
+            <el-select class="inputQuery" v-model="queryParams.status" placeholder="部门状态" clearable size="small">
               <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
             </el-select>
           </el-form-item>
@@ -44,8 +44,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">新增</el-button>
-          <el-button v-if="scope.row.parentId != 0" size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -223,9 +222,6 @@ export default {
         this.open = true;
         this.title = "修改部门";
       });
-      listDeptExcludeChild(row.deptId).then(response => {
-	        this.deptOptions = this.handleTree(response.data, "deptId");
-      });
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -263,3 +259,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.inputQuery {
+  width: 70%;
+}
+</style>
