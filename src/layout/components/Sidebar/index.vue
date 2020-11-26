@@ -10,14 +10,11 @@
                 :unique-opened="true"
                 :active-text-color="settings.theme"
                 :collapse-transition="false"
-                mode="vertical"
-            >
-                <sidebar-item
-                    v-for="(route, index) in permission_routes"
+                mode="vertical">
+                <sidebar-item v-for="(route, index) in permission_routes"
                     :key="route.path  + index"
                     :item="route"
-                    :base-path="route.path"
-                />
+                    :base-path="route.path"/>
             </el-menu>
         </el-scrollbar>
     </div>
