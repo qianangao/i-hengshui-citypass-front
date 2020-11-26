@@ -1,28 +1,22 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-row>
+    <el-row class="el-center" :gutter="15">
+      <!-- 用户查询条件 -->
+      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="菜单名称" prop="menuName">
-            <el-input
-              v-model="queryParams.menuName"
-              placeholder="请输入菜单名称"
-              clearable
-              size="small"
-              class = 'roleInput'
-            />
+            <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable size="small" class = 'roleInput'/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small" class='roleInput'>
+            <el-select v-model="queryParams.status" placeholder="请选择菜单状态" clearable size="small" class='roleInput'>
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-                class = 'roleInput'
-              />
+                class = 'roleInput'/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -32,10 +26,8 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-col>
-        
-      </el-row>
-    </el-form>
-
+      </el-form>
+    </el-row>
     <el-row :gutter="8" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -413,9 +405,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .app-container{
       .roleInput{
-        width: 220px;
+        width: 70%;
       }
 
       .menuName{
@@ -447,6 +438,5 @@ export default {
       .optaion{
         width: 200px;
       }
-  }
 
 </style>
