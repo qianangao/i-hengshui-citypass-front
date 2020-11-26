@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-row >
-        <el-col :span="8">
+      <el-row>
+        <el-col :span="6">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input
               v-model="queryParams.menuName"
@@ -13,7 +13,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="菜单状态" clearable size="small" class='roleInput'>
               <el-option
@@ -26,12 +26,13 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">   
+        <el-col :span="6">   
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
-         </el-col>
+        </el-col>
+        
       </el-row>
     </el-form>
 
@@ -45,7 +46,7 @@
           v-hasPermi="['system:menu:add']"
         >新增</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
 
     <el-table
@@ -246,7 +247,8 @@ export default {
       // 查询参数
       queryParams: {
         menuName: undefined,
-        visible: undefined
+        visible: undefined,
+        status:''
       },
       // 表单参数
       form: {},
@@ -413,7 +415,7 @@ export default {
 <style lang="scss" scoped>
   .app-container{
       .roleInput{
-        width: 240px;
+        width: 220px;
       }
 
       .menuName{

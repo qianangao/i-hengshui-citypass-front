@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="queryParams" ref="queryForm">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input
               v-model="queryParams.menuName"
@@ -13,7 +13,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item>
             <el-button
               type="cyan"
@@ -115,6 +115,7 @@
             type="text"
             icon="el-icon-disable"
             @click="handleStatusChange(scope.row)"
+            v-if="scope.row.level > 1"
             >{{ scope.row.status === "0" ? "禁用" : "启用" }}
           </el-button>
         </template>
@@ -213,10 +214,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="22">
             <el-form-item label="菜单Code" prop="menuCode">
-              <!-- <el-input placeholder="请输入菜单Code" v-model="form.menuCode" /> -->
+              
                <el-select v-model="value" placeholder="请选择菜单Code">
                  <el-option
                   v-for="dict in appMenuCode"
@@ -227,8 +228,7 @@
                 </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        
+        </el-row> -->
         <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon">
@@ -244,8 +244,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
-
         <el-row>
           <el-col :span="24">
             <el-form-item label="是否首页" prop="ifHome">
@@ -254,7 +252,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="22">
             <el-form-item label="是否携带用户信息" prop="ifCarryUser">
@@ -307,7 +304,6 @@
             </el-form-item>
           </el-col>
         </el-row> -->
-
         <!-- <el-row>
           <el-col :span="22">
             <el-form-item label="是否热门"  prop="ifHot">
@@ -368,6 +364,8 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
 import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
 
+const baseUrl = "http://10.92.119.10/";
+// console.log("baseUrl>>>",baseUrl);
 export default {
   name: "Menu",
   components: { Treeselect, IconSelect },
@@ -432,7 +430,13 @@ export default {
       },
       supportPicFormat: ["jpg", "png", "gif", "JPEG"],
       imageUrl: "",
-      value:''
+      value:'',
+      // 校验表单
+      rules:{
+        content:[
+            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
+        ]
+     }
     };
   },
   created() {
@@ -458,26 +462,26 @@ export default {
         parentId: "0",
         menuName: undefined,
         sortNum: undefined,
-        icon: undefined,
+        icon: null,
         menuType: "M",
         status: "0",
         level: undefined,
         ifHot: "1",
         ifHome: "1",
-        ifCarryUser: "1",
-        icon:undefined
+        ifCarryUser: "1"
       };
+      this.imageUrl = "";
       this.resetForm("form");
     },
-    /** 查询菜单下拉树结构 */
-    getTreeselect() {
-      listMenu().then((response) => {
-        this.menuOptions = [];
-        const menu = { menuId: 0, menuName: "主类目", children: [] };
-        // console.log("menu-----", menu);
-        this.menuOptions = this.handleTree(response.data, "id");
-      });
-    },
+    // /** 查询菜单下拉树结构 */
+    // getTreeselect() {
+    //   listMenu().then((response) => {
+    //     this.menuOptions = [];
+    //     const menu = { menuId: 0, menuName: "主类目", children: [] };
+    //     // console.log("menu-----", menu);
+    //     this.menuOptions = this.handleTree(response.data, "id");
+    //   });
+    // },
     /** 新增按钮操作 */
     handleAdd(row, level) {
       this.reset();
@@ -494,7 +498,7 @@ export default {
         this.open = true;
       }
     },
-    // 角色状态修改
+    //菜单状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "禁用" : "启用";
       this.$confirm(
@@ -507,14 +511,17 @@ export default {
         }
       )
         .then(function () {
-          row.status = row.status === "0" ? "1" : "0";
-          return changeMenuStatus(row.id, row.status);
+          const status =  row.status === "0" ? "1" : "0";
+          // this.getList();
+          return changeMenuStatus(row.id, status);
+
         })
         .then(() => {
+          this.getList();
           this.msgSuccess(text + "成功");
         })
-        .catch(function () {
-          row.status = row.status === "0" ? "0" : "1";
+        .catch( ()=> {
+          
         });
     },
     /** 查询按钮操作 */
@@ -528,25 +535,29 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row, level) {
-      // console.log(level)
       this.reset();
-      this.getTreeselect();
+      // this.getTreeselect();
       getMenu(row.id).then((response) => {
         this.form = response.data;
+        if(this.form.icon != null) {
+          this.imageUrl = baseUrl + this.form.icon;
+        }
+        // console.log("this.form",this.imageUrl);
         if (level === 3) {
           this.addOpen = true;
         } else {
           this.open = true;
         }
-        this.title = "修改菜单";
+          this.title = "修改菜单";
+
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          console.log("valid-----", valid);
-          console.log(this.form);
+          // console.log("valid-----", valid);
+          console.log(this.form.level);
           if (this.form.id != undefined) {
             updataMenu(this.form).then((response) => {
               this.msgSuccess("修改成功");
@@ -636,7 +647,7 @@ export default {
 <style lang="scss" scoped>
 .app-container {
   .roleInput {
-    width: 240px;
+    width: 220px;
   }
   .el-dialog {
     overflow-x: auto;
