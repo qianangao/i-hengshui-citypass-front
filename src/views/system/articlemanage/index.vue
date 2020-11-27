@@ -8,7 +8,7 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="标题查询" prop="articleName">
-                <el-input class="inputQuery" v-model="queryParams.title"  placeholder="请输入标题" clearable size="small"/>
+                <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -17,7 +17,6 @@
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
               </el-form-item>
             </el-col>
-           
           </el-row>
           <el-row>
           <el-col :span="2">
@@ -28,7 +27,7 @@
           <el-table class="articlerForm" :data="articleList">
               <el-table-column label="编号" align="center">
                 <template slot-scope="scope">
-                <span >{{ scope.$index+1 }}</span>
+                <span >{{scope.$index+1}}</span>
                 </template>
             </el-table-column>
             <el-table-column label="文章标题"   align="center" prop="title" />
@@ -58,8 +57,8 @@
             </el-table-column>
           </el-table>
           <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
+        
           <!-- 对话框 -->
-
           <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
             <el-form ref="form" :model="form" :rules="rules" class="dialogForm"  label-width="125px">
               <!-- <el-row>
@@ -445,5 +444,8 @@ img {
   }
   .dialogForm::v-deep .el-form-item__content{
     margin-left: 20px !important;
+  }
+  .inputQuery{
+    width: 183px;
   }
 </style>
