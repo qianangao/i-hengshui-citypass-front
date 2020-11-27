@@ -1,20 +1,19 @@
 <template>
   <div class="app-container">
-    <el-row class="elCenter" :gutter="20">
+    <el-row class="elCenter" :gutter="15">
       <!-- 文章数据 -->
-      <el-col class="articleCenter" :span="20" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" >
+      <el-col class="articleCenter">
+        <el-form :model="queryParams" ref="queryForm"  :inline="true" v-show="showSearch" >
           <!-- 查询框 -->
           <el-row>
             <el-col :span="6">
               <el-form-item label="标题查询" prop="articleName">
-                <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>
+                <el-input class="inputQuery" v-model="queryParams.title"  placeholder="请输入标题" clearable size="small"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item>
-                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
-                  >查询</el-button>
+                <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
               </el-form-item>
             </el-col>
@@ -22,7 +21,7 @@
           </el-row>
           <el-row>
           <el-col :span="2">
-              <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi">新增文章</el-button >
+              <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi"  v-hasPermi="['system:articlemanage:add']">新增文章</el-button >
             </el-col>
           </el-row>
           <!-- 文章表格数据 -->
@@ -45,26 +44,10 @@
                 </el-popover>
               </template>
             </el-table-column>
-             <!-- <el-table-column label="头像" align="center" height="10px">
-             <template slot-scope="scope">
-             <el-popover placement="right" title="" trigger="hover">
-             <img :src="scope.row.image_url" />
-             <img slot="reference" :src="scope.row.image_url" :alt="scope.row.image_url" style="max-height: 50px;max-width: 130px">
-             </el-popover>
-             </template>
-             </el-table-column> -->
-            <!-- <el-table-column
-              label="创建日期 "
-              align="center"
-              prop="createTime"
-              width="120"
-            /> -->
-            <!-- <el-table-column label="权重" align="center" prop="Weights" /> -->
-
             <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
               <template slot-scope="scope">
-                <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:list']">修改</el-button>
-                <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
+                <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:articlemanage:remove']">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
