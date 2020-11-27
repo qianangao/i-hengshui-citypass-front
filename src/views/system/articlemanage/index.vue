@@ -26,7 +26,12 @@
           </el-row>
           <!-- 文章表格数据 -->
           <el-table class="articlerForm" :data="articleList">
-            <el-table-column label="文章类型"   align="center" prop="title" />
+              <el-table-column label="编号" align="center">
+                <template slot-scope="scope">
+                <span >{{ scope.$index+1 }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="文章标题"   align="center" prop="title" />
             <!-- <el-table-column label="文章编号" align="center" prop="id" /> -->
             <!-- <el-table-column label="文章类型" :formatter="articleType"  align="center" prop="msgType" /> -->
              <el-table-column label="是否在首页轮播" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
@@ -36,7 +41,7 @@
               <div v-if="scope.row.url!==''||undefined||null" >{{scope.row.url}}</div>
             </template>
            </el-table-column>
-            <el-table-column align="center" label="图片" >
+            <el-table-column align="center" label="缩略图" >
               <template slot-scope="scope">
                   <el-popover placement="right" title="" trigger="hover" >
                  <img style="margin-left: 10px" :src="`http://10.92.119.10/${scope.row.pic}`" class="imgSlotHover" />
@@ -44,6 +49,7 @@
                 </el-popover>
               </template>
             </el-table-column>
+            <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
             <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
               <template slot-scope="scope">
                 <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
