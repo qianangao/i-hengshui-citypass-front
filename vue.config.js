@@ -37,8 +37,8 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://localhost:8080`,
         // target: `http://10.92.119.155:8081`,  //李奇本地
-        // target: `http://10.92.119.167:8081`,  //马儿本地
-        target: `http://10.92.119.10:8081`,   //10服务器
+        target: `http://10.92.119.167:8081`,  //马儿本地
+        // target: `http://10.92.119.10:8081`,   //10服务器
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

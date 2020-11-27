@@ -1,135 +1,64 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParams" ref="queryForm">
-      <el-row>
-        <el-col :span="6">
-          <el-form-item label="菜单名称" prop="menuName">
-            <el-input
-              v-model="queryParams.menuName"
-              placeholder="请输入菜单名称"
-              size="small"
-              clearable
-              class="roleInput"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item>
-            <el-button
-              type="cyan"
-              icon="el-icon-search"
-              size="mini"
-              @click="handleQuery"
-              v-hasPermi="['system:app:menuinfo:query']"
-              >查询</el-button
-            >
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-              v-hasPermi="['system:app:menuinfo:query']"
-              >重置</el-button
-            >
-          </el-form-item>
-        </el-col>
+    <!-- 用户查询条件 -->
+     <el-row>
+        <el-form :inline="false" :model="queryParams" ref="queryForm">
+          <el-col :span="6">
+            <el-form-item label="菜单名称" prop="menuName">
+              <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" size="small" clearable class="roleInput" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item>
+              <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" v-hasPermi="['system:app:menuinfo:query']">查询</el-button>
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery" v-hasPermi="['system:app:menuinfo:query']" >重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-form>
       </el-row>
-    </el-form>
+    
+    <!-- 其他操作 -->
     <el-row :gutter="8" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd(null, 0)"
-          v-hasPermi="['system:app:menuinfo:add']"
-          >新增菜单</el-button
-        >
+        <el-button type="primary"  icon="el-icon-plus" size="mini" @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']">新增菜单</el-button>
       </el-col>
       <!-- <right-toolbar :showSearch.sync="showSearch"></right-toolbar> -->
     </el-row>
-    <el-table
-      v-loading="loading"
-      :data="menuList"
-      row-key="id"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
-      <el-table-column
-        prop="menuName"
-        label="菜单名称"
-        :show-overflow-tooltip="true"
-        class="menuName"
-      ></el-table-column>
-      <el-table-column
-        prop="sortNum"
-        label="排序"
-        class="orderNum"
-        width="100px"
-      >
+    <!-- table 展示 -->
+    <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true" class="menuName" ></el-table-column>
+       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"   class="menuName" ></el-table-column>
+      <el-table-column prop="sortNum" label="排序" class="orderNum" width="100px"  >
         <template slot-scope="scope">
           <span>{{ scope.row.sortNum }}</span>
         </template>
       </el-table-column>
+     
       <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="编辑时间" align="center" prop="editTime">
+      <el-table-column label="编辑时间" align="center" prop="updateTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="status"
-        label="菜单状态"
-        v-model="queryParams.status"
-        class="status"
-        align="center"
-      >
+      <el-table-column prop="status" label="菜单状态" v-model="queryParams.status" class="status" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.status === "0" ? "启用" : "禁用" }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-plus"
-            @click="handleAdd(scope.row, scope.row.level)"
-            v-if="scope.row.level < 3"
-            v-hasPermi="['system:app:menuinfo:add']"
-            >新增</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row, scope.row.level)"
-            v-hasPermi="['system:app:menuinfo:edit']"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-disable"
-            @click="handleStatusChange(scope.row)"
-            v-if="scope.row.level > 1"
-            >{{ scope.row.status === "0" ? "禁用" : "启用" }}
-          </el-button>
+          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add']">新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row, scope.row.level)" v-hasPermi="['system:app:menuinfo:edit']">编辑</el-button>
+          <el-button size="mini" type="text" icon="el-icon-disable" @click="handleStatusChange(scope.row)" v-if="scope.row.level > 1" >{{ scope.row.status === "0" ? "禁用" : "启用" }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 添加或修改菜单对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="open"
-      width="600px"
-      :close-on-press-escape="false"
-      :close-on-click-modal="false"
-      append-to-body
-    >
+    <!-- 添加或修改二级菜单对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-row>
           <el-col :span="22">
@@ -142,12 +71,7 @@
           <el-col :span="22">
             <el-form-item label="菜单Code" prop="menuCode">
               <el-select v-model="form.menuCode" placeholder="请选择菜单Code" style="100%">
-                  <el-option
-                  v-for="dict in appMenuCode"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  :value="dict.dictValue"
-                />
+                  <el-option v-for="dict in appMenuCode"  :key="dict.dictValue"  :label="dict.dictValue"  :value="dict.dictValue"   />
               </el-select>
             </el-form-item>
           </el-col>
@@ -155,11 +79,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="显示排序" prop="sortNum">
-              <el-input-number
-                v-model="form.sortNum"
-                controls-position="right"
-                :min="0"
-              />
+              <el-input-number v-model="form.sortNum" controls-position="right" :min="0"  />
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,15 +110,8 @@
       </div>
     </el-dialog>
 
-    <!-- 添加或修改菜单对话框 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="addOpen"
-      width="600px"
-      height="600px"
-      :close-on-press-escape="false"
-      :close-on-click-modal="false"
-      append-to-body>
+    <!-- 添加或修改三级菜单菜单对话框 -->
+    <el-dialog :title="title" :visible.sync="addOpen" width="600px"   height="600px" :close-on-press-escape="false" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="130px">
         <el-row>
           <el-col :span="22">
@@ -232,12 +145,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon">
-              <el-upload
-                class="menu-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
+              <el-upload  class="menu-uploader"  action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false"  :on-success="handleAvatarSuccess"  :before-upload="beforeAvatarUpload">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
               </el-upload>
@@ -263,15 +171,18 @@
          <el-row>
           <el-col :span="22">
             <el-form-item label="应用简介" prop="content">
-              <el-input
-                type="textarea"
-                autosize
-                placeholder="请输入内容"
-                v-model="form.content">
-              </el-input>
+              <el-input type="textarea"  autosize placeholder="请输入内容"  v-model="form.content"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
 
         <!-- <el-row>
           <el-col :span="22">
@@ -340,14 +251,7 @@
             </el-form-item>
           </el-col>
         </el-row> -->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-  </div>
-</template>
+
 
 <script>
 import {
@@ -418,6 +322,9 @@ export default {
         linkman: [
           { required: true, message: "联系人姓名不能为空", trigger: "blur" },
         ],
+        icon: [
+          { required: true, message: "icon不能为空", trigger: "blur" },
+        ],
         phone: [
           { required: true, message: "联系方式不能为空", trigger: "blur" },
           {
@@ -426,20 +333,19 @@ export default {
             trigger: "blur",
           },
         ],
+         content:[
+            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
+        ]
       },
       supportPicFormat: ["jpg", "png", "gif", "JPEG"],
       imageUrl: "",
-      value:'',
-      // 校验表单
-      rules:{
-        content:[
-            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
-        ]
-     }
+      value:''
     };
   },
   created() {
+    // 获取菜单列表
     this.getList();
+    //  app菜单Code数据字典
     this.getDicts("app_menu_code").then(response => {
       this.appMenuCode = response.data;
     }).catch( ()=>{})
@@ -449,9 +355,8 @@ export default {
     getList() {
       this.loading = true;
       listMenu(this.queryParams).then((response) => {
-        this.menuList = this.handleTree(response.data, "menuId");
-        this.loading = false;
-        // this.getTreeselect()
+        this.menuList = response.data,
+        this.loading = false
       });
     },
     // 表单重置
@@ -460,7 +365,7 @@ export default {
         id: undefined,
         parentId: "0",
         menuName: undefined,
-        sortNum: undefined,
+        sortNum: '',
         icon: null,
         menuType: "M",
         status: "0",
@@ -502,16 +407,13 @@ export default {
       )
         .then(function () {
           const status =  row.status === "0" ? "1" : "0";
-          // this.getList();
           return changeMenuStatus(row.id, status);
-
         })
         .then(() => {
           this.getList();
           this.msgSuccess(text + "成功");
         })
         .catch( ()=> {
-          
         });
     },
     /** 查询按钮操作 */
@@ -539,7 +441,7 @@ export default {
         }
           this.title = "修改菜单";
 
-      });
+      }).catch( () =>{})
     },
     /** 提交按钮 */
     submitForm() {
@@ -569,16 +471,20 @@ export default {
       this.addOpen = false;
       this.reset();
     },
+    // 上传地址
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
     },
+    // 上传图片接口
     beforeAvatarUpload(file) {
       const supportPicFormat = file.type;
       const isLt2M = file.size / 1024 / 1024 < 10;
+      // 文件类型进行判断 
        if (!supportPicFormat) {
         this.$message.error("上传头像图片只能是只能上传jpg/png文件!");
         return false;
       }
+      // 文件大小进行判断 
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 10MB!");
         return false;
@@ -590,43 +496,10 @@ export default {
         this.form.icon =  res.data;
         }
         this.loading = false;
-      })
-
-     
-    },
-  },
-};
-// 上传图标
-//  handlePreview(file) {
-//   },
-//   handleExceed(files, fileList) {
-//     this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-//   },
-//去上传
-// uploadFile(file) {
-//   const fileTypeName = file.name.substring(
-//     file.name.lastIndexOf(".") * 1 + 1 * 1
-//   ); // 获取后缀名
-//   if (this.supportPicFormat.indexOf(fileTypeName) == -1) {
-//     this.$message.error("格式不支持!");
-//     return false;
-//   } else {
-//     this.loading = true;
-//     let fileParam = new FormData();
-//     fileParam.append("file", file);
-//     let url = "";
-//     uploadImg(fileParam).then(res => {
-//       if (res.code == 200) {
-//         this.form.icon =  res.data;
-//       }
-//       this.loading = false;
-//     });
-//   }
-// },
-//上传菜单图片
-// beforeAvatarUpload(file) {
-//   this.uploadFile(file);
-// },
+      })  
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -636,11 +509,9 @@ export default {
   }
   .el-dialog {
     overflow-x: auto;
-
     .el-upload__tip {
       display: inline-block;
     }
-
   }
 }
 </style>

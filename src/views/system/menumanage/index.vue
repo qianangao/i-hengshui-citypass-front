@@ -11,12 +11,7 @@
         <el-col :span="6">
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="请选择菜单状态" clearable size="small" class='roleInput'>
-              <el-option
-                v-for="dict in statusOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-                class = 'roleInput'/>
+              <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel"  :value="dict.dictValue" class = 'roleInput'/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -28,25 +23,15 @@
         </el-col>
       </el-form>
     </el-row>
+    <!-- 其他操作 -->
     <el-row :gutter="8" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:menu:add']"
-        >新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:menu:add']">新增</el-button>
       </el-col>
       <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
-
-    <el-table
-      v-loading="loading"
-      :data="menuList"
-      row-key="menuId"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    >
+    <!-- table 展示 -->
+    <el-table v-loading="loading" :data="menuList" row-key="menuId" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" class = 'menuName'></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" class="icon">
         <template slot-scope="scope">
@@ -64,46 +49,19 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="optaion" width="160px">
         <template slot-scope="scope">
-          <el-button size="mini" 
-            type="text" 
-            icon="el-icon-edit" 
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:menu:edit']"
-          >修改</el-button>
-          <el-button 
-            size="mini" 
-            type="text" 
-            icon="el-icon-plus" 
-            @click="handleAdd(scope.row)"
-            v-hasPermi="['system:menu:add']"
-          >新增</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
-          >删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-plus"  @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']">新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']" >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" 
-      :close-on-press-escape="false"
-      :close-on-click-modal="false"
-    append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px"  :close-on-press-escape="false"  :close-on-click-modal="false"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
-              <treeselect
-                v-model="form.parentId"
-                :options="menuOptions"
-                :normalizer="normalizer"
-                :show-count="true"
-                placeholder="选择上级菜单"
-              />
+              <treeselect v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" :show-count="true" placeholder="选择上级菜单" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -117,20 +75,10 @@
           </el-col>
           <el-col :span="24">
             <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
-              <el-popover
-                placement="bottom-start"
-                width="460"
-                trigger="click"
-                @show="$refs['iconSelect'].reset()"
-              >
+              <el-popover placement="bottom-start" width="460" trigger="click" @show="$refs['iconSelect'].reset()"  >
                 <IconSelect ref="iconSelect" @selected="selected" />
                 <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
-                  <svg-icon
-                    v-if="form.icon"
-                    slot="prefix"
-                    :icon-class="form.icon"
-                    class="el-input__icon"
-                  />
+                  <svg-icon v-if="form.icon" slot="prefix"  :icon-class="form.icon" class="el-input__icon" />
                   <i v-else slot="prefix" class="el-icon-search el-input__icon" />
                 </el-input>
               </el-popover>
@@ -172,22 +120,14 @@
           <el-col :span="12">
             <el-form-item v-if="form.menuType != 'F'" label="显示状态">
               <el-radio-group v-model="form.visible">
-                <el-radio
-                  v-for="dict in visibleOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                <el-radio v-for="dict in visibleOptions" :key="dict.dictValue" :label="dict.dictValue" >{{dict.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType != 'F'" label="菜单状态">
               <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -259,10 +199,13 @@ export default {
     };
   },
   created() {
+    // 获取菜单列表
     this.getList();
+    // 状态数据字典
     this.getDicts("sys_show_hide").then(response => {
       this.visibleOptions = response.data;
     });
+    // 权限字符数据字典
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
