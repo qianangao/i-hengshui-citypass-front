@@ -50,11 +50,11 @@
     <!-- table 展示 -->
     <el-table class="table-list" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center"/>
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="用户编号" align="center" prop="userId"/>
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
       <el-table-column label="手机号码" align="center" prop="phonenumber" width="120"/>
-      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
@@ -99,8 +99,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="角色" prop="roleId">
-              <el-select class="inputContent" v-model="form.roleId" placeholder="请选择">
-                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1">
+              <el-select class="inputContent" v-model="form.roleId" placeholder="请选择角色">
+                <el-option v-for="item in roleOptions" 
+                  :key="item.roleId" 
+                  :label="item.roleName" 
+                  :value="item.roleId" 
+                  :disabled="item.status == 1">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -114,7 +118,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="归属部门">
-              <el-input class="inputContent" v-model="form.deptName" placeholder="请输入归属部门" :show-count="true"/>
+              <!-- <el-input class="inputContent" v-model="form.deptName" placeholder="请输入归属部门"/> -->
+              <el-select class="inputContent" v-model="form.deptName" placeholder="请选择部门">
+                <el-option v-for="item in deptOption"
+                  :key="item.deptId"
+                  :label="item.deptName"
+                  :value="item.deptName"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -122,14 +132,12 @@
               <el-input class="inputContent" v-model="form.nickName" placeholder="请输入用户昵称" maxlength="10"/>
             </el-form-item>
           </el-col>
-          
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户性别">
               <el-select class="inputContent" v-model="form.sex" placeholder="请选择">
-                <el-option
-                  v-for="dict in sexOptions"
+                <el-option v-for="dict in sexOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="dict.dictValue">
@@ -140,7 +148,11 @@
           <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue" >{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" 
+                  :key="dict.dictValue" 
+                  :label="dict.dictValue">
+                  {{ dict.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -148,7 +160,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+              <el-input v-model="form.remark" rows="3" type="textarea" placeholder="请输入内容" maxlength="200"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -195,6 +207,7 @@
 
 <script>
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
+import { getDeptSelect } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -217,8 +230,6 @@ export default {
       userList: [],
       // 弹出层标题
       title: "",
-      // 部门树选项
-      deptOptions: undefined,
       // 是否显示弹出层
       open: false,
       // 部门名称
@@ -231,12 +242,10 @@ export default {
       sexOptions: [],
       // 角色选项
       roleOptions: [],
+      // 部门选项
+      deptOption:[],
       // 表单参数
       form: {},
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
       // 用户导入参数
       upload: {
         // 是否显示弹出层（用户导入）
@@ -261,7 +270,6 @@ export default {
         status: undefined,
         deptId: undefined,
       },
-      // roleId:"",
       // 表单校验
       rules: {
         userName: [
@@ -311,7 +319,7 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+      listUser(this.queryParams).then((response) => {
           this.userList = response.data.rows;
           this.total = response.data.total;
           this.loading = false;
@@ -325,14 +333,12 @@ export default {
         deptId: undefined,
         userName: undefined,
         nickName: undefined,
-        password: undefined,
         phonenumber: undefined,
         email: undefined,
         sex: undefined,
         status: "0",
         remark: undefined,
-        roleId:undefined,
-        roleIds: [],
+        roleId: undefined,
         deptName: undefined,
       };
       this.resetForm("form");
@@ -361,7 +367,6 @@ export default {
       this.open = false;
       this.handleReset();
     },
-    
     /** 重置按钮操作 */
     resetQuery() {
       this.dateRange = [];
@@ -382,6 +387,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.handleReset();
+      this.handleDept();
       getUser().then((response) => {
         this.roleOptions = response.data.roles;
         this.open = true;
@@ -391,42 +397,32 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.handleReset();
-      this.form.roleIds = [];
       const userId = row.userId || this.ids;
       getUser(userId).then((response) => {
         this.form = response.data.userInfo;
         this.roleOptions = response.data.roles;
-        // this.form.roleId = response.data.roleIds[0];
-        if(this.form.roleIds !== null){
-           this.form.roleIds.map(item => {
-            this.form.roleId = item;
-          });
-        }
         this.open = true;
         this.title = "修改用户";
       });
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
-      this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-      }).then(({ value }) => {
-        resetUserPwd(row.userId, value).then((response) => {
-          this.msgSuccess("修改成功，新密码是：" + value);
-        });
-      }).catch(() => {});
+      resetUserPwd(row.userId).then((response) => {
+        this.msgSuccess("重置密码成功，新密码是：123456" );
+      });
+      // this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      // }).then(({ value }) => {
+      //   resetUserPwd(row.userId, value).then((response) => {
+      //     this.msgSuccess("修改成功，新密码是：" + value);
+      //   });
+      // }).catch(() => {});
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if(this.form.roleIds.length != 0){
-            this.form.roleIds = [];
-            this.form.roleIds.push(this.form.roleId);
-          }else {
-            this.form.roleIds.push(this.form.roleId);
-          }
           if (this.form.userId != undefined) {
             updateUser(this.form).then((response) => {
               this.msgSuccess("修改成功");
@@ -437,7 +433,6 @@ export default {
             addUser(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
-              this.form.roleIds = [];
               this.getList();
             });
           };
@@ -499,6 +494,12 @@ export default {
     submitFileForm() {
       this.$refs.upload.submit();
     },
+    // 获取部门select
+    handleDept() {
+      getDeptSelect().then(response => {
+        this.deptOption = response.data;
+      })
+    }
   },
 };
 </script>
