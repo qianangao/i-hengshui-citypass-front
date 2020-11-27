@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <el-row class="elCenter" :gutter="20">
+    <el-row class="elCenter" :gutter="15">
       <!-- 文章数据 -->
-      <el-col class="articleCenter" :span="20" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" >
+      <el-col class="articleCenter">
+        <el-form :model="queryParams" ref="queryForm"  :inline="true" v-show="showSearch" >
           <!-- 查询框 -->
           <el-row>
             <el-col :span="6">
@@ -11,39 +11,36 @@
                 <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>
               </el-form-item>
             </el-col>
-            
             <el-col :span="6">
               <el-form-item>
-                <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery"
-                  >查询</el-button>
+                <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
               </el-form-item>
             </el-col>
-           
           </el-row>
           <el-row>
           <el-col :span="2">
-              <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi">新增文章</el-button >
+              <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi"  v-hasPermi="['system:articlemanage:add']">新增文章</el-button >
             </el-col>
           </el-row>
           <!-- 文章表格数据 -->
           <el-table class="articlerForm" :data="articleList">
+              <el-table-column label="编号" align="center">
+                <template slot-scope="scope">
+                <span >{{scope.$index+1}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="文章标题"   align="center" prop="title" />
             <!-- <el-table-column label="文章编号" align="center" prop="id" /> -->
             <!-- <el-table-column label="文章类型" :formatter="articleType"  align="center" prop="msgType" /> -->
              <el-table-column label="是否在首页轮播" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
-            <el-table-columnlabel="标题" align="center" prop="title" show-overflow-tooltip="true" />
             <el-table-column label="链接或富文本内容 " align="center"  prop="url"   :show-overflow-tooltip="true">
               <template slot-scope="scope">
               <div v-if="scope.row.content!==''||null||undefined" v-html="scope.row.content"></div>
               <div v-if="scope.row.url!==''||undefined||null" >{{scope.row.url}}</div>
             </template>
            </el-table-column>
-             <!-- <el-table-column label="非链接内容" align="center"  :show-overflow-tooltip="true">
-              <template slot-scope="scope">
-              <div v-html="scope.row.content"></div>
-            </template>
-            </el-table-column> -->
-            <el-table-column align="center" label="图片" >
+            <el-table-column align="center" label="缩略图" >
               <template slot-scope="scope">
                   <el-popover placement="right" title="" trigger="hover" >
                  <img style="margin-left: 10px" :src="`http://10.92.119.10/${scope.row.pic}`" class="imgSlotHover" />
@@ -51,32 +48,17 @@
                 </el-popover>
               </template>
             </el-table-column>
-             <!-- <el-table-column label="头像" align="center" height="10px">
-             <template slot-scope="scope">
-             <el-popover placement="right" title="" trigger="hover">
-          <img :src="scope.row.image_url" />
-          <img slot="reference" :src="scope.row.image_url" :alt="scope.row.image_url" style="max-height: 50px;max-width: 130px">
-        </el-popover>
-      </template>
-    </el-table-column> -->
-            <!-- <el-table-column
-              label="创建日期 "
-              align="center"
-              prop="createTime"
-              width="120"
-            /> -->
-            <!-- <el-table-column label="权重" align="center" prop="Weights" /> -->
-
+            <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
             <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
               <template slot-scope="scope">
-                <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:list']">修改</el-button>
-                <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
+                <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:articlemanage:remove']">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
+        
           <!-- 对话框 -->
-
           <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
             <el-form ref="form" :model="form" :rules="rules" class="dialogForm"  label-width="125px">
               <!-- <el-row>
@@ -107,7 +89,6 @@
                     </el-radio-group>
                   </el-form-item>
                   </el-row>
-                  
                    <el-row>
                   <el-form-item label="文章是否为链接:" prop="ifLink">
                     <el-radio-group v-model="form.ifLink">
@@ -139,24 +120,17 @@
               </el-row> -->
               <el-row>
                 <el-col>
-                  <el-form-item label="图片上传:">
-                 <el-upload
-                 class="avatar-uploader"
-                :action="url"
-                :headers="headers"
-                :show-file-list="false"
-                :on-success="handlePreview"
-                 :on-error="handlEerror">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-                  </el-form-item>
+                 <el-form-item label="图片上传:">
+                 <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :on-success="handlePreview" :on-error="handlEerror">
+                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                 </el-upload>
+                </el-form-item>
                 </el-col>
               </el-row>
               <el-row v-if="form.ifLink !== 0">
                 <Editor v-model="form.content"  :min-height="80" />
               </el-row>
-            
             </el-form>
               <div slot="footer" class="dialog-footer">
                   <el-button type="primary"  @click="oksubmi">确认</el-button>
@@ -203,16 +177,14 @@ export default {
       },
       // 文件上传
         imageUrl: '',
-     
       // 模态框标题
-      title: "",
+        title: "",
+      // 文件上传格式刷
       headers: { Authorization: "Bearer " + getToken() },
-      // 图片上传
-      url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
+      // 图片上传地址
+        url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
       // 上传图片
-      fileList: undefined,
-      // 弹出框计数器
-
+      // fileList: undefined,
       // 总条数
       total: 0,
       fileList: [],
@@ -240,27 +212,22 @@ export default {
       showSearch: true,
       // 查询参数
       queryParams: {
-      
         title:undefined,
         pageNum: 1,
         pageSize: 10,
         articleName: undefined,
-     
       },
-   
     };
   },
   created() {
     this.getList();
     // 类型字典
       this.getDicts("sc_msg_type").then((response) => {
-        
       this.aceType = response.data;
     }),
      this.getList();
     // 类型字典
       this.getDicts("project_status").then((response) => {
-       
       this.dictionaryLink = response.data;
       this.dictionaryBanner=response.data
     })
@@ -276,8 +243,8 @@ export default {
        }else{
          return "政策动态"
        }
-
-    },articleBanner(row, column){
+    },
+    articleBanner(row, column){
       let ifBanner=row.ifBanner;
       if(ifBanner==0){
         return "是"
@@ -334,16 +301,14 @@ export default {
       this.loading = true;
       listArticle(this.addDateRange(this.queryParams, this.dateRange)).then(
         (response) => {
-          // console.log(response);
           this.articleList = response.data.rows;
           this.total = response.data.total;
           this.loading = false;
         }
       );
     },
+    // 图片上传
      handlePreview(file) {
-     
-       
       this.form.pic =  file.data;
       this.imageUrl =  "http://10.92.119.10/" + file.data;
     },
@@ -359,19 +324,19 @@ export default {
        this.open = false;
        this.addHandleReset()
     },
+    // 新增文章按钮
     Addsubmi() {
       this.addHandleReset();
       this.open = true;
       this.title = "新增文章";
     },
-    // 修改按钮
+    // 修改文章按钮
     handleUpdate(row) {
       this.updataHandleReset();
       this.open = true;
       const id = row.id || this.id;
-      getArticle(id).then((response) => {
-        console.log(response)
-        this.imageUrl=response.data.pic;
+    getArticle(id).then((response) => {
+        this.imageUrl= "http://10.92.119.10/" + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
@@ -380,10 +345,11 @@ export default {
         this.title = "修改文章";
       });
     },
+    // 模态框确认事件
     oksubmi() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updateArticle(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -391,8 +357,6 @@ export default {
             });
           } else {
             addArticle(this.form).then((response) => {
-              console.log(this.form);
-              console.log(response);
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -402,7 +366,7 @@ export default {
       });
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
+    handleDelete(row){
       const userIds = row.id || this.ids;
       this.$confirm(
         '是否确认删除用户编号为"' + userIds + '"的数据项?',
@@ -412,15 +376,13 @@ export default {
           cancelButtonText: "取消",
           type: "warning",
         }
-      )
-        .then(function () {
+      ).then(function () {
           return delArticle(userIds);
-        })
-        .then(() => {
+        }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         });
-    },
+      },  
   },
 };
 </script>
@@ -436,9 +398,6 @@ img {
 .articlerForm {
   width: 100%;
 }
-
-
-
 .modal {
   width: 300px;
 }
@@ -448,7 +407,6 @@ img {
 .ql-editor p {
   min-height: 80px;
 }
-
 .imgSlotHover{
   width: 200px;
   height: 200px;
@@ -461,7 +419,6 @@ img {
   width: 100%;
   height: 100%;
 }
-
 .avatar-uploader::v-deep .el-upload{
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -471,7 +428,6 @@ img {
   }
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
-     
   }
   .avatar-uploader-icon {
     font-size: 28px;
@@ -480,15 +436,16 @@ img {
     height: 178px;
     line-height: 178px;
     text-align: center;
-  
   }
   .avatar {
     width: 178px;
     height: 178px;
     display: block;
-    
   }
   .dialogForm::v-deep .el-form-item__content{
     margin-left: 20px !important;
+  }
+  .inputQuery{
+    width: 183px;
   }
 </style>
