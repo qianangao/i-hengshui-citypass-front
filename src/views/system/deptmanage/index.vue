@@ -5,14 +5,12 @@
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="部门名称" prop="deptName">
-            <el-input class="inputQuery" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>
+            <el-input class="deptInputQuery" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="状态" prop="status">
-            <el-select class="inputQuery" v-model="queryParams.status" placeholder="部门状态" clearable size="small">
-              <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
-            </el-select>
+          <el-form-item label="负责人" prop="leader">
+            <el-input class="deptInputQuery" v-model="queryParams.leader" placeholder="请输入负责人" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -33,7 +31,6 @@
     <el-table class="table-list" v-loading="loading" :data="deptList">
       <el-table-column prop="deptName" label="部门名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="部门状态" align="center" :formatter="statusFormat"></el-table-column>
       <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
@@ -51,43 +48,40 @@
     <!-- 分页器 -->
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
     <!-- 添加或修改部门对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="22">
             <el-form-item label="部门名称" prop="deptName">
               <el-input v-model="form.deptName" placeholder="请输入部门名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="22">
             <el-form-item label="部门负责人" prop="leader">
               <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="22">
             <el-form-item label="联系电话" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="22">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="部门状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
+        </el-row>
+        <el-row>
+          <el-col :span="22">
             <el-form-item label="部门简介" prop="remark">
-              <el-input type="textarea" :rows="3" v-model="form.remark" placeholder="请输入部门简介" maxlength="500"/>
+              <el-input type="textarea" :rows="3" v-model="form.remark" placeholder="请输入部门简介" maxlength="200"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -129,7 +123,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         deptName: undefined,
-        status: undefined
+        // status: undefined
+        leader: undefined
       },
       // 表单参数
       form: {},
@@ -259,8 +254,8 @@ export default {
   }
 };
 </script>
-<style scoped>
-.inputQuery {
+<style>
+.deptInputQuery {
   width: 70%;
 }
 </style>
