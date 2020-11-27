@@ -18,7 +18,7 @@
 
 <script>
 import { updateUserPwd,userPasd } from "@/api/system/user";
-
+import md5 from "md5";
 export default {
   data() {
     const equalToPassword = (rule, value, callback) => {
@@ -55,7 +55,7 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-           userPasd(this.user.oldPassword=md5(this.user.oldPassword),this.user.newPassword=md5(this.user.newPassword)).then(
+          userPasd(this.user.oldPassword=md5(this.user.oldPassword),this.user.newPassword=md5(this.user.newPassword)).then(
             response => {
               this.msgSuccess("修改成功");
             }

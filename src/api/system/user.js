@@ -86,7 +86,18 @@ export function updateUserProfile(data) {
     data: data
   })
 }
-
+// 更改密码
+export function userPasd(originalPassword, newPassword) {
+  const data = {
+    originalPassword,
+    newPassword
+  }
+  return request({
+    url: 'system/user/password',
+    method: 'put',
+    data: data
+  })
+}
 // 用户密码重置
 export function updateUserPwd(oldPassword, newPassword) {
   const data = {
