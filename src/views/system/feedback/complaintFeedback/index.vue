@@ -1,51 +1,29 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParams" ref="queryForm">
-      <el-row >
+    <el-row>
+      <el-form  :model="queryParams" ref="queryForm">
         <el-col :span="6">
           <el-form-item label="标题" prop="title">
-            <el-input
-              v-model="queryParams.title"
-              placeholder="请输入标题名称"
-              size="small"
-              clearable
-              class = 'roleInput'
-            />
+            <el-input v-model="queryParams.title" placeholder="请输入标题名称" size="small"  clearable class = 'roleInput'/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
             <el-form-item label="反馈状态" prop="replyStatus">
-              <el-select
-                v-model="queryParams.replyStatus"
-                placeholder="请选择反馈状态"
-                clearable
-                size="small"
-                class="roleInput"
-               
-              >
-                <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                />
+              <el-select v-model="queryParams.replyStatus" placeholder="请选择反馈状态"  clearable size="small" class="roleInput">
+                <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
               </el-select>
             </el-form-item>
         </el-col>
         <el-col :span="6">
-            <el-form-item style="width:'220px'">
+            <el-form-item style="width:220px">
                 <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
         </el-col>
-       </el-row>
-    </el-form>
+      </el-form>
+    </el-row>
         
-        <el-table
-            v-loading="loading"
-            :data="menuList"
-            row-key="id"
-            >
+        <el-table  v-loading="loading" :data="menuList" row-key="id"  >
             <el-table-column label="反馈人" align="center" prop="userName" width="100">
                 <template slot-scope="scope">
                   <span>{{ scope.row.userName }}</span>
@@ -83,45 +61,53 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
-                   <el-button
-                      size="mini"
-                      type="text"
-                    @click = 'handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
+                   <el-button size="mini"  type="text" @click = 'handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
                 </template>
         </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"  />
     <!-- 点击查看  弹出的模态框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" 
-      :close-on-press-escape="false"
-      :close-on-click-modal="false"
-    append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false"  append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-       
         <el-row>
-           <el-col :span="22">
+           <el-col :span="12">
+            <el-form-item label="标题" prop="title">
+              <el-input   :disabled="true" v-model="showFrom.title"/>
+            </el-form-item>
+          </el-col>
+
+           <el-col :span="12">
             <el-form-item label="反馈人"  prop="userName">
               <el-input   :disabled="true" v-model="showFrom.userName"/>
             </el-form-item>
           </el-col>
-        </el-row>
-      
-        <el-row>
-          <el-col :span="22">
+
+          <el-col :span="12">
+            <el-form-item label="反馈部门"  prop="deptName" :show-overflow-tooltip='true'>
+               <el-input   :disabled="true" v-model="showFrom.deptName"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+              <el-form-item label="反馈时间"  prop="createTime">
+                <el-input   :disabled="true" v-model="showFrom.createTime"/>
+              </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
             <el-form-item label="联系方式"  prop="contactPhone">
                 <el-input  :disabled="true" v-model="showFrom.contactPhone"/>
             </el-form-item>
           </el-col>
-        </el-row>
+        
+          <el-col :span="12">
+            <el-form-item label="身份证号"  prop="identityNum">
+                <el-input  :disabled="true" v-model="showFrom.identityNum"/>
+            </el-form-item>
+          </el-col>
         <!-- <el-row>
-          <el-col :span="22">
+          <el-col :span="10">
               <el-table-column label="创建时间" align="center" prop="contactPhone">
               <template slot-scope="scope">
                 <span>{{scope.row.contactPhone }}</span>
@@ -129,58 +115,23 @@
             </el-table-column>
             </el-col>
         </el-row> -->
-        <el-row>
-          <el-col :span="22">
-            <el-form-item label="身份证号"  prop="identityNum">
-                <el-input  :disabled="true" v-model="showFrom.identityNum"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="22">
-            <el-form-item label="部门名称"  prop="deptName" :show-overflow-tooltip='true'>
-               <el-input   :disabled="true" v-model="showFrom.deptName"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-          <el-row>
-            <el-col :span="22">
-              <el-form-item label="反馈时间"  prop="createTime">
-                <el-input   :disabled="true" v-model="showFrom.createTime"/>
-              </el-form-item>
-            </el-col>
-        </el-row>
-         <el-row>
-          <el-col :span="22">
-            <el-form-item label="标题" prop="title">
-              <el-input   :disabled="true" v-model="showFrom.title"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="22">
+          <el-col :span="24">
             <el-form-item label="内容" prop="content">
-               <el-input   :disabled="true" type="textarea" v-model="showFrom.content" rows='6'/>
+               <el-input   :disabled="true" type="textarea" v-model="showFrom.content" rows= 3 />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row  v-if="showFrom.replyStatus == '0'&&'1'">
-          <el-col :span="22">
+          <el-col :span="24">
             <el-form-item label="反馈回复"  prop="replyContent">
-              <el-input  type="textarea" :disabled="true" v-model="showFrom.replyContent"/>
+              <el-input  type="textarea" :disabled="true" v-model="showFrom.replyContent" rows= 3 />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row v-if="showFrom.replyStatus == '1' ">
-          <el-col :span="22">
+          <el-col :span="24">
             <el-form-item label="反馈回复"  prop="replyContent">
-                <el-input
-                    type="textarea"
-                    placeholder="请输入反馈回复内容"
-                    v-model="showFrom.replyContent"
-                    rows='6'
-                    >
-                </el-input>
+                <el-input type="textarea" placeholder="请输入反馈回复内容" v-model="showFrom.replyContent" rows= 3  maxlength = 300></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -243,23 +194,19 @@ export default {
       // 表单校验
       rules: {
         menuName: [
-          { required: true, message: "菜单名称不能为空", trigger: "blur" }
+          { required: true, message: "菜单名称不能为空", trigger:[ 'blur', 'change'] }
         ],
         sortNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
+          { required: true, message: "菜单顺序不能为空", trigger:[ 'blur', 'change'] }
         ],
         path: [
-          { required: true, message: "路由地址不能为空", trigger: "blur" }
-        ],
-        replyContent:[
-            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
+          { required: true, message: "路由地址不能为空", trigger:[ 'blur', 'change'] }
         ]
-      ,id:''
-
-      }
       
-    }
-  },
+      },
+      id:''
+      }
+    },
     created() {
         this.getList();
     },
@@ -344,3 +291,7 @@ export default {
     }
 
 </style>
+<style>
+.el-tooltip__popper{font-size: 14px; max-width:20%;word-wrap:break-word;}
+</style>
+

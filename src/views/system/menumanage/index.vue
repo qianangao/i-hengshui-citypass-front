@@ -2,16 +2,19 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm"  v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="菜单名称" prop="menuName">
-            <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable size="small" class = 'roleInput'/>
+            <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable size="small" class='menuInput'/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="请选择菜单状态" clearable size="small" class='roleInput'>
-              <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel"  :value="dict.dictValue" class = 'roleInput'/>
+            <el-select v-model="queryParams.status" placeholder="请选择菜单状态" clearable size="small" class='menuInput'>
+              <el-option v-for="dict in statusOptions" 
+                :key="dict.dictValue" 
+                :label="dict.dictLabel"
+                :value="dict.dictValue"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -32,22 +35,22 @@
     </el-row>
     <!-- table 展示 -->
     <el-table v-loading="loading" :data="menuList" row-key="menuId" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-      <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" class = 'menuName'></el-table-column>
-      <el-table-column prop="icon" label="图标" align="center" class="icon">
+      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true" class="menuName" align="center"></el-table-column>
+      <el-table-column prop="icon" label="图标" align="center" class="menuIcon">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" class="orderNum"></el-table-column>
-      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" class="status"></el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column prop="orderNum" label="排序" class="orderNum" align="center"></el-table-column>
+      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" align="center" ></el-table-column>
+      <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" class="menuPerms" align="center" ></el-table-column>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" class="status" align="center"></el-table-column>
+      <!-- <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="optaion" width="160px">
+      </el-table-column> -->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="menuOptaion" width="160px">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-plus"  @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']">新增</el-button>
@@ -57,8 +60,8 @@
     </el-table>
     <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px"  :close-on-press-escape="false"  :close-on-click-modal="false"  append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
+      <el-row>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="24">
             <el-form-item label="上级菜单">
               <treeselect v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" :show-count="true" placeholder="选择上级菜单" />
@@ -95,16 +98,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item v-if="form.menuType != 'F'" label="路由地址" prop="path">
+              <el-input v-model="form.path" placeholder="请输入路由地址" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item v-if="form.menuType != 'F'" label="是否外链">
               <el-radio-group v-model="form.isFrame">
                 <el-radio label="0">是</el-radio>
                 <el-radio label="1">否</el-radio>
               </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" label="路由地址" prop="path">
-              <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menuType == 'C'">
@@ -139,8 +142,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row>
-      </el-form>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -187,13 +190,13 @@ export default {
       // 表单校验
       rules: {
         menuName: [
-          { required: true, message: "菜单名称不能为空", trigger: "blur" }
+          { required: true, message: "菜单名称不能为空", trigger:[ 'blur', 'change']}
         ],
         orderNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
+          { required: true, message: "菜单顺序不能为空", trigger:[ 'blur', 'change']}
         ],
         path: [
-          { required: true, message: "路由地址不能为空", trigger: "blur" }
+          { required: true, message: "路由地址不能为空", trigger:[ 'blur', 'change']}
         ]
       }
     };
@@ -347,39 +350,37 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-      .roleInput{
-        width: 70%;
-      }
-
-      .menuName{
-        width: 160px;
-      }
-      .icon {
-        width: 100px;
-      }
-      .orderNum {
-        width: 60px;
-      }
-      .status {
-         width: 80px;
-      }
-
-      .addTitle {
-        width: 600px;
-        .bootomStart {
-          width: 460px;
-        }
-        .el-input__icon{
-          width: 16px;
-          height: 32px;
-        }
-      }
-      .cell{
-        width: 200px;
-      }
-      .optaion{
-        width: 200px;
-      }
+<style scoped>
+  .menuInput{
+    width: 70%;
+  }
+  .menuIcon {
+    width: 100px;
+  }
+  .orderNum {
+    width: 60px;
+  }
+  .status {
+      width: 200px;
+  }
+  .addTitle {
+    width: 600px;
+  }
+  .bootomStart {
+    width: 460px;
+  }
+  .cell{
+    width: 200px;
+  }
+  .menuOptaion{
+    width: 200px;
+  }
+  .menuPerms{
+    width: 250px;
+  }
+  .el-input__icon{
+    width: 16px;
+    height: 32px;
+  }
 
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <!-- 用户查询条件 -->
-     <el-row>
-        <el-form :inline="false" :model="queryParams" ref="queryForm">
+     <el-row  class="el-center" :gutter="15">
+        <el-form  :model="queryParams" ref="queryForm">
           <el-col :span="6">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" size="small" clearable class="roleInput" />
+              <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" size="small" clearable class="menuInput" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -15,26 +15,23 @@
             </el-form-item>
           </el-col>
         </el-form>
-      </el-row>
-    
+     </el-row>  
     <!-- 其他操作 -->
     <el-row :gutter="8" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary"  icon="el-icon-plus" size="mini" @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']">新增菜单</el-button>
       </el-col>
-      <!-- <right-toolbar :showSearch.sync="showSearch"></right-toolbar> -->
     </el-row>
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true" class="menuName" ></el-table-column>
-       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"   class="menuName" ></el-table-column>
-      <el-table-column prop="sortNum" label="排序" class="orderNum" width="100px"  >
+      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true" class="menuName" align="center"></el-table-column>
+       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"   class="menuName" align="center"></el-table-column>
+      <el-table-column prop="sortNum" label="排序" class="orderNum" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.sortNum }}</span>
         </template>
       </el-table-column>
-     
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column label="创建时间" align="center" prop="createTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -71,7 +68,7 @@
           <el-col :span="22">
             <el-form-item label="菜单Code" prop="menuCode">
               <el-select v-model="form.menuCode" placeholder="请选择菜单Code" style="100%">
-                  <el-option v-for="dict in appMenuCode"  :key="dict.dictValue"  :label="dict.dictValue"  :value="dict.dictValue"   />
+                  <el-option v-for="dict in appMenuCode"  :key="dict.dictValue"  :label="dict.dictValue"  :value="dict.dictValue"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -83,26 +80,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
-        <!-- <el-row>
-            <el-col :span="24">
-              <el-form-item label="应用图标">
-                <el-upload
-                    class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :on-preview="handlePreview"
-                    multiple
-                    :limit="1"
-                    :on-exceed="handleExceed"
-                    accept="image/jpeg, image/jpg, image/png, image/pdf"
-                    :before-upload="uploadMenuImg"
-                    >
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <span slot="tip" class="el-upload__tip" style="margin-left: 10px">只能上传jpg/png文件，且不超过10Mb</span>
-                </el-upload>
-              </el-form-item>
-            </el-col>
-        </el-row> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -112,7 +89,7 @@
 
     <!-- 添加或修改三级菜单菜单对话框 -->
     <el-dialog :title="title" :visible.sync="addOpen" width="600px"   height="600px" :close-on-press-escape="false" :close-on-click-modal="false" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
+      <el-form ref="form" :model="form" :rules="rulesThird" label-width="130px">
         <el-row>
           <el-col :span="22">
             <el-form-item label="菜单名称" prop="menuName">
@@ -127,21 +104,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row>
+         <el-row>
           <el-col :span="22">
-            <el-form-item label="菜单Code" prop="menuCode">
-              
-               <el-select v-model="value" placeholder="请选择菜单Code">
-                 <el-option
-                  v-for="dict in appMenuCode"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  :value="dict.dictValue"
-                />
-                </el-select>
+            <el-form-item label="应用简介" prop="content">
+              <el-input type="textarea"   placeholder="请输入内容"  v-model="form.content" rows= 3  maxlength = 300></el-input>
             </el-form-item>
           </el-col>
-        </el-row> -->
+        </el-row>
         <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon">
@@ -168,13 +137,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-         <el-row>
-          <el-col :span="22">
-            <el-form-item label="应用简介" prop="content">
-              <el-input type="textarea"  autosize placeholder="请输入内容"  v-model="form.content"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -184,94 +147,12 @@
   </div>
 </template>
 
-        <!-- <el-row>
-          <el-col :span="22">
-            <el-form-item label="授权回调地址" prop="callbackUrl">
-              <el-input
-                v-model="form.callbackUrl"
-                placeholder="请输入授权回调地址"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系人姓名" prop="linkman">
-              <el-input v-model="form.linkman" placeholder="请输入联系人姓名" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系方式" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系方式" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="版本号" prop="version">
-              <el-input v-model="form.version" placeholder="请输入版本号" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="22">
-            <el-form-item label="是否热门"  prop="ifHot">
-                <el-radio v-model="form.ifHot" label="0">是</el-radio>
-                <el-radio v-model="form.ifHot" label="1">否</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="机构名称" prop="orgName">
-              <el-input v-model="form.orgName" placeholder="请输入机构名称" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="应用ID" prop="appId">
-              <el-input v-model="form.appId" placeholder="请输入应用ID" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="AppKey" prop="appKey">
-              <el-input v-model="form.appKey" placeholder="请输入AppKey" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item label="App secret" prop="appSecret">
-              <el-input v-model="form.appSecret" placeholder="请输入App secret" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-
-
 <script>
-import {
-  listTable,
-  listMenu,
-  addMenu,
-  getMenu,
-  updataMenu,
-  changeMenuStatus,
-  uploadImg,
-} from "@/api/app/menuinfo";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import IconSelect from "@/components/IconSelect";
-import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
+import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
 
 const baseUrl = "http://10.92.119.10/";
 export default {
   name: "Menu",
-  components: { Treeselect, IconSelect },
   data() {
     return {
       // 遮罩层
@@ -300,42 +181,30 @@ export default {
       fileList: [],
       form: {},
       // 表单校验
-      rules: {
+      rulesThird: {
         menuName: [
-          { required: true, message: "菜单名称不能为空", trigger: "blur" },
-        ],
-        sortNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" },
-        ],
-        path: [
-          { required: true, message: "路由地址不能为空", trigger: "blur" },
-        ],
-        menuCode: [
-          { required: true, message: "菜单Code不能为空", trigger: "blur" },
+          { required: true, message: "菜单名称不能为空", trigger:[ 'blur', 'change'] },
         ],
         inUrl: [
-          { required: true, message: "外链地址不能为空", trigger: "blur" },
-        ],
-        callbackUrl: [
-          { required: true, message: "授权回调篇不能为空", trigger: "blur" },
-        ],
-        linkman: [
-          { required: true, message: "联系人姓名不能为空", trigger: "blur" },
+          { required: true, message: "外链地址不能为空", trigger:[ 'blur', 'change'] },
         ],
         icon: [
-          { required: true, message: "icon不能为空", trigger: "blur" },
-        ],
-        phone: [
-          { required: true, message: "联系方式不能为空", trigger: "blur" },
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur",
-          },
+          { required: true, message: "icon不能为空", trigger:[ 'blur', 'change'] },
         ],
          content:[
-            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger: "blur" }
+            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger:[ 'blur', 'change'] }
         ]
+      },
+      rules: {
+        menuName: [
+          { required: true, message: "菜单名称不能为空", trigger:[ 'blur', 'change'] },
+        ],
+        sortNum: [
+          { required: true, message: "菜单顺序不能为空", trigger:[ 'blur', 'change'] },
+        ],
+        menuCode: [
+          { required: true, message: "菜单Code不能为空", trigger:[ 'blur', 'change'] },
+        ],
       },
       supportPicFormat: ["jpg", "png", "gif", "JPEG"],
       imageUrl: "",
@@ -367,7 +236,6 @@ export default {
         menuName: undefined,
         sortNum: '',
         icon: null,
-        menuType: "M",
         status: "0",
         level: undefined,
         ifHot: "1",
@@ -404,17 +272,14 @@ export default {
           cancelButtonText: "取消",
           type: "warning",
         }
-      )
-        .then(function () {
-          const status =  row.status === "0" ? "1" : "0";
-          return changeMenuStatus(row.id, status);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess(text + "成功");
-        })
-        .catch( ()=> {
-        });
+      ).then(function () {
+        const status =  row.status === "0" ? "1" : "0";
+        return changeMenuStatus(row.id, status);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess(text + "成功");
+      }).catch( ()=> {
+      });
     },
     /** 查询按钮操作 */
     handleQuery() {
@@ -428,7 +293,6 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row, level) {
       this.reset();
-      // this.getTreeselect();
       getMenu(row.id).then((response) => {
         this.form = response.data;
         if(this.form.icon != null) {
@@ -502,22 +366,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.app-container {
-  .roleInput {
-    width: 220px;
-  }
-  .el-dialog {
-    overflow-x: auto;
-    .el-upload__tip {
-      display: inline-block;
-    }
-  }
-}
-</style>
 <style>
+.menuInput {
+  width: 70%;
+}
+.el-dialog {
+  overflow-x: auto;
+}
+.el-upload__tip {
+  display: inline-block;
+}
 .menu-uploader .el-upload {
-  border: 1px dashed rgba(0, 0, 0, 0.5);
+  border: 1px dashed rgba(0, 0, 0, 0.3);
   border-radius: 6px;
   cursor: pointer;
   position: relative;
@@ -539,10 +399,10 @@ export default {
   height: 130px;
   display: block;
 }
-  .el-select{
-    width: 100%;
-  }
-  .el-input-number--medium{
-    width: 100%;
-  }
+.el-select{
+  width: 100%;
+}
+.el-input-number--medium{
+  width: 100%;
+}
 </style>

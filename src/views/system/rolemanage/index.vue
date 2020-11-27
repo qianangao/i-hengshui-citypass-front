@@ -43,23 +43,23 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:role:remove']">批量删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['system:role:export']">导出</el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
     <!-- table 展示 -->
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="角色编号" prop="roleId" align="center"/>
-      <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true"/>
-      <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true"/>
-      <el-table-column label="显示顺序" prop="roleSort" align="center"/>
+      <el-table-column label="角色编号" prop="roleId" align="center" width="100"/>
+      <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
+      <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
+      <!-- <el-table-column label="显示顺序" prop="roleSort" align="center"/> -->
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="240">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -120,7 +120,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" rows= 3 maxlength = 200 ></el-input>
             </el-form-item>
             </el-col>
         </el-row>
@@ -190,27 +190,19 @@ export default {
       // 表单校验
       rules: {
         roleName: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" }
+          { required: true, message: "角色名称不能为空", trigger:[ 'blur', 'change'] }
         ],
         roleKey: [
-          { required: true, message: "权限字符不能为空", trigger: "blur" },
-         {
-            pattern: /^[a-zA-Z0-9_]{4,15}$/,
-            message: "仅支持字母,数字,下划线,长度4~15",
-            trigger: ["blur", "change"],
-          }
+          { required: true, message: "权限字符不能为空", trigger:[ 'blur', 'change'] },
+          { pattern: /^[a-zA-Z0-9_]{4,15}$/, message: "仅支持字母,数字,下划线,长度4~15",trigger: ["blur", "change"] }
         ],
         roleSort: [
-          { required: true, message: "角色顺序不能为空", trigger: "blur" }
+          { required: true, message: "角色顺序不能为空", trigger:[ 'blur', 'change'] }
         ]
       },
       keyCodeRules: {
         roleKey: [
-         {
-            pattern:  /^[a-zA-Z0-9_]{1,}$/,
-            message: "仅字母,数字,下划线",
-            trigger: ["blur", "change"],
-          }
+         { pattern:  /^[a-zA-Z0-9_]{1,}$/,message: "仅字母,数字,下划线",trigger:[ 'blur', 'change'] }
         ]
       }
     };
@@ -300,7 +292,7 @@ export default {
         roleId: undefined,
         roleName: undefined,
         roleKey: undefined,
-        roleSort: 0,
+        // roleSort: 0,
         status: "0",
         menuIds: [],
         deptIds: [],
@@ -429,11 +421,11 @@ export default {
         })
     },
     /** 导出按钮操作 */
-    handleExport() {
-      this.download('system/role/export', {
-        ...this.queryParams
-      }, `role_${new Date().getTime()}.xlsx`)
-    }
+    // handleExport() {
+    //   this.download('system/role/export', {
+    //     ...this.queryParams
+    //   }, `role_${new Date().getTime()}.xlsx`)
+    // }
   }
 };
 </script>
