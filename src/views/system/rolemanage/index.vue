@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :rules="keyCodeRules" v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="角色名称" prop="roleName">
             <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small"/>
@@ -10,23 +10,20 @@
         </el-col>
         <el-col :span="6">
             <el-form-item label="权限字符" prop="roleKey">
-              <el-select v-model="queryParams.roleKey" placeholder="请选择权限字符" class="roleInput" clearable>
+              <el-input class="roleInput" v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable size="small"/>
+              <!-- <el-select v-model="queryParams.roleKey" placeholder="请选择权限字符" class="roleInput" clearable>
                 <el-option
                   v-for="dict in permissionType"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
                   :value="dict.dictValue"/>
-              </el-select>
+              </el-select> -->
             </el-form-item>
         </el-col>
         <el-col :span="6">
             <el-form-item label="状态" prop="status">
               <el-select v-model="queryParams.status" placeholder="请选择角色状态" clearable size="small" class="roleInput">
-                <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"/>
+                <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
               </el-select>
             </el-form-item>
         </el-col>
@@ -59,12 +56,7 @@
       <el-table-column label="显示顺序" prop="roleSort" align="center"/>
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-          ></el-switch>
+          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime">
@@ -95,12 +87,14 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="权限字符" prop="roleKey">
-              <el-select v-model="form.roleKey" placeholder="请选择权限字符">
+              <el-input class="roleInput" v-model="form.roleKey" placeholder="请输入权限字符" clearable />
+
+              <!-- <el-select v-model="form.roleKey" placeholder="请选择权限字符">
                   <el-option v-for="dict in permissionType"
                     :key="dict.dictValue"
                     :label="dict.dictValue"
                     :value="dict.dictValue"/>
-              </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -110,16 +104,7 @@
               <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
               <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
               <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
-              <el-tree
-                class="treeBorder"
-                :data="menuOptions"
-                show-checkbox
-                ref="menu"
-                node-key="id"
-                :check-strictly="!form.menuCheckStrictly"
-                empty-text="加载中，请稍后"
-                :props="defaultProps">
-              </el-tree>
+              <el-tree class="treeBorder" :data="menuOptions" show-checkbox ref="menu" node-key="id" :check-strictly="!form.menuCheckStrictly" empty-text="加载中，请稍后" :props="defaultProps"></el-tree>
             </el-form-item>
           </el-col>
         </el-row>
@@ -127,11 +112,7 @@
           <el-col :span="22">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue">
-                  {{dict.dictLabel}}
-                </el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -200,7 +181,8 @@ export default {
       // 权限字符数据字典
       permissionType: [],
       // 表单参数
-      form: {},
+      form: {
+      },
       defaultProps: {
         children: "children",
         label: "label"
@@ -211,10 +193,24 @@ export default {
           { required: true, message: "角色名称不能为空", trigger: "blur" }
         ],
         roleKey: [
-          { required: true, message: "权限字符不能为空", trigger: "blur" }
+          { required: true, message: "权限字符不能为空", trigger: "blur" },
+         {
+            pattern: /^[a-zA-Z0-9_]{4,15}$/,
+            message: "仅支持字母,数字,下划线,长度4~15",
+            trigger: ["blur", "change"],
+          }
         ],
         roleSort: [
           { required: true, message: "角色顺序不能为空", trigger: "blur" }
+        ]
+      },
+      keyCodeRules: {
+        roleKey: [
+         {
+            pattern:  /^[a-zA-Z0-9_]{1,}$/,
+            message: "仅字母,数字,下划线",
+            trigger: ["blur", "change"],
+          }
         ]
       }
     };
@@ -227,9 +223,9 @@ export default {
       this.statusOptions = response.data;
     });
     // 权限字符数据字典
-    this.getDicts("sys_permission_type").then(response => {
-      this.permissionType = response.data;
-    }).catch( ()=>{})
+    // this.getDicts("sys_permission_type").then(response => {
+    //   this.permissionType = response.data;
+    // }).catch( ()=>{})
   },
   methods: {
     /** 查询角色列表 */
@@ -370,6 +366,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      console.log("row.roleId",row.roleId);
       const roleId = row.roleId || this.ids
       const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {
