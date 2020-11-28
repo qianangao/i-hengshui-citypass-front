@@ -17,16 +17,16 @@
         </el-form>
      </el-row>  
     <!-- 其他操作 -->
-    <el-row :gutter="8" class="mb8">
+    <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary"  icon="el-icon-plus" size="mini" @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']">新增菜单</el-button>
       </el-col>
     </el-row>
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true" class="menuName" align="center"></el-table-column>
-       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"   class="menuName" align="center"></el-table-column>
-      <el-table-column prop="sortNum" label="排序" class="orderNum" width="100px" align="center">
+      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  align="center"></el-table-column>
+       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.sortNum }}</span>
         </template>
@@ -187,6 +187,12 @@ export default {
         ],
         inUrl: [
           { required: true, message: "外链地址不能为空", trigger:[ 'blur', 'change'] },
+          {
+            pattern: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&‘\*\+,;=.]+$/,
+            message: "请输入正确的网址(以http://'或者'https://'格式开头)",
+            trigger: ["blur", "change"]
+          }
+
         ],
         icon: [
           { required: true, message: "icon不能为空", trigger:[ 'blur', 'change'] },
@@ -318,7 +324,6 @@ export default {
               this.addOpen = false;
               this.getList();
             });
-          } else {
             addMenu(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
@@ -360,7 +365,7 @@ export default {
         this.form.icon =  res.data;
         }
         this.loading = false;
-      })  
+      }).catch(()=>{}) 
     }
   }
 }
@@ -404,5 +409,8 @@ export default {
 }
 .el-input-number--medium{
   width: 100%;
+}
+.sortNum{
+  width: 100px;
 }
 </style>
