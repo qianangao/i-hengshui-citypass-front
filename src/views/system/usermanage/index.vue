@@ -66,11 +66,6 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="创建时间" align="center" prop="createTime" width="160">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">修改</el-button>
@@ -119,11 +114,11 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="归属部门">
-              <el-select class="inputContent" v-model="form.deptName" placeholder="请选择部门">
+              <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
                 <el-option v-for="item in deptOption"
                   :key="item.deptId"
                   :label="item.deptName"
-                  :value="item.deptName"></el-option>
+                  :value="item.deptId"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -336,8 +331,7 @@ export default {
         sex: undefined,
         status: "0",
         remark: undefined,
-        roleId: undefined,
-        deptName: undefined,
+        roleId: undefined
       };
       this.resetForm("form");
     },

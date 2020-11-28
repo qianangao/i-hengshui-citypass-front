@@ -38,7 +38,7 @@ export function updateDept(data) {
 // 删除部门
 export function delDept(deptId) {
   return request({
-    url: '/system//sys/app/dept/' + deptId,
+    url: '/system/sys/app/dept/' + deptId,
     method: 'delete'
   })
 }
