@@ -5,7 +5,7 @@
         <el-form  :model="queryParams" ref="queryForm">
           <el-col :span="6">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" size="small" clearable class="menuInput" />
+              <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable size="small" class="menuInput" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -19,18 +19,19 @@
     <!-- 其他操作 -->
     <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary"  icon="el-icon-plus" size="mini" @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']">新增菜单</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']">新增菜单</el-button>
       </el-col>
     </el-row>
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  align="center"></el-table-column>
-       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
-      <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sortNum }}</span>
+      <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="ifHome" label="是否首页" align="center">
+          <template slot-scope="scope">
+          <span>{{ scope.row.ifHome === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -86,7 +87,6 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
     <!-- 添加或修改三级菜单菜单对话框 -->
     <el-dialog :title="title" :visible.sync="addOpen" width="600px"   height="600px" :close-on-press-escape="false" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rulesThird" label-width="130px">
@@ -137,7 +137,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -324,7 +323,8 @@ export default {
               this.addOpen = false;
               this.getList();
             });
-            addMenu(this.form).then((response) => {
+          }else{
+              addMenu(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.addOpen = false;
