@@ -23,7 +23,11 @@
         <el-col :span="6">
             <el-form-item label="状态" prop="status">
               <el-select v-model="queryParams.status" placeholder="请选择角色状态" clearable size="small" class="roleInput">
-                <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
+                <el-option v-for="dict in statusOptions" 
+                :key="dict.dictValue" 
+                :label="dict.dictLabel" 
+                :value="dict.dictValue"
+                />
               </el-select>
             </el-form-item>
         </el-col>
@@ -36,16 +40,13 @@
       </el-form>
     </el-row>
     <!-- 其他操作 -->
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:role:remove']">批量删除</el-button>
       </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button type="warning" icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['system:role:export']">导出</el-button>
-      </el-col> -->
     </el-row>
     <!-- table 展示 -->
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
@@ -54,12 +55,12 @@
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
       <!-- <el-table-column label="显示顺序" prop="roleSort" align="center"/> -->
-      <el-table-column label="状态" align="center" width="100">
+      <el-table-column label="状态" align="center" >
         <template slot-scope="scope">
           <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="240">
+      <el-table-column label="创建时间" align="center" prop="createTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -75,7 +76,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
 
     <!-- 添加或修改角色配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="22">
@@ -87,14 +88,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="权限字符" prop="roleKey">
-              <el-input class="roleInput" v-model="form.roleKey" placeholder="请输入权限字符" clearable />
-
-              <!-- <el-select v-model="form.roleKey" placeholder="请选择权限字符">
-                  <el-option v-for="dict in permissionType"
-                    :key="dict.dictValue"
-                    :label="dict.dictValue"
-                    :value="dict.dictValue"/>
-              </el-select> -->
+              <el-input class="roleKeyInput" v-model="form.roleKey" placeholder="请输入权限字符" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -136,7 +130,6 @@
 <script>
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/rolemanage";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
-import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
 
 export default {
   name: "Role",
@@ -214,10 +207,6 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
-    // 权限字符数据字典
-    // this.getDicts("sys_permission_type").then(response => {
-    //   this.permissionType = response.data;
-    // }).catch( ()=>{})
   },
   methods: {
     /** 查询角色列表 */
@@ -382,7 +371,7 @@ export default {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
-            });
+            })
           } else {
             this.form.menuIds = this.getMenuAllCheckedKeys();
             addRole(this.form).then(response => {
@@ -392,7 +381,7 @@ export default {
             });
           }
         }
-      });
+      })
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
@@ -402,7 +391,7 @@ export default {
           this.msgSuccess("修改成功");
           this.openDataScope = false;
           this.getList();
-        });
+        }).catch(()=>{})
       }
     },
     /** 删除按钮操作 */
@@ -419,13 +408,7 @@ export default {
           this.msgSuccess("删除成功");
         }).catch ( () =>{
         })
-    },
-    /** 导出按钮操作 */
-    // handleExport() {
-    //   this.download('system/role/export', {
-    //     ...this.queryParams
-    //   }, `role_${new Date().getTime()}.xlsx`)
-    // }
+    }
   }
 };
 </script>
@@ -445,6 +428,9 @@ export default {
     width: 100%;
   }
   .el-input-number--medium{
+    width: 100%;
+  }
+  .roleKeyInput{
     width: 100%;
   }
 </style>

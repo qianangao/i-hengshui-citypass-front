@@ -1,16 +1,20 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row class="el-center" :gutter="15">
       <el-form  :model="queryParams" ref="queryForm">
         <el-col :span="6">
           <el-form-item label="标题" prop="title">
-            <el-input v-model="queryParams.title" placeholder="请输入标题名称" size="small"  clearable class = 'roleInput'/>
+            <el-input v-model="queryParams.title" placeholder="请输入标题名称" size="small"  clearable class = 'feedInput'/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
             <el-form-item label="反馈状态" prop="replyStatus">
-              <el-select v-model="queryParams.replyStatus" placeholder="请选择反馈状态"  clearable size="small" class="roleInput">
-                <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+              <el-select v-model="queryParams.replyStatus" placeholder="请选择反馈状态"  clearable size="small" class="feedInput">
+                <el-option v-for="dict in statusOptions" 
+                :key="dict.dictValue" 
+                :label="dict.dictLabel" 
+                :value="dict.dictValue" 
+                />
               </el-select>
             </el-form-item>
         </el-col>
@@ -106,15 +110,7 @@
                 <el-input  :disabled="true" v-model="showFrom.identityNum"/>
             </el-form-item>
           </el-col>
-        <!-- <el-row>
-          <el-col :span="10">
-              <el-table-column label="创建时间" align="center" prop="contactPhone">
-              <template slot-scope="scope">
-                <span>{{scope.row.contactPhone }}</span>
-              </template>
-            </el-table-column>
-            </el-col>
-        </el-row> -->
+          
           <el-col :span="24">
             <el-form-item label="内容" prop="content">
                <el-input   :disabled="true" type="textarea" v-model="showFrom.content" rows= 3 />
@@ -275,20 +271,20 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .app-container{
+.app-container{
 
-      .roleInput{
-        width: 220px;
-      }
-      .el-dialog{
-        overflow-x: auto;
+.feedInput{
+width: 70%
+}
+.el-dialog{
+overflow-x: auto;
 
-        .el-upload__tip{
-          display: inline-block;
-          
-        }
-      }
-    }
+.el-upload__tip{
+display: inline-block;
+
+}
+}
+}
 
 </style>
 <style>
