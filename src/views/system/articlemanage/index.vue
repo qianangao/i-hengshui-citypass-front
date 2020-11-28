@@ -1,20 +1,21 @@
 <template>
   <div class="app-container">
     <!-- 搜索框 -->
-    <el-row class="el-center" :gutter="15">
-        <el-form :model="queryParams" ref="queryForm"  :inline="true" v-show="showSearch" >
+     <el-row class="el-center" :gutter="15">
+      <!-- 用户查询条件 -->
+      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
           <el-col :span="6">
-            <el-form-item label="标题查询" prop="articleName">
+            <el-form-item label="文章标题" prop="articleName">
               <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>
-           </el-form-item>
+            </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item>
               <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
-          </el-col>
-        </el-form>
+        </el-col>
+      </el-form>
     </el-row>
     <!-- 新增按钮 -->
     <el-row :gutter="10" class="addBut" >
@@ -23,89 +24,97 @@
       </el-col>
     </el-row>
     <!-- 文章表格数据 -->
-     <el-table class="articlerForm" :data="articleList">
-        <el-table-column label="编号" align="center">
-          <template slot-scope="scope">
-            <span >{{scope.$index+1}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="文章标题" :show-overflow-tooltip="true"  align="center" prop="title" />
-        <el-table-column label="是否是banner" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
-        <el-table-column label="链接 " align="center"  prop="url"   :show-overflow-tooltip="true"/>
-        <el-table-column align="center" label="缩略图" >
-          <template slot-scope="scope">
-            <el-popover placement="right" title="" trigger="hover" >
-              <img style="margin-left: 10px" :src="`http://10.92.119.10/${scope.row.pic}`" class="imgSlotHover" />
-              <img slot="reference" :src="`http://10.92.119.10/${scope.row.pic}`" :alt="scope.row.pic" class="imgSlot" >
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
-        <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
-         <template slot-scope="scope">
-           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
-           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:articlemanage:remove']">删除</el-button>
-           <el-button size="mini" type="text" icon="el-icon-view" v-if="scope.row.url==''" @click="handleLook(scope.row)">查看</el-button>
-         </template>
-        </el-table-column>
-     </el-table>
+    <el-table class="articlerForm" :data="articleList">
+      <el-table-column label="编号" align="center">
+        <template slot-scope="scope">
+          <span >{{scope.$index+1}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="文章标题" :show-overflow-tooltip="true"  align="center" prop="title" />
+      <el-table-column label="是否是banner" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
+      <el-table-column label="链接 " align="center"  prop="url"   :show-overflow-tooltip="true"/>
+      <el-table-column align="center" label="缩略图" >
+        <template slot-scope="scope">
+          <el-popover placement="right" title="" trigger="hover" >
+            <img style="margin-left: 10px" :src="`http://10.92.119.10/${scope.row.pic}`" class="imgSlotHover" />
+            <img slot="reference" :src="`http://10.92.119.10/${scope.row.pic}`" :alt="scope.row.pic" class="imgSlot" >
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
+      <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
+        <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:articlemanage:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-view" v-if="scope.row.url==''" @click="handleLook(scope.row)">查看</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
      <!-- 分页器 -->
      <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
-      <!-- 对话框 -->
-      <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
-        <el-form ref="form" :model="form" :rules="rules" class="dialogForm"  label-width="125px">
-            <el-row>
-              <el-form-item label="文章标题标题" prop="title">
-                <el-input  class="modal" v-model="form.title" :maxlength=100 placeholder="请输入标题"/>
-              </el-form-item>
-            </el-row> 
-            <el-row>
-              <el-form-item label="是否banner" prop="ifBanner">
-                <el-radio-group v-model="form.ifBanner">
-                    <el-radio v-for="dict in dictionaryBanner"
-                     :key="dict.dictSort"
-                     :label="dict.dictSort">{{ dict.dictLabel }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-row>
-            <el-row>
-              <el-form-item label="文章是否为链接" prop="ifLink">
-                <el-radio-group v-model="form.ifLink"  @change="agreeChange">
-                  <el-radio v-for="dict in dictionaryLink"
+    <!-- 对话框 -->
+    <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
+      <el-form ref="form" :model="form" :rules="rules"   label-width="120px">
+          <el-row>
+            <el-col :span="24">
+            <el-form-item label="文章标题标题" prop="title">
+              <el-input  class="modal" v-model="form.title" maxlength="100" placeholder="请输入标题"/>
+            </el-form-item>
+            </el-col>
+          </el-row> 
+          <el-row>
+           <el-col :span="24">
+            <el-form-item label="是否banner" prop="ifBanner">
+              <el-radio-group v-model="form.ifBanner">
+                  <el-radio v-for="dict in dictionaryBanner"
                     :key="dict.dictSort"
                     :label="dict.dictSort">{{ dict.dictLabel }}</el-radio>
-                </el-radio-group>
+              </el-radio-group>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+            <el-form-item label="文章是否为链接" prop="ifLink">
+              <el-radio-group v-model="form.ifLink"  @change="agreeChange">
+                <el-radio v-for="dict in dictionaryLink"
+                  :key="dict.dictSort"
+                  :label="dict.dictSort">{{ dict.dictLabel }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="文章网址链接" prop="url" v-if="form.ifLink === 0">
+                  <el-input class="modal" v-model="form.url" placeholder="请输入链接"/>
               </el-form-item>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <el-form-item label="文章网址链接" prop="url" v-if="form.ifLink === 0">
-                   <el-input class="modal" v-model="form.url" placeholder="请输入链接"/>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-             <el-col>
-              <el-form-item label="图片上传">
-                <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handlePreview" :on-error="handlEerror">
-                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-              </el-form-item>
-             </el-col>
-            </el-row>
-            <el-row v-if="form.ifLink !== 0">
-              <el-form-item label="文章内容">
-                <Editor v-model="form.content"  :min-height="80" />
-              </el-form-item>
-            </el-row>
-        </el-form>
-        <!-- 模态框操作 -->
-        <div slot="footer" class="dialog-footer">
-           <el-button type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
-           <el-button @click="handleCancel">取 消</el-button>
-        </div>
-      </el-dialog>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+            <el-form-item label="图片上传">
+              <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handlePreview" :on-error="handlEerror">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-if="form.ifLink !== 0">
+            <el-col :span="20">
+            <el-form-item label="文章内容">
+              <Editor v-model="form.content"  :min-height="120" />
+            </el-form-item>
+            </el-col>
+          </el-row>
+      </el-form>
+      <!-- 模态框操作 -->
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
+          <el-button @click="handleCancel">取 消</el-button>
+      </div>
+    </el-dialog>
    </div>
 </template>
 
@@ -277,17 +286,26 @@ export default {
      handlePreview(file) {
       this.form.pic =  file.data;
       this.imageUrl =  "http://10.92.119.10/" + file.data;
+      if(file.code==200){
+        this.$message.success("上传成功")
+      }
     },
      handlEerror(){
        this.$message.error("上传失败");
      },
       beforeAvatarUpload(file) {
+        // 图片上传限制
+        const isPNG = file.type === 'image/png'||file.type === 'image/jpeg'||file.type === 'image/jpg'||file.type === 'image/gif'||file.type === 'image/fpx'||file.type === 'image/bmp'||file.type === 'image/webp';
         const isLt5M = file.size / 1024 / 1024 < 5;
-
+        if (!isPNG) {
+          this.$message.error('只能上传图片格式文件!');
+        }
+        
+  
         if (!isLt5M) {
           this.$message.error('上传5头像图片大小不能超过 5MB!');
         }
-        return  isLt5M;
+        return isPNG||isJPG &&isLt5M;
       },
     // 模态框确认按钮
     oksubmi() {
@@ -413,6 +431,8 @@ img {
   height: 100%;
 }
 .avatar-uploader::v-deep .el-upload{
+      width: 130px;
+  height: 130px;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -425,9 +445,9 @@ img {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 130px;
+    height: 130px;
+    line-height: 130px;
     text-align: center;
   }
   .avatar {
@@ -439,15 +459,15 @@ img {
     margin-left: 20px !important;
   }
   .inputQuery{
-    width: 183px;
+    width: 70%;
   }
   .addBut{
     margin-bottom: 10px;
   }
 
-  .el-tooltip__popper::v-deep .is-dark{
-     max-width: 20% !important;
-     word-wrap: break-word;
-  }
 
+ 
+</style>
+<style>
+.el-tooltip__popper{font-size: 14px; max-width:40%;word-wrap:break-word;}
 </style>
