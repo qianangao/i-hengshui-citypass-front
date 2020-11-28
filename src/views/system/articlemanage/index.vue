@@ -29,7 +29,7 @@
             <span >{{scope.$index+1}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="文章标题"   align="center" prop="title" />
+        <el-table-column label="文章标题" :show-overflow-tooltip="true"  align="center" prop="title" />
         <el-table-column label="是否是banner" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
         <el-table-column label="链接 " align="center"  prop="url"   :show-overflow-tooltip="true"/>
         <el-table-column align="center" label="缩略图" >
@@ -55,8 +55,8 @@
       <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
         <el-form ref="form" :model="form" :rules="rules" class="dialogForm"  label-width="125px">
             <el-row>
-              <el-form-item label="标题" prop="title">
-                <el-input  class="modal" v-model="form.title" placeholder="请输入标题"/>
+              <el-form-item label="文章标题标题" prop="title">
+                <el-input  class="modal" v-model="form.title" :maxlength=100 placeholder="请输入标题"/>
               </el-form-item>
             </el-row> 
             <el-row>
@@ -79,7 +79,7 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="链接" prop="url" v-if="form.ifLink === 0">
+                <el-form-item label="文章网址链接" prop="url" v-if="form.ifLink === 0">
                    <el-input class="modal" v-model="form.url" placeholder="请输入链接"/>
                 </el-form-item>
               </el-col>
@@ -95,7 +95,7 @@
              </el-col>
             </el-row>
             <el-row v-if="form.ifLink !== 0">
-              <el-form-item label="富文本">
+              <el-form-item label="文章内容">
                 <Editor v-model="form.content"  :min-height="80" />
               </el-form-item>
             </el-row>
@@ -129,7 +129,7 @@ export default {
     return {
      rules: {
         title: [
-          { required: true, message: "用户名称不能为空", trigger: "blur" },
+          { required: true, message: "文章标题不能为空", trigger: "blur" },
         ],
         ifBanner:[
           { required: true, message: "是否为轮播不能为空", trigger: "blur" },
@@ -139,6 +139,10 @@ export default {
         ],
         url:[
           { required: true, message: "链接不能为空", trigger: "blur" },
+          { pattern: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&‘\*\+,;=.]+$/,
+            message: "请正确输入以http或https开头的网址",
+            trigger: ["blur", "change"]
+            }
         ],
       },
       // 提交按钮状态
@@ -206,16 +210,6 @@ export default {
        this.form.url="";
     },
     // 表格格式化数据
-    // articleType(row, column){
-    //    let msgType=row.msgType;
-    //    if(msgType==1){
-    //         return "衡水热点"
-    //    }else if(msgType==2){
-    //          return "周边资讯"
-    //    }else{
-    //      return "政策动态"
-    //    }
-    // },
     articleBanner(row, column){
       let ifBanner=row.ifBanner;
       if(ifBanner==0){
@@ -450,4 +444,10 @@ img {
   .addBut{
     margin-bottom: 10px;
   }
+
+  .el-tooltip__popper::v-deep .is-dark{
+     max-width: 20% !important;
+     word-wrap: break-word;
+  }
+
 </style>
