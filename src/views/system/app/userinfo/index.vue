@@ -22,7 +22,7 @@
         <el-table-column label="手机号" align="center" prop="phoneNumber" :show-overflow-tooltip="true"/>
         <el-table-column label="创建时间" align="center" prop="creationTime" :show-overflow-tooltip="true"/>
         <el-table-column label="修改时间" prop="changeTime" align="center"/>
-        <el-table-column label="最近登录时间" align="center" prop="loginTime" width="120" />
+        <el-table-column label="最近登录时间" align="center" prop="loginTime"/>
         <el-table-column label="终端类型" align="center" prop="terminal" />
       </el-table>
   </div>
