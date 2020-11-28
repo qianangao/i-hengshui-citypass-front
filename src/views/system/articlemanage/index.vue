@@ -95,7 +95,7 @@
             <el-col :span="24">
             <el-form-item label="图片上传">
               <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handlePreview" :on-error="handlEerror">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
@@ -185,8 +185,6 @@ export default {
       dictionaryBanner:[],
       // 是否显示弹出层
       open: false,
-      // 总条数
-      total: 1,
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -450,9 +448,9 @@ img {
     line-height: 130px;
     text-align: center;
   }
-  .avatar {
-    width: 178px;
-    height: 178px;
+  .avatarImg {
+    width: 130px;
+    height: 130px;
     display: block;
   }
   .dialogForm::v-deep .el-form-item__content{
