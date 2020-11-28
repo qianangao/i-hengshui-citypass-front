@@ -40,7 +40,6 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt';
-import md5 from "md5";
 
 export default {
   name: "Login",
@@ -110,8 +109,8 @@ export default {
             Cookies.remove("password");
             Cookies.remove('rememberMe');
           }
-          this.loginForm.password = md5(this.loginForm.password);
           this.$store.dispatch("Login", this.loginForm).then(() => {
+            this.loading = false;
             this.$router.push({ path: this.redirect || "/" });
           }).catch(() => {
             this.loading = false;

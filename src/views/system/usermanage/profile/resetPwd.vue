@@ -11,7 +11,6 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" @click="submit">保存</el-button>
-      <el-button type="danger" size="mini" @click="close">关闭</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -29,7 +28,6 @@ export default {
       }
     };
     return {
-      test: "1test",
       user: {
         oldPassword: undefined,
         newPassword: undefined,
@@ -42,11 +40,16 @@ export default {
         ],
         newPassword: [
           { required: true, message: "新密码不能为空", trigger: "blur" },
-          { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          // { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          {
+            pattern: /^.*(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?])\w{6,}/,
+            message: "密码必须包含大小写字母、数字和特殊字符(长度大于6位)",
+            trigger: ["blur", "change"]
+          }
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" },
-          { required: true, validator: equalToPassword, trigger: "blur" }
+          { required: true, validator: equalToPassword, trigger: ["blur","change"] }
         ]
       }
     };
@@ -55,10 +58,10 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-           userPasd(this.user.oldPassword=md5(this.user.oldPassword),this.user.newPassword=md5(this.user.newPassword)).then(
-            response => {
-              this.msgSuccess("修改成功");
-            }
+          userPasd(this.user.oldPassword=this.user.oldPassword,this.user.newPassword=this.user.newPassword).then(response => {
+            this.resetForm("form");
+            this.msgSuccess("修改成功");
+          }
           );
         }
       });
