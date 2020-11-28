@@ -1,7 +1,8 @@
 <template>
   <div>
-    <img v-bind:src="options.img" @click="editCropper()" title="点击上传头像" class="img-circle img-lg" />
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body @opened="modalOpened">
+    <img v-bind:src="options.img" title="暂无头像" class="img-circle img-lg" />
+    <!-- <img v-bind:src="options.img" @click="editCropper()" title="暂无头像" class="img-circle img-lg" /> -->
+    <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body @opened="modalOpened">
       <el-row>
         <el-col :xs="24" :md="12" :style="{height: '350px'}">
           <vue-cropper
@@ -13,8 +14,7 @@
             :autoCropHeight="options.autoCropHeight"
             :fixedBox="options.fixedBox"
             @realTime="realTime"
-            v-if="visible"
-          />
+            v-if="visible"/>
         </el-col>
         <el-col :xs="24" :md="12" :style="{height: '350px'}">
           <div class="avatar-upload-preview">
@@ -48,7 +48,7 @@
           <el-button type="primary" size="small" @click="uploadImg()">提 交</el-button>
         </el-col>
       </el-row>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 

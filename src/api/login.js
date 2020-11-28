@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import md5 from "md5";
 
 const client_id = 'web'
 const client_secret = '123456'
@@ -6,6 +7,7 @@ const scope = 'server'
 
 // 登录方法
 export function login(username, password, code, uuid) {
+  password = md5(password);
   return request({
     url: '/auth/login',
     method: 'post',

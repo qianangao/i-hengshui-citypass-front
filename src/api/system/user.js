@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { praseStrEmpty } from "@/utils/chinaunicom";
+import md5 from "md5";
 
 // 查询用户列表
 export function listUser(query) {
@@ -86,12 +87,11 @@ export function updateUserProfile(data) {
     data: data
   })
 }
-// 更改密码
+// 修改密码
 export function userPasd(originalPassword, newPassword) {
-  const data = {
-    originalPassword,
-    newPassword
-  }
+  originalPassword = md5(originalPassword);
+  newPassword = md5(newPassword);
+  const data = { originalPassword, newPassword };
   return request({
     url: 'system/user/password',
     method: 'put',
