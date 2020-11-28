@@ -56,14 +56,14 @@
     <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
       <el-form ref="form" :model="form" :rules="rules"   label-width="120px">
           <el-row>
-            <el-col >
+            <el-col :span="24">
             <el-form-item label="文章标题标题" prop="title">
               <el-input  class="modal" v-model="form.title" maxlength="100" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
           <el-row>
-           <el-col >
+           <el-col :span="24">
             <el-form-item label="是否banner" prop="ifBanner">
               <el-radio-group v-model="form.ifBanner">
                   <el-radio v-for="dict in dictionaryBanner"
@@ -74,7 +74,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col >
+            <el-col :span="24">
             <el-form-item label="文章是否为链接" prop="ifLink">
               <el-radio-group v-model="form.ifLink"  @change="agreeChange">
                 <el-radio v-for="dict in dictionaryLink"
@@ -85,14 +85,14 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col >
+            <el-col :span="24">
               <el-form-item label="文章网址链接" prop="url" v-if="form.ifLink === 0">
                   <el-input class="modal" v-model="form.url" placeholder="请输入链接"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col >
+            <el-col :span="24">
             <el-form-item label="图片上传">
               <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handlePreview" :on-error="handlEerror">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
