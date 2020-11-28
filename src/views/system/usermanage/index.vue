@@ -2,34 +2,34 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
-          <el-col :span="6">
-            <el-form-item label="用户名称" prop="userName">
-              <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input class="inputQuery" v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="状态" prop="status">
-              <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择用户状态" clearable size="small">
-                <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-            </el-form-item>
-          </el-col>
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+        <el-col :span="6">
+          <el-form-item label="用户名称" prop="userName">
+            <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="手机号码" prop="phonenumber">
+            <el-input class="inputQuery" v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="状态" prop="status">
+            <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择用户状态" clearable size="small">
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
       </el-form>
     </el-row>
     <!-- 其他操作 -->
@@ -54,6 +54,7 @@
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
       <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
+      <el-table-column label="角色权限" align="center" prop="roleName"/>
       <el-table-column label="手机号码" align="center" prop="phonenumber" width="120"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
@@ -65,11 +66,11 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <!-- <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">修改</el-button>
@@ -118,7 +119,6 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="归属部门">
-              <!-- <el-input class="inputContent" v-model="form.deptName" placeholder="请输入归属部门"/> -->
               <el-select class="inputContent" v-model="form.deptName" placeholder="请选择部门">
                 <el-option v-for="item in deptOption"
                   :key="item.deptId"
@@ -232,8 +232,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 部门名称
-      // deptName: undefined,
       // 日期范围
       dateRange: [],
       // 状态数据字典
@@ -375,7 +373,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.page = 1;
+      this.queryParams.pageNum = 1;
       this.getList();
     },
     /** 多选框选中数据 */
@@ -397,6 +395,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.handleReset();
+      this.handleDept();
       const userId = row.userId || this.ids;
       getUser(userId).then((response) => {
         this.form = response.data.userInfo;
