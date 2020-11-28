@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" :rules="keyCodeRules" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
         <el-col :span="6">
           <el-form-item label="角色名称" prop="roleName">
             <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small"/>
@@ -11,13 +11,6 @@
         <el-col :span="6">
             <el-form-item label="权限字符" prop="roleKey">
               <el-input class="roleInput" v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable size="small"/>
-              <!-- <el-select v-model="queryParams.roleKey" placeholder="请选择权限字符" class="roleInput" clearable>
-                <el-option
-                  v-for="dict in permissionType"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  :value="dict.dictValue"/>
-              </el-select> -->
             </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -26,8 +19,7 @@
                 <el-option v-for="dict in statusOptions" 
                 :key="dict.dictValue" 
                 :label="dict.dictLabel" 
-                :value="dict.dictValue"
-                />
+                :value="dict.dictValue"/>
               </el-select>
             </el-form-item>
         </el-col>
@@ -54,7 +46,6 @@
       <el-table-column label="角色编号" prop="roleId" align="center" width="100"/>
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
-      <!-- <el-table-column label="显示顺序" prop="roleSort" align="center"/> -->
       <el-table-column label="状态" align="center" >
         <template slot-scope="scope">
           <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
@@ -187,17 +178,12 @@ export default {
         ],
         roleKey: [
           { required: true, message: "权限字符不能为空", trigger:[ 'blur', 'change'] },
-          { pattern: /^[a-zA-Z0-9_]{4,15}$/, message: "仅支持字母,数字,下划线,长度4~15",trigger: ["blur", "change"] }
+          { pattern: /^[a-zA-Z0-9_]{4,15}$/, message: "仅支持字母,数字或者下划线,长度4~15",trigger: ["blur", "change"] }
         ],
         roleSort: [
           { required: true, message: "角色顺序不能为空", trigger:[ 'blur', 'change'] }
         ]
       },
-      keyCodeRules: {
-        roleKey: [
-         { pattern:  /^[a-zA-Z0-9_]{1,}$/,message: "仅字母,数字,下划线",trigger:[ 'blur', 'change'] }
-        ]
-      }
     };
   },
   created() {
@@ -347,7 +333,6 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      console.log("row.roleId",row.roleId);
       const roleId = row.roleId || this.ids
       const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {

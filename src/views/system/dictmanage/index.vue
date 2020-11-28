@@ -1,35 +1,35 @@
 <template>
   <div class="app-container">
-     <el-row class="el-center" :gutter="10">
-         <!-- 用户查询条件 -->
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-col :span="6">
-      <el-form-item label="字典名称" prop="dictName">
-        <el-input class="inputQuery" v-model="queryParams.dictName" placeholder="请输入字典名称" clearable size="small" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      </el-col>
-      <el-col :span="6">
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input class="inputQuery" v-model="queryParams.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      </el-col>
-      <el-col :span="6">
-      <el-form-item label="状态" prop="status">
-        <el-select class="inputQuery" v-model="queryParams.status" placeholder="字典状态" clearable size="small">
-          <el-option v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"/>
-        </el-select>
-      </el-form-item>
-      </el-col>
-      <el-col :span="6">
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-      </el-col>
-    </el-form>
+    <el-row class="el-center" :gutter="10">
+      <!-- 用户查询条件 -->
+      <el-form :model="queryParams" ref="queryForm">
+        <el-col :span="6">
+        <el-form-item label="字典名称" prop="dictName">
+          <el-input class="inputQuery" v-model="queryParams.dictName" placeholder="请输入字典名称" clearable size="small" @keyup.enter.native="handleQuery"/>
+        </el-form-item>
+        </el-col>
+        <el-col :span="6">
+        <el-form-item label="字典类型" prop="dictType">
+          <el-input class="inputQuery" v-model="queryParams.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleQuery" />
+        </el-form-item>
+        </el-col>
+        <el-col :span="6">
+        <el-form-item label="状态" prop="status">
+          <el-select class="inputQuery" v-model="queryParams.status" placeholder="字典状态" clearable size="small">
+            <el-option v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"/>
+          </el-select>
+        </el-form-item>
+        </el-col>
+        <el-col :span="6">
+        <el-form-item>
+          <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+        </el-col>
+      </el-form>
     </el-row>
     <!-- 其他操作 -->
     <el-row :gutter="10" class="mb8">
@@ -92,7 +92,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -150,8 +150,8 @@ export default {
         dictType: [
           { required: true, message: "字典类型不能为空", trigger: "blur" },
           {
-            pattern:/^[a-zA-Z_]{1,}$/,
-            message:"字典类型只能使用字母或_",
+            pattern:/^[a-zA-Z_]{3,}$/,
+            message:"格式为：字母或字母、下划线",
             trigger:["blur","change"]
           }
         ]
@@ -168,7 +168,7 @@ export default {
     /** 查询字典类型列表 */
     getList() {
       this.loading = true;
-      listType(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listType(this.queryParams).then(response => {
           this.typeList = response.rows;
           this.total = response.total;
           this.loading = false;

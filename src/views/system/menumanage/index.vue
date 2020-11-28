@@ -184,7 +184,7 @@ export default {
       queryParams: {
         menuName: undefined,
         visible: undefined,
-        status:''
+        status: undefined
       },
       // 表单参数
       form: {},
@@ -242,7 +242,7 @@ export default {
     getTreeselect() {
       listMenu().then(response => {
         this.menuOptions = [];
-        const menu = { menuId: 0, menuName: '主类目', children: [] };
+        const menu = { menuId: 0, menuName: '菜单目录', children: [] };
         menu.children = this.handleTree(response.data, "menuId");
         this.menuOptions.push(menu);
       });
@@ -335,7 +335,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-        // console.log("-----row",row.menuId);
       this.$confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
