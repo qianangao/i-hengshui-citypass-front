@@ -71,7 +71,7 @@
               <el-select v-model="form.menuCode" placeholder="请选择菜单Code" style="100%">
                   <el-option v-for="dict in appMenuCode" 
                   :key="dict.dictValue" 
-                  :label="dict.dictValue" 
+                  :label="dict.dictLabel" 
                   :value="dict.dictValue" />
               </el-select>
             </el-form-item>

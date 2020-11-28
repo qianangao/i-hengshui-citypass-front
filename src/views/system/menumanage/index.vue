@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm"  v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm">
         <el-col :span="6">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable size="small" class='menuInput'/>
@@ -32,7 +32,6 @@
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:menu:add']">新增</el-button>
       </el-col>
-      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
     <!-- table 展示 -->
     <el-table v-loading="loading" :data="menuList" row-key="menuId" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
@@ -183,7 +182,6 @@ export default {
       // 查询参数
       queryParams: {
         menuName: undefined,
-        visible: undefined,
         status: undefined
       },
       // 表单参数
