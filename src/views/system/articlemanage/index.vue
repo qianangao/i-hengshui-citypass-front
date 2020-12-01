@@ -36,8 +36,8 @@
       <el-table-column align="center" label="缩略图" >
         <template slot-scope="scope">
           <el-popover placement="right" title="" trigger="hover" >
-            <img style="margin-left: 10px" :src="`http://10.92.119.10/${scope.row.pic}`" class="imgSlotHover" />
-            <img slot="reference" :src="`http://10.92.119.10/${scope.row.pic}`" :alt="scope.row.pic" class="imgSlot" >
+            <img style="margin-left: 10px" :src="address+scope.row.pic" class="imgSlotHover" />
+            <img slot="reference" :src="address+scope.row.pic" :alt="scope.row.pic" class="imgSlot" >
           </el-popover>
         </template>
       </el-table-column>
@@ -97,7 +97,7 @@
           </el-row>
           <el-row>
             <el-col :span="22">
-              <el-form-item label="图片上传">
+              <el-form-item label="图片上传" prop="pic">
                 <el-upload class="avatar-uploader" 
                   :action="url" 
                   :headers="headers"
@@ -112,11 +112,11 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="22">
+            <el-col :span="24">
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
                 <!-- <Editor v-model="form.content"  :min-height="160"/> -->
                 <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
-                <UEditor :config="config" ref="ueditor"></UEditor>
+                <UEditor :config="config"   ref="ueditor"></UEditor>
               </el-form-item>
             </el-col>
           </el-row>
@@ -135,7 +135,8 @@
 import { getToken } from "@/utils/auth";
 // 1、引入UEditor组件
 import UEditor from '@/components/Ueditor/ueditor.vue';
-
+// 从全局工具类引入全局地址变量
+import settings from "@/settings.js";
 import {
   listArticle,
   addArticle,
@@ -163,14 +164,19 @@ export default {
         ifLink:[
             { required: true, message: "是否为链接不能为空", trigger: "blur" },
         ],
+         pic:[
+            { required: true, message: "图片为必传项", trigger: "blur" },
+        ],
         url:[
           { required: true, message: "链接不能为空", trigger: "blur" },
-          { pattern: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&‘\*\+,;=.]+$/,
+          { pattern: /^((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?)$/,
             message: "请正确输入以http或https开头的网址",
             trigger: ["blur", "change"]
             }
         ],
       },
+      // 全局地址变量
+       address:settings.address,
       // 提交按钮状态
       submitButton:0,
       // 文件上传
@@ -225,7 +231,7 @@ export default {
           autoHeightEnabled: false,      // 编辑器不自动被内容撑高
           autoFloatEnabled: true,
           initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
-          autoClearinitialContent:true,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+          autoClearinitialContent:false,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
           initialFrameWidth: null,       // 初始容器宽度
           initialFrameHeight: 300,       // 初始容器高度
           UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
@@ -234,6 +240,7 @@ export default {
           // UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : '/static/ueditor/',
           // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
           serverUrl: 'http://35.201.165.105:8000/controller.php',
+          // serverUrl: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
         },
     };
   },
@@ -251,12 +258,14 @@ export default {
     })
   },
   methods: {
-    //获取文档内容
+    //获取富文本文档内容
     getContent(){
       let content = this.$refs.ueditor.getUEContent();
+      this.form.content = content;
       console.log(content);
-      alert(content);
     },
+
+    // 切换是否为链接让输入框为空
     agreeChange(){
        this.form.content="";
        this.form.url="";
@@ -313,6 +322,7 @@ export default {
         msgType: 1,
       };
       this.resetForm("form");
+      
     },
     /** 查询用户列表 */
     getList() {
@@ -328,7 +338,7 @@ export default {
     // 图片上传
      handlePreview(file) {
       this.form.pic =  file.data;
-      this.imageUrl =  "http://10.92.119.10/" + file.data;
+      this.imageUrl =  this.address + file.data;
       if(file.code==200){
         this.$message.success("上传成功")
       }
@@ -364,15 +374,18 @@ export default {
       this.addHandleReset();
       this.open = true;
       this.title = "新增文章";
-       
-     this.submitButton=1;
+      this.config.initialContent="请输入内容";
+      this.config.autoClearinitialContent=true
+      this.submitButton=1;
     },
     // 查看
     handleLook(row){
       this.updataHandleReset();
       this.open = true;
       const id = row.id || this.id;
-         getArticle(id).then((response) => {
+      getArticle(id).then((response) => {
+        this.config.autoClearinitialContent=false;
+        this.config.initialContent=response.data.content;
         this.imageUrl= "http://10.92.119.10/" + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
@@ -380,7 +393,7 @@ export default {
         this.form.msgType = Number(response.data.msgType);
         this.open = true;
         this.title = "查看文章";
-         this.submitButton=0;
+        this.submitButton=0;
       });
     },
     // 修改文章按钮
@@ -389,6 +402,8 @@ export default {
       this.open = true;
       const id = row.id || this.id;
       getArticle(id).then((response) => {
+        this.config.autoClearinitialContent=false;
+        this.config.initialContent=response.data.content;
         this.imageUrl= "http://10.92.119.10/" + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
@@ -396,24 +411,31 @@ export default {
         this.form.msgType = Number(response.data.msgType);
         this.open = true;
         this.title = "修改文章";
-         this.submitButton=1;
+        this.submitButton=1;
       });
     },
     // 模态框确认事件
     oksubmi() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          if(this.form.ifLink!==0){
+              this.getContent()
+          }
+           
           if (this.form.id !== undefined) {
-            updateArticle(this.form).then((response) => {
+           
+              updateArticle(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
+            
             addArticle(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+             
             });
           }
         }
@@ -423,7 +445,7 @@ export default {
     handleDelete(row){
       const userIds = row.id || this.ids;
       this.$confirm(
-        '是否确认删除用户编号为"' + userIds + '"的数据项?',
+        '是否确认删除编号为"' + userIds + '"的文章?',
         "警告",
         {
           confirmButtonText: "确定",
