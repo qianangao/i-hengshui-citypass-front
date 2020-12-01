@@ -9,8 +9,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="手机号码" prop="phonenumber">
-            <el-input class="inputQuery" v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"/>
+          <el-form-item label="手机号码" prop="phone">
+            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入手机号码" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -55,7 +55,7 @@
       <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
       <el-table-column label="角色权限" align="center" prop="roleName"/>
-      <el-table-column label="手机号码" align="center" prop="phonenumber" width="120"/>
+      <el-table-column label="手机号码" align="center" prop="phone" width="120"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
@@ -87,8 +87,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input class="inputContent" v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11"/>
+            <el-form-item label="手机号码" prop="phone">
+              <el-input class="inputContent" v-model="form.phone" placeholder="请输入手机号码" maxlength="11"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -259,7 +259,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userName: undefined,
-        phonenumber: undefined,
+        phone: undefined,
         status: undefined,
         deptId: undefined,
       },
@@ -273,7 +273,7 @@ export default {
             trigger: ["blur", "change"],
           },
         ],
-        phonenumber: [
+        phone: [
           { required: true, message: "手机号码不能为空", trigger: "blur" },
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
@@ -326,7 +326,7 @@ export default {
         deptId: undefined,
         userName: undefined,
         nickName: undefined,
-        phonenumber: undefined,
+        phone: undefined,
         email: undefined,
         sex: undefined,
         status: "0",

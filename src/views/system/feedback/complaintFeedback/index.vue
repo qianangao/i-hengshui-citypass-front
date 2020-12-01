@@ -199,7 +199,7 @@ export default {
       // 查看操作按钮
       handleShow(row){
         this.open = true;
-        this.title = "查看";
+        this.title = row.replyStatus === "0" ?"查看":"回复";
         getFrom(row.id).then(response =>{
           this.showFrom = response.data;
         })
