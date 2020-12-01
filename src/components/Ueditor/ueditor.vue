@@ -19,7 +19,7 @@
       },
       config: {
           type: Object
-      }
+      },
     },
     data() {
       return {
