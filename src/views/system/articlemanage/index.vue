@@ -50,62 +50,74 @@
         </template>
       </el-table-column>
     </el-table>
-     <!-- 分页器 -->
-     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
+    <!-- 分页器 -->
+    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
     <!-- 对话框 -->
-    <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="600px">
+    <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="900px">
       <el-form ref="form" :model="form" :rules="rules"   label-width="120px">
           <el-row>
-            <el-col :span="24">
-            <el-form-item label="文章标题标题" prop="title">
-              <el-input  class="modal" v-model="form.title" maxlength="100" placeholder="请输入标题"/>
+            <el-col :span="22">
+            <el-form-item label="文章标题" prop="title">
+              <el-input v-model="form.title" maxlength="150" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
           <el-row>
-           <el-col :span="24">
+           <el-col :span="22">
             <el-form-item label="是否banner" prop="ifBanner">
               <el-radio-group v-model="form.ifBanner">
                   <el-radio v-for="dict in dictionaryBanner"
                     :key="dict.dictSort"
-                    :label="dict.dictSort">{{ dict.dictLabel }}</el-radio>
+                    :label="dict.dictSort">
+                    {{ dict.dictLabel }}
+                  </el-radio>
               </el-radio-group>
             </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="24">
-            <el-form-item label="文章是否为链接" prop="ifLink">
-              <el-radio-group v-model="form.ifLink"  @change="agreeChange">
-                <el-radio v-for="dict in dictionaryLink"
-                  :key="dict.dictSort"
-                  :label="dict.dictSort">{{ dict.dictLabel }}</el-radio>
+            <el-col :span="22">
+              <el-form-item label="是否为链接" prop="ifLink">
+                <el-radio-group v-model="form.ifLink"  @change="agreeChange">
+                  <el-radio v-for="dict in dictionaryLink"
+                    :key="dict.dictSort"
+                    :label="dict.dictSort">
+                    {{ dict.dictLabel }}
+                  </el-radio>
               </el-radio-group>
             </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="24">
-              <el-form-item label="文章网址链接" prop="url" v-if="form.ifLink === 0">
-                  <el-input class="modal" v-model="form.url" placeholder="请输入链接"/>
+            <el-col :span="22">
+              <el-form-item label="网址链接" prop="url" v-if="form.ifLink === 0">
+                  <el-input v-model="form.url" placeholder="请输入链接"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="24">
-            <el-form-item label="图片上传">
-              <el-upload class="avatar-uploader" :action="url" :headers="headers" :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handlePreview" :on-error="handlEerror">
-                <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-            </el-form-item>
+            <el-col :span="22">
+              <el-form-item label="图片上传">
+                <el-upload class="avatar-uploader" 
+                  :action="url" 
+                  :headers="headers"
+                  :show-file-list="false"
+                  :before-upload="beforeAvatarUpload"
+                  :on-success="handlePreview"
+                  :on-error="handlEerror">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-if="form.ifLink !== 0">
-            <el-col :span="20">
-            <el-form-item label="文章内容">
-              <Editor v-model="form.content"  :min-height="120" />
-            </el-form-item>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="文章内容" v-if="form.ifLink!==0">
+                <!-- <Editor v-model="form.content"  :min-height="160"/> -->
+                <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
+                <UEditor :config="config" ref="ueditor"></UEditor>
+              </el-form-item>
             </el-col>
           </el-row>
       </el-form>
@@ -119,8 +131,11 @@
 </template>
 
 <script>
-import Editor from "@/components/Editor";
+// import Editor from "@/components/Editor";
 import { getToken } from "@/utils/auth";
+// 1、引入UEditor组件
+import UEditor from '@/components/Ueditor/ueditor.vue';
+
 import {
   listArticle,
   addArticle,
@@ -130,8 +145,10 @@ import {
   uploadAvatar,
 } from "@/api/system/article";
 export default {
+  // 2、注册组件
   components: {
-    Editor,
+    // Editor,
+    UEditor,
   },
 
   data() {
@@ -196,6 +213,28 @@ export default {
         pageSize: 10,
         articleName: undefined,
       },
+      // 3、v-model绑定数据 form.content
+      // 4、根据项目需求自行配置,具体配置参见ueditor.config.js源码或 http://fex.baidu.com/ueditor/#start-start
+      config: {
+          //可以在此处定义工具栏的内容
+          // toolbars: [
+          //  ['fullscreen', 'undo', 'redo','|','bold', 'italic', 'underline',
+          //  '|','superscript','subscript','|', 'insertorderedlist', 'insertunorderedlist',
+          //  '|','fontfamily','fontsize','justifyleft','justifyright','justifycenter','justifyjustify']
+          // ],
+          autoHeightEnabled: false,      // 编辑器不自动被内容撑高
+          autoFloatEnabled: true,
+          initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
+          autoClearinitialContent:true,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+          initialFrameWidth: null,       // 初始容器宽度
+          initialFrameHeight: 300,       // 初始容器高度
+          UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
+          // UEDITOR_HOME_URL: process.env.BASE_URL + 'static/ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
+          // VUE CLI 3 会添加 process.env.BASE_URL 的环境变量，而 VUE CLI 2 没有，所以借此设置 UEDITOR_HOME_URL，能涵盖大部分 Vue 开发者的使用场景
+          // UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : '/static/ueditor/',
+          // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
+          serverUrl: 'http://35.201.165.105:8000/controller.php',
+        },
     };
   },
   created() {
@@ -212,6 +251,12 @@ export default {
     })
   },
   methods: {
+    //获取文档内容
+    getContent(){
+      let content = this.$refs.ueditor.getUEContent();
+      console.log(content);
+      alert(content);
+    },
     agreeChange(){
        this.form.content="";
        this.form.url="";
@@ -343,7 +388,7 @@ export default {
       this.updataHandleReset();
       this.open = true;
       const id = row.id || this.id;
-    getArticle(id).then((response) => {
+      getArticle(id).then((response) => {
         this.imageUrl= "http://10.92.119.10/" + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
@@ -386,12 +431,12 @@ export default {
           type: "warning",
         }
       ).then(function () {
-          return delArticle(userIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        });
-      },  
+        return delArticle(userIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
+    },
   },
 };
 </script>
