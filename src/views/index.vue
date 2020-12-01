@@ -17,7 +17,7 @@
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="phone"/><span class="personInfo">手机号码</span>
-                <div class="pull-right">{{ user.phonenumber }}</div>
+                <div class="pull-right">{{ user.phone }}</div>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="email"/><span class="personInfo">用户邮箱</span>
