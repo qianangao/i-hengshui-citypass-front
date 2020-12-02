@@ -46,7 +46,7 @@
           v-hasPermi="['system:dict:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -55,7 +55,7 @@
           @click="handleUpdate"
           v-hasPermi="['system:dict:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -64,7 +64,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:dict:remove']"
-        >删除</el-button>
+        >批量删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
