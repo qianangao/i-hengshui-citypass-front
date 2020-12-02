@@ -8095,7 +8095,7 @@ UE.Editor.defaultOptions = function(editor){
 
                 configUrl && UE.ajax.request(configUrl,{
                     'method': 'GET',
-                    'dataType': isJsonp ? 'jsonp':'',
+                    // 'dataType': isJsonp ? 'jsonp':'',
                     'onsuccess':function(r){
                         try {
                             var config = isJsonp ? r:eval("("+r.responseText+")");
@@ -8393,7 +8393,8 @@ UE.ajax = function() {
          * ```
          */
 		request:function(url, opts) {
-            if (opts && opts.dataType == 'jsonp') {
+            // if (opts && opts.dataType == 'jsonp') {
+            if (opts && opts.dataType == 'json') {
                 doJsonp(url, opts);
             } else {
                 doAjax(url, opts);
@@ -23278,7 +23279,7 @@ UE.plugins['catchremoteimage'] = function () {
                 isJsonp = utils.isCrossDomainUrl(url),
                 opt = {
                     'method': 'POST',
-                    'dataType': isJsonp ? 'jsonp':'',
+                    // 'dataType': isJsonp ? 'jsonp':'',
                     'timeout': 60000, //单位：毫秒，回调请求超时设置。目标用户如果网速不是很快的话此处建议设置一个较大的数值
                     'onsuccess': callbacks["success"],
                     'onerror': callbacks["error"]

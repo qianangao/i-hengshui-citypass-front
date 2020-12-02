@@ -5,11 +5,12 @@
 </template>
 
 <script>
-  import '../../../public/ueditor/ueditor.config.js';
-  import '../../../public/ueditor/ueditor.all.js';
-  import '../../../public/ueditor/lang/zh-cn/zh-cn.js';
-  import '../../../public/ueditor/jquery-2.2.3.min.js';
-  import '../../../public/ueditor/themes/default/css/ueditor.css';
+  import '../../../static/ueditor/ueditor.config.js';
+  import '../../../static/ueditor/ueditor.all.js';
+  import '../../../static/ueditor/lang/zh-cn/zh-cn.js';
+  import '../../../static/ueditor/jquery.min.js';
+  // import '../../../static/ueditor/jquery-2.2.3.min.js';
+  import '../../../static/ueditor/themes/default/css/ueditor.css';
 
   export default {
     name: "UEditor",
@@ -19,7 +20,7 @@
       },
       config: {
           type: Object
-      },
+      }
     },
     data() {
       return {

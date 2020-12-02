@@ -22,7 +22,9 @@ import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/chinaunicom";
 import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
-import RightToolbar from "@/components/RightToolbar"
+import RightToolbar from "@/components/RightToolbar";
+import $ from 'jquery'; //引入jquery
+window.$=$;
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts

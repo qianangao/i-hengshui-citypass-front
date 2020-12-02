@@ -116,7 +116,7 @@
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
                 <!-- <Editor v-model="form.content"  :min-height="160"/> -->
                 <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
-                <UEditor :config="config"   ref="ueditor"></UEditor>
+                <UEditor :config="config" ref="ueditor"></UEditor>
               </el-form-item>
             </el-col>
           </el-row>
@@ -234,13 +234,15 @@ export default {
           autoClearinitialContent:false,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
           initialFrameWidth: null,       // 初始容器宽度
           initialFrameHeight: 300,       // 初始容器高度
-          UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
+          BaseUrl: '',
+          // UEDITOR_HOME_URL: 'static/ueditor/'
+          // UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
           // UEDITOR_HOME_URL: process.env.BASE_URL + 'static/ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
           // VUE CLI 3 会添加 process.env.BASE_URL 的环境变量，而 VUE CLI 2 没有，所以借此设置 UEDITOR_HOME_URL，能涵盖大部分 Vue 开发者的使用场景
-          // UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : '/static/ueditor/',
+          UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : 'static/ueditor/',
           // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-          serverUrl: 'http://35.201.165.105:8000/controller.php',
-          // serverUrl: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
+          // serverUrl: 'http://35.201.165.105:8000/controller.php',
+          // serverUrl:  'http://10.92.119.10:8081/ueditor/exec',
         },
     };
   },

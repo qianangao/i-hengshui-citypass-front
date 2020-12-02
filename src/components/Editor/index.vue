@@ -21,7 +21,6 @@ export default {
       type: Number,
       default: null,
     },
-    
     /* 最小高度 */
     minHeight: {
       type: Number,
