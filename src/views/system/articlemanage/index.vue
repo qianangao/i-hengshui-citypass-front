@@ -58,14 +58,14 @@
           <el-row>
             <el-col :span="22">
             <el-form-item label="文章标题" prop="title">
-              <el-input v-model="form.title" maxlength="150" placeholder="请输入标题"/>
+              <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
           <el-row>
            <el-col :span="22">
             <el-form-item label="是否banner" prop="ifBanner">
-              <el-radio-group v-model="form.ifBanner">
+              <el-radio-group v-model="form.ifBanner" :disabled="this.disabled">
                   <el-radio v-for="dict in dictionaryBanner"
                     :key="dict.dictSort"
                     :label="dict.dictSort">
@@ -78,7 +78,7 @@
           <el-row>
             <el-col :span="22">
               <el-form-item label="是否为链接" prop="ifLink">
-                <el-radio-group v-model="form.ifLink"  @change="agreeChange">
+                <el-radio-group v-model="form.ifLink"  @change="agreeChange" :disabled="this.disabled">
                   <el-radio v-for="dict in dictionaryLink"
                     :key="dict.dictSort"
                     :label="dict.dictSort">
@@ -91,15 +91,16 @@
           <el-row>
             <el-col :span="22">
               <el-form-item label="网址链接" prop="url" v-if="form.ifLink === 0">
-                  <el-input v-model="form.url" placeholder="请输入链接"/>
+                  <el-input v-model="form.url" placeholder="请输入链接" :disabled="this.disabled"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="22">
-              <el-form-item label="图片上传" prop="pic">
+              <el-form-item label="图片上传" prop="pic" >
                 <el-upload class="avatar-uploader" 
                   :action="url" 
+                  :disabled="this.disabled"
                   :headers="headers"
                   :show-file-list="false"
                   :before-upload="beforeAvatarUpload"
@@ -107,6 +108,7 @@
                   :on-error="handlEerror">
                   <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                   <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -117,7 +119,7 @@
                 <!-- <Editor v-model="form.content"  :min-height="160"/> -->
                 <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
                 <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
-                <vue-ueditor-wrap v-model="form.content" :config="config"></vue-ueditor-wrap>
+                <vue-ueditor-wrap v-model="form.content" @ready="ready" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
               </el-form-item>
             </el-col>
           </el-row>
@@ -132,6 +134,7 @@
 </template>
 
 <script>
+
 // import Editor from "@/components/Editor";
 import { getToken } from "@/utils/auth";
 // 1、引入UEditor组件
@@ -147,6 +150,7 @@ import {
   delArticle,
   uploadAvatar,
 } from "@/api/system/article";
+ 
 export default {
   // 2、注册组件
   components: {
@@ -168,7 +172,7 @@ export default {
             { required: true, message: "是否为链接不能为空", trigger: "blur" },
         ],
          pic:[
-            { required: true, message: "图片为必传项", trigger: "blur" },
+            { required: true, message: "请上传图片", trigger: "blur" },
         ],
         url:[
           { required: true, message: "链接不能为空", trigger: "blur" },
@@ -178,6 +182,7 @@ export default {
             }
         ],
       },
+      ue:"",
       // 全局地址变量
        address:settings.address,
       // 提交按钮状态
@@ -195,6 +200,8 @@ export default {
       // 总条数
       total: 0,
       fileList: [],
+      // 表单禁用
+      disabled:false,
       // 文章表格数据
       articleList: null,
       // 表单模态框参数
@@ -226,13 +233,63 @@ export default {
       // 4、根据项目需求自行配置,具体配置参见ueditor.config.js源码或 http://fex.baidu.com/ueditor/#start-start
       config: {
           //可以在此处定义工具栏的内容
-          // toolbars: [
-          //  ['fullscreen', 'undo', 'redo','|','bold', 'italic', 'underline',
-          //  '|','superscript','subscript','|', 'insertorderedlist', 'insertunorderedlist',
-          //  '|','fontfamily','fontsize','justifyleft','justifyright','justifycenter','justifyjustify']
-          // ],
+          toolbars: [
+           [
+        'undo', //撤销
+        'redo', //重做
+        'bold', //加粗
+        'indent', //首行缩进
+        'italic', //斜体
+        'underline', //下划线
+        'strikethrough', //删除线
+        'subscript', //下标
+        'fontborder', //字符边框
+        'superscript', //上标
+        'formatmatch', //格式刷
+        'source', //源代码
+        'blockquote', //引用
+        'pasteplain', //纯文本粘贴模式
+        'selectall', //全选
+        'horizontal', //分隔线
+        'removeformat', //清除格式
+        'time', //时间
+        'date', //日期
+        'unlink', //取消链接
+        'cleardoc', //清空文档
+        'insertcode', //代码语言
+        'fontfamily', //字体
+        'fontsize', //字号
+        'paragraph', //段落格式
+        'simpleupload', //单图上传
+        'insertimage', //多图上传
+        'imagecenter', //图片居中
+        'link', //超链接
+        'spechars', //特殊字符
+        'searchreplace', //查询替换
+        'map', //Baidu地图
+        'insertvideo', //视频
+        'help', //帮助
+        'justifyleft', //居左对齐
+        'justifyright', //居右对齐
+        'justifycenter', //居中对齐
+        'justifyjustify', //两端对齐
+        'forecolor', //字体颜色
+        'rowspacingtop', //段前距
+        'rowspacingbottom', //段后距
+        'pagebreak', //分页
+        'attachment', //附件
+        'lineheight', //行间距
+        'edittip ', //编辑提示
+        'customstyle', //自定义标题
+        'autotypeset', //自动排版
+        'touppercase', //字母大写
+        'tolowercase', //字母小写
+           ]
+          ],
+      
+          readonly:false,
+          autoFloatEnabled :false,
           autoHeightEnabled: false,      // 编辑器不自动被内容撑高
-          autoFloatEnabled: true,
           initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
           autoClearinitialContent:false,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
           initialFrameWidth: null,       // 初始容器宽度
@@ -249,6 +306,7 @@ export default {
     };
   },
   created() {
+     
     this.getList();
     // 类型字典
       this.getDicts("sc_msg_type").then((response) => {
@@ -262,6 +320,11 @@ export default {
     })
   },
   methods: {
+    //  实例化是吧文字改为36px
+     ready (editorInstance) {
+       editorInstance.execCommand("fontsize","36px");
+   },
+  
     //获取富文本文档内容
     getContent(){
       let content = this.$refs.ueditor.getUEContent();
@@ -352,7 +415,7 @@ export default {
      },
       beforeAvatarUpload(file) {
         // 图片上传限制
-        const isPNG = file.type === 'image/png'||file.type === 'image/jpeg'||file.type === 'image/jpg'||file.type === 'image/gif'||file.type === 'image/fpx'||file.type === 'image/bmp'||file.type === 'image/webp';
+       const isPNG = file.type === 'image/png'||file.type === 'image/jpeg' || file.type === 'image/jpg' ;
         const isLt5M = file.size / 1024 / 1024 < 5;
         if (!isPNG) {
           this.$message.error('只能上传图片格式文件!');
@@ -364,6 +427,7 @@ export default {
         }
         return isPNG||isJPG &&isLt5M;
       },
+      
     // 模态框确认按钮
     oksubmi() {
       this.open = false;
@@ -381,7 +445,10 @@ export default {
       this.config.initialContent="请输入内容";
       this.config.autoClearinitialContent=true
       this.submitButton=1;
+      this.disabled=false;
+      this.config.readonly=false;
     },
+    
     // 查看
     handleLook(row){
       this.updataHandleReset();
@@ -398,6 +465,8 @@ export default {
         this.open = true;
         this.title = "查看文章";
         this.submitButton=0;
+        this.disabled=true;
+        this.config.readonly=true;
       });
     },
     // 修改文章按钮
@@ -416,6 +485,8 @@ export default {
         this.open = true;
         this.title = "修改文章";
         this.submitButton=1;
+        this.disabled=false;
+        this.config.readonly=false;
       });
     },
     // 模态框确认事件
