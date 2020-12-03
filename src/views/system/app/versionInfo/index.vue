@@ -2,20 +2,30 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 版本查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm">
         <el-col :span="6">
-          <el-form-item label="app名称" prop="appName">
-            <el-input  placeholder="请输入app名称" v-model="queryParams.appName" clearable size="small" class="versionInfo"/>
+          <el-form-item label="版本类型" prop="appType">
+            <el-input  placeholder="请输入版本类型" v-model="queryParams.appType" clearable size="small" class="versionInfo"/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="版本号" prop="versionCode">
-            <el-input  placeholder="请输入版本号" v-model="queryParams.versionCode" clearable size="small" class="versionInfo"/>
+         <el-col :span="8">
+          <el-form-item label="创建时间" >
+             <el-date-picker
+                v-model="dateRange"
+                type="daterange"
+                 value-format="yyyy-MM-dd"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                 style="width: 240px"
+                 size="small"
+                >
+              </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="6" >
           <el-form-item>
-            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+            <el-button type="cyan" icon="el-icon-search" size="mini" v-hasPermi="['system:app:versionInfo:query']" @click="handleQuery">查询</el-button>
               <el-button  icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-col>
@@ -40,26 +50,24 @@
         <el-table-column label="APP包大小" prop="pkSize" align="center" />
         <el-table-column label="下载地址"  prop="appId" align="center" />
         <el-table-column label="操作" class-name="small-padding fixed-width" align="center">
-            <template >
-                <el-button size="mini" type="text" icon="el-icon-plus">删除</el-button>
+            <template slot-scope="scope">
+                <el-button size="mini" type="text" icon="el-icon-plus" @click="handleShow(scope.row)">查看</el-button>
+                <el-button size="mini" type="text" icon="el-icon-plus" v-hasPermi="['system:versionInfo:remove']" @click="handleDelete(scope.row)">删除</el-button>
             </template>
         </el-table-column>
      </el-table>
-        <!-- 添加新版本信息 -->
+     <!-- 添加新版本信息 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+      <el-form ref="form" :model="form"  label-width="90px">
           <el-row>
-            <el-col :span="22">
+            <el-col :span="24">
                 <el-form-item label="上传文件">
                     <el-upload
                         ref="upload"
                         :limit="1"
-                        accept=""
-                        :headers="upload.headers"
-                        :action="upload.url + '?updateSupport=' + upload.updateSupport"
-                        :disabled="upload.isUploading"
-                        :auto-upload="false"
-                        :on-progress="handleFileUploadProgress"
+                        :action="url"
+                        :before-upload="handleFileUploadProgress"
+                         :file-list="fileList"
                         drag>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">
@@ -71,54 +79,44 @@
             </el-col>
           </el-row>
         <el-row>
-          <el-col :span="22">
+          <el-col :span="24">
             <el-form-item label="版本号">
               <el-input :disabled="true" v-model="form.versionCode"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="22">
-            <el-form-item label="版本大小">
+          <el-col :span="24">
+            <el-form-item label="版本大小" >
               <el-input :disabled="true" v-model="form.pkSize" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="22">
+          <el-col :span="24">
             <el-form-item label="版本名称">
-              <el-input :disabled="true" v-model="form.versionName"/>
+              <el-input :disabled="true" v-model="form.appName"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="22">
-            <el-form-item label="下载地址">
-              <el-input :disabled="true" v-model="form.menuName"/>
+          <el-col :span="24">
+            <el-form-item label="版本内容" >
+              <el-input type="textarea" placeholder="请输入版本内容" v-model="form.content" :rows="3"  maxlength='500'></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="22">
-            <el-form-item label="升级内容" prop="content">
-              <el-input type="textarea" placeholder="请输入升级内容" v-model="form.content" :rows="3"  maxlength='300'></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" v-if="this.title!=='查看版本'" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" >取 消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { versionTable, addVersion, uploadFile } from "@/api/app/versionInfo";
-
-
+import { versionTable, addVersion, uploadFile, delVersion, getFrom } from "@/api/app/versionInfo";
 export default {
   data(){
     return {
@@ -132,110 +130,122 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 文件上传地址
+      url: process.env.VUE_APP_BASE_API + "/system/sys/app/version/record/upload",
       // 查询参数
       queryParams: {
-        menuName: undefined,
+        appType: undefined,
+        createTime: undefined,
+        dateRange:null
       },
       // 上传图标
       form: {},
-      // 文件上传信息
-      upload: {
-        // 是否显示弹出层（用户导入）
-        open: false,
-        // 是否禁用上传
-        isUploading: false,
-        // 是否更新已经存在的用户数据
-        updateSupport: 0,
-        // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData",
-        },
-        //   表单校验
-        rules:{
-            content:[
-                { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger:[ 'blur', 'change'] }
-            ]
-        } ,
-        // 查询参数
-      queryParams: {
-        versionCode: undefined,
-        appName: undefined,
-      },
-     
+      // 上传信息
+       fileList: [],
+        // 日期范围
+      dateRange: []
     }
   },
   created(){
-     // 获取版本列表
+    // 获取版本列表
     this.getList();
-    
   },
   methods:{
-    //   查询版本列表 
+    // 查询版本列表 
     getList() {
       this.loading = true;
-      versionTable().then((response) => {
+      versionTable(this.queryParams).then((response) => {
         this.versionList = response.data.rows,
-        this.loading = false
+        this.loading = false;
       });
     },
- 
-    //  新增按钮操作 
-    handleAdd() {
-        this.title = "添加新版本";
-        this.open = true;
-
-      },
     // 表单重置
     reset() {
       this.form = {
         appId:undefined,
         appName:undefined,
-        appType:undefined,
         content:undefined,
         pkSize:undefined,
         versionCode:undefined,
-        versionName:undefined
+        appType:undefined,
+        createTime:undefined,
+        createdBy:undefined
       };
+      this.fileList=[];
+      this.resetForm("form");
     },
-    // 文件上传中处理
-    handleFileUploadProgress(event, file, fileList) {
-        uploadFile(file).then( (response)=>{
-                console.log("12345678",response)
-         })
-        console.log("file-----",file);
-      this.upload.isUploading = true;
-    },
-    // 文件上传成功处理
-    handleFileSuccess(response, file, fileList) {
-
-
-      this.upload.open = false;
-      this.$refs.upload.clearFiles();
-      
-    },
-    //   提交按钮 
+      //新增按钮操作 
+      handleAdd() {
+        this.title = "添加版本";
+        this.open = true;
+        this.reset();
+      },
+      //文件上传中处理
+      handleFileUploadProgress(file) {
+        let fileParam = new FormData();
+        fileParam.append("file", file);
+        uploadFile(fileParam).then( (response)=>{
+          if (response.code == 200) {
+            this.msgSuccess("上传已成功");
+            this.form=response.data;
+            const file = {"name":response.data.uploadFileName,"url":response.data.appId}
+            this.fileList.push(file)
+          }
+        }).catch( ()=>{});
+      },
+    //提交按钮 
     submitForm() {
       this.$refs["form"].validate((valid) => {
-          addVersion().then((response)=>{
-                this.from = response.data.rows,
-                this.loading = false
-          }).catch( ()=>{})
+          addVersion(this.form).then((response)=>{
+                this.loading = false;
+                this.getList();
+                this.open = false;
+          }).catch( ()=>{});
       })
     },
     // 取消按钮
     cancel() {
       this.open = false;
-    //   this.reset();
+      this.reset()
     },
-        /** 搜索按钮操作 */
+    // 搜索按钮操作
     handleQuery() {
       this.getList();
     },
-        /** 重置按钮操作 */
+    // 重置按钮操作 
     resetQuery() {
-      this.resetForm("queryForm");
+      this.queryParams.appType=undefined;
+      this.dateRange = [];
+      // this.resetForm("queryForm");
       this.handleQuery();
+      
     },
-  
+  // 查看操作按钮
+    handleShow(row){
+      this.open = true;
+      this.title ="查看版本"
+      getFrom(row.id).then(response =>{
+        this.form = response.data;
+      })
+    },
+    // 删除按钮操作
+    handleDelete(row) {
+      const id = row.id;
+      this.$confirm(
+        '是否确认删除用户编号为"' + id + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(function () {
+        return delVersion(id);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch( ()=>{});
+    }
   }
 }
 </script>
