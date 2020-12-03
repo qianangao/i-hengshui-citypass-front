@@ -116,7 +116,8 @@
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
                 <!-- <Editor v-model="form.content"  :min-height="160"/> -->
                 <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
-                <UEditor :config="config" ref="ueditor"></UEditor>
+                <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
+                <vue-ueditor-wrap v-model="form.content" :config="config"></vue-ueditor-wrap>
               </el-form-item>
             </el-col>
           </el-row>
@@ -134,7 +135,8 @@
 // import Editor from "@/components/Editor";
 import { getToken } from "@/utils/auth";
 // 1、引入UEditor组件
-import UEditor from '@/components/Ueditor/ueditor.vue';
+// import UEditor from '@/components/Ueditor/ueditor.vue';
+import VueUeditorWrap from 'vue-ueditor-wrap';
 // 从全局工具类引入全局地址变量
 import settings from "@/settings.js";
 import {
@@ -149,7 +151,8 @@ export default {
   // 2、注册组件
   components: {
     // Editor,
-    UEditor,
+    // UEditor,
+    VueUeditorWrap
   },
 
   data() {
@@ -235,11 +238,10 @@ export default {
           initialFrameWidth: null,       // 初始容器宽度
           initialFrameHeight: 300,       // 初始容器高度
           BaseUrl: '',
-          // UEDITOR_HOME_URL: 'static/ueditor/'
-          // UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
+          UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
           // UEDITOR_HOME_URL: process.env.BASE_URL + 'static/ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
           // VUE CLI 3 会添加 process.env.BASE_URL 的环境变量，而 VUE CLI 2 没有，所以借此设置 UEDITOR_HOME_URL，能涵盖大部分 Vue 开发者的使用场景
-          UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : 'static/ueditor/',
+          // UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : 'static/ueditor/',
           // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
           // serverUrl: 'http://35.201.165.105:8000/controller.php',
           // serverUrl:  'http://10.92.119.10:8081/ueditor/exec',
@@ -420,9 +422,9 @@ export default {
     oksubmi() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if(this.form.ifLink!==0){
-              this.getContent()
-          }
+          // if(this.form.ifLink!==0){
+          //     this.getContent()
+          // }
            
           if (this.form.id !== undefined) {
            
