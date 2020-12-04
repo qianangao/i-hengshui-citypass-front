@@ -152,7 +152,7 @@
 <script>
 import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
 
-const baseUrl = "http://10.92.119.10/";
+import settings from '@/settings.js'
 export default {
   name: "Menu",
   data() {
@@ -182,6 +182,8 @@ export default {
       // 上传图标
       fileList: [],
       form: {},
+      // 地址
+      address:settings.address,
       // 表单校验
       rulesThird: {
         menuName: [
@@ -190,7 +192,7 @@ export default {
         inUrl: [
           { required: true, message: "外链地址不能为空", trigger:[ 'blur', 'change'] },
           {
-            pattern: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&‘\*\+,;=.]+$/,
+            pattern: /(http|https):\/\/([\w.]+\/?)\S*/,
             message: "请输入正确的网址(以http://'或者'https://'格式开头)",
             trigger: ["blur", "change"]
           }
@@ -304,7 +306,7 @@ export default {
       getMenu(row.id).then((response) => {
         this.form = response.data;
         if(this.form.icon != null) {
-          this.imageUrl = baseUrl + this.form.icon;
+          this.imageUrl = this.address + this.form.icon;
         }
         if (level === 3) {
           this.addOpen = true;

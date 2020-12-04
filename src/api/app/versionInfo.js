@@ -45,3 +45,12 @@ export function getFrom (id){
     })
 }
 
+// 点击取消按钮接口
+export function closeButton (query){
+    return request({
+        url:"/file/ftpDeleteFile",
+        method:"get",
+        params: query
+    })
+}
+

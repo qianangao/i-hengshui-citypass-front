@@ -9,23 +9,23 @@
           </el-form-item>
         </el-col>
          <el-col :span="8">
-          <el-form-item label="创建时间" >
+          <el-form-item label="创建时间">
              <el-date-picker
                 v-model="dateRange"
                 type="daterange"
-                 value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
                 range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                 style="width: 240px"
-                 size="small"
+                style="width: 240px"
+                size="small"
                 >
               </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="6" >
           <el-form-item>
-            <el-button type="cyan" icon="el-icon-search" size="mini" v-hasPermi="['system:app:versionInfo:query']" @click="handleQuery">查询</el-button>
+              <el-button type="cyan" icon="el-icon-search" size="mini" v-hasPermi="['system:app:versionInfo:query']" @click="handleQuery">查询</el-button>
               <el-button  icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-col>
@@ -37,10 +37,9 @@
         <el-button type="primary" icon="el-icon-plus"  @click="handleAdd"  v-hasPermi="['system:app:versionInfo:add']" size="mini">新增版本</el-button>
       </el-col>
     </el-row>
-     <!-- 版本表格数据 -->
+     <!-- 版本表格数据展示 -->
        <el-table  v-loading="loading" :data="versionList" row-key="id">
-        <el-table-column label="app名称" prop="appName" align="center"  :show-overflow-tooltip="true"/>
-        <el-table-column label="版本号"  prop="versionCode" align="center" :show-overflow-tooltip="true"/>
+        <el-table-column label="app名称" prop="appName" align="center" />
         <el-table-column label="创建时间" prop="createTime" align="center">
             <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -57,17 +56,18 @@
         </el-table-column>
      </el-table>
      <!-- 添加新版本信息 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false"  :before-close='closeDialog'>
       <el-form ref="form" :model="form"  label-width="90px">
           <el-row>
             <el-col :span="24">
-                <el-form-item label="上传文件">
+                <el-form-item label="上传文件" v-if="this.title=='添加版本'">
                     <el-upload
                         ref="upload"
                         :limit="1"
                         :action="url"
                         :before-upload="handleFileUploadProgress"
-                         :file-list="fileList"
+                        :file-list="fileList"
+                        :on-remove="handleRemove"
                         drag>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">
@@ -76,15 +76,11 @@
                     </div>
                    </el-upload>
                 </el-form-item>
+                <el-form-item label="文件名" v-if="this.title=='查看版本'">
+                  <el-input :disabled="true" v-model="form.uploadFileName"/>
+                </el-form-item>
             </el-col>
           </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="版本号">
-              <el-input :disabled="true" v-model="form.versionCode"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="版本大小" >
@@ -116,7 +112,7 @@
 </template>
 
 <script>
-import { versionTable, addVersion, uploadFile, delVersion, getFrom } from "@/api/app/versionInfo";
+import { versionTable, addVersion, uploadFile, delVersion, getFrom, closeButton } from "@/api/app/versionInfo";
 export default {
   data(){
     return {
@@ -134,16 +130,14 @@ export default {
       url: process.env.VUE_APP_BASE_API + "/system/sys/app/version/record/upload",
       // 查询参数
       queryParams: {
-        appType: undefined,
-        createTime: undefined,
-        dateRange:null
+        appType: undefined
       },
       // 上传图标
       form: {},
       // 上传信息
-       fileList: [],
-        // 日期范围
-      dateRange: []
+      fileList: [],
+      // 日期范围
+      dateRange:[]
     }
   },
   created(){
@@ -154,10 +148,12 @@ export default {
     // 查询版本列表 
     getList() {
       this.loading = true;
+      this.queryParams["startTime"]= this.dateRange[0];
+      this.queryParams["endTime"]= this.dateRange[1];
       versionTable(this.queryParams).then((response) => {
         this.versionList = response.data.rows,
         this.loading = false;
-      });
+      }).catch( ()=>{});
     },
     // 表单重置
     reset() {
@@ -166,7 +162,6 @@ export default {
         appName:undefined,
         content:undefined,
         pkSize:undefined,
-        versionCode:undefined,
         appType:undefined,
         createTime:undefined,
         createdBy:undefined
@@ -180,6 +175,15 @@ export default {
         this.open = true;
         this.reset();
       },
+       //关闭弹框的事件
+        closeDialog(done){
+          // 根据id判断是否为新增 如果是新增版本，点击关闭按钮，调用删除操作
+          if(!this.form.id && this.form.uploadFileName){
+              closeButton({"filePath":this.form.uploadFileName}).then( (response)=>{
+              }).catch( ()=>{});
+          }
+          done()
+        },
       //文件上传中处理
       handleFileUploadProgress(file) {
         let fileParam = new FormData();
@@ -188,26 +192,43 @@ export default {
           if (response.code == 200) {
             this.msgSuccess("上传已成功");
             this.form=response.data;
-            const file = {"name":response.data.uploadFileName,"url":response.data.appId}
-            this.fileList.push(file)
+            const file = {"name":response.data.uploadFileName,"url":response.data.appId};
+            this.fileList.push(file);
           }
-        }).catch( ()=>{});
+        }).catch( ()=>{})
       },
     //提交按钮 
     submitForm() {
       this.$refs["form"].validate((valid) => {
+        if(this.form.uploadFileName){
           addVersion(this.form).then((response)=>{
                 this.loading = false;
                 this.getList();
                 this.open = false;
           }).catch( ()=>{});
+        }else{
+          this.$message.error('请上传文件');
+        }
       })
     },
     // 取消按钮
     cancel() {
+      // 根据id判断是否为新增 如果是新增版本，点击关闭按钮，调用删除操作
+      if(this.title === '添加版本' && this.form.uploadFileName){
+        closeButton({"filePath":this.form.uploadFileName}).then( (response)=>{
+        }).catch( ()=>{})
+      }
       this.open = false;
       this.reset()
     },
+    // 点击×时候的操作
+     handleRemove(file, fileList) {
+          if(this.title === '添加版本' && this.form.uploadFileName){
+              closeButton({"filePath":this.form.uploadFileName}).then( (response)=>{
+              }).catch( ()=>{})
+          }
+          this.reset()
+     },
     // 搜索按钮操作
     handleQuery() {
       this.getList();
@@ -216,9 +237,7 @@ export default {
     resetQuery() {
       this.queryParams.appType=undefined;
       this.dateRange = [];
-      // this.resetForm("queryForm");
       this.handleQuery();
-      
     },
   // 查看操作按钮
     handleShow(row){
@@ -226,6 +245,8 @@ export default {
       this.title ="查看版本"
       getFrom(row.id).then(response =>{
         this.form = response.data;
+        const file = {"name":response.data.uploadFileName,"url":response.data.appId}
+        this.fileList.push(file)
       })
     },
     // 删除按钮操作
