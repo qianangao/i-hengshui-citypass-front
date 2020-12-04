@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <div  v-if="this.ly==0">
     <!-- 搜索框 -->
      <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
@@ -53,8 +54,88 @@
     <!-- 分页器 -->
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
     <!-- 对话框 -->
-    <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="900px">
+    <!-- <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="900px">
       <el-form ref="form" :model="form" :rules="rules"   label-width="120px">
+          <el-row>
+            <el-col :span="22">
+            <el-form-item label="文章标题" prop="title">
+              <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
+            </el-form-item>
+            </el-col>
+          </el-row> 
+          <el-row>
+           <el-col :span="22">
+            <el-form-item label="是否banner" prop="ifBanner">
+              <el-radio-group v-model="form.ifBanner" :disabled="this.disabled">
+                  <el-radio v-for="dict in dictionaryBanner"
+                    :key="dict.dictSort"
+                    :label="dict.dictSort">
+                    {{ dict.dictLabel }}
+                  </el-radio>
+              </el-radio-group>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="是否为链接" prop="ifLink">
+                <el-radio-group v-model="form.ifLink"  @change="agreeChange" :disabled="this.disabled">
+                  <el-radio v-for="dict in dictionaryLink"
+                    :key="dict.dictSort"
+                    :label="dict.dictSort">
+                    {{ dict.dictLabel }}
+                  </el-radio>
+              </el-radio-group>
+            </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="网址链接" prop="url" v-if="form.ifLink === 0">
+                  <el-input v-model="form.url" placeholder="请输入链接" :disabled="this.disabled"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="图片上传" prop="pic" >
+                <el-upload class="avatar-uploader" 
+                  :action="url" 
+                  :disabled="this.disabled"
+                  :headers="headers"
+                  :show-file-list="false"
+                  :before-upload="beforeAvatarUpload"
+                  :on-success="handlePreview"
+                  :on-error="handlEerror">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                   <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="文章内容" v-if="form.ifLink!==0"> -->
+                <!-- <Editor v-model="form.content"  :min-height="160"/> -->
+                <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
+                <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
+                <!-- <vue-ueditor-wrap v-model="form.content" @ready="ready" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
+              </el-form-item>
+            </el-col>
+          </el-row>
+      </el-form> -->
+      <!-- 模态框操作 -->
+      <!-- <div slot="footer" class="dialog-footer">
+          <el-button type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
+          <el-button @click="handleCancel">取 消</el-button>
+      </div>
+    </el-dialog> -->
+  
+  </div>
+    <div v-if="this.ly==1" >
+            <el-form ref="form" :model="form" :rules="rules"   label-width="120px" >
+             <h4 v-cloak>{{title}}</h4>
           <el-row>
             <el-col :span="22">
             <el-form-item label="文章标题" prop="title">
@@ -119,18 +200,20 @@
                 <!-- <Editor v-model="form.content"  :min-height="160"/> -->
                 <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
                 <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
-                <vue-ueditor-wrap v-model="form.content" @ready="ready" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
+                <vue-ueditor-wrap  v-model="form.content" :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
               </el-form-item>
             </el-col>
           </el-row>
       </el-form>
       <!-- 模态框操作 -->
-      <div slot="footer" class="dialog-footer">
-          <el-button type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
-          <el-button @click="handleCancel">取 消</el-button>
-      </div>
-    </el-dialog>
+     
+          <el-button class="operating" @click="handleCancel">取 消</el-button>
+          
+          <el-button  class="operating"  type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
+    
+    </div>
    </div>
+   
 </template>
 
 <script>
@@ -182,6 +265,7 @@ export default {
             }
         ],
       },
+      ly:0,
       ue:"",
       // 全局地址变量
        address:settings.address,
@@ -232,6 +316,15 @@ export default {
       // 3、v-model绑定数据 form.content
       // 4、根据项目需求自行配置,具体配置参见ueditor.config.js源码或 http://fex.baidu.com/ueditor/#start-start
       config: {
+        zIndex : 1,
+        initialStyle:'p span{font-size:28px}' ,
+        fontsize:[
+             28,
+             38,
+             48,
+             58,
+             68
+        ],
           //可以在此处定义工具栏的内容
           toolbars: [
            [
@@ -268,7 +361,6 @@ export default {
         'searchreplace', //查询替换
         'map', //Baidu地图
         'insertvideo', //视频
-        'help', //帮助
         'justifyleft', //居左对齐
         'justifyright', //居右对齐
         'justifycenter', //居中对齐
@@ -321,9 +413,9 @@ export default {
   },
   methods: {
     //  实例化是吧文字改为36px
-     ready (editorInstance) {
-       editorInstance.execCommand("fontsize","36px");
-   },
+  //    ready (editorInstance) {
+  //      editorInstance.execCommand("fontsize","36px");
+  //  },
   
     //获取富文本文档内容
     getContent(){
@@ -431,11 +523,13 @@ export default {
     // 模态框确认按钮
     oksubmi() {
       this.open = false;
+      this.ly=0
     },
     // 模态框取消按钮
     handleCancel(){
        this.open = false;
        this.addHandleReset()
+       this.ly=0
     },
     // 新增文章按钮
     Addsubmi() {
@@ -447,6 +541,7 @@ export default {
       this.submitButton=1;
       this.disabled=false;
       this.config.readonly=false;
+      this.ly=1
     },
     
     // 查看
@@ -457,7 +552,7 @@ export default {
       getArticle(id).then((response) => {
         this.config.autoClearinitialContent=false;
         this.config.initialContent=response.data.content;
-        this.imageUrl= "http://10.92.119.10/" + response.data.pic;
+        this.imageUrl= this.address + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
@@ -467,6 +562,7 @@ export default {
         this.submitButton=0;
         this.disabled=true;
         this.config.readonly=true;
+        this.ly=1
       });
     },
     // 修改文章按钮
@@ -477,7 +573,7 @@ export default {
       getArticle(id).then((response) => {
         this.config.autoClearinitialContent=false;
         this.config.initialContent=response.data.content;
-        this.imageUrl= "http://10.92.119.10/" + response.data.pic;
+        this.imageUrl= this.address + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
@@ -487,6 +583,7 @@ export default {
         this.submitButton=1;
         this.disabled=false;
         this.config.readonly=false;
+        this.ly=1
       });
     },
     // 模态框确认事件
@@ -496,7 +593,6 @@ export default {
           // if(this.form.ifLink!==0){
           //     this.getContent()
           // }
-           
           if (this.form.id !== undefined) {
            
               updateArticle(this.form).then((response) => {
@@ -510,7 +606,7 @@ export default {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
-             
+             this.ly=0
             });
           }
         }
@@ -532,7 +628,7 @@ export default {
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
-      });
+      }).catch(() => {})
     },
   },
 };
@@ -610,4 +706,8 @@ img {
 </style>
 <style>
 .el-tooltip__popper{font-size: 14px; max-width:40%;word-wrap:break-word;}
+.operating{
+  float: right;
+  margin: 10px 10px;
+}
 </style>
