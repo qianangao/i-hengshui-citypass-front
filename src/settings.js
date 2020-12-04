@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'i衡水后台管理系统',
+  title: 'i衡水管理系统',
 
   /**
    * 是否系统布局配置

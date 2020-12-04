@@ -57,24 +57,26 @@
      </el-table>
      <!-- 添加新版本信息 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false"  :before-close='closeDialog'>
-      <el-form ref="form" :model="form"  label-width="90px">
+      <el-form ref="form" :model="form" label-width="90px">
           <el-row>
             <el-col :span="24">
-                <el-form-item label="上传文件" v-if="this.title=='添加版本'">
-                    <el-upload
-                        ref="upload"
-                        :limit="1"
-                        :action="url"
-                        :before-upload="handleFileUploadProgress"
-                        :file-list="fileList"
-                        :on-remove="handleRemove"
-                        drag>
-                    <i class="el-icon-upload"></i>
-                    <div class="el-upload__text">
-                    将文件拖到此处，或
-                    <em>点击上传</em>
-                    </div>
-                   </el-upload>
+                <el-form-item label="上传文件" v-if="this.title=='添加版本'" >
+                   
+                           <el-upload
+                              class="upload-demo"    
+                              ref="upload"
+                              :limit="1"
+                              :action="url"
+                              :on-change="handleChange"
+                              :file-list="fileList"
+                              :on-remove="handleRemove"
+                              :headers="headers"
+                              multiple
+                              drag>
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                            <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过500kb</div>
+                          </el-upload>
                 </el-form-item>
                 <el-form-item label="文件名" v-if="this.title=='查看版本'">
                   <el-input :disabled="true" v-model="form.uploadFileName"/>
@@ -91,7 +93,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="版本名称">
-              <el-input :disabled="true" v-model="form.appName"/>
+              <el-input :disabled="true" v-model="form.versionName"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -112,6 +114,7 @@
 </template>
 
 <script>
+import {getToken} from '@/utils/auth';
 import { versionTable, addVersion, uploadFile, delVersion, getFrom, closeButton } from "@/api/app/versionInfo";
 export default {
   data(){
@@ -126,6 +129,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 文件上传格式刷
+      headers: { Authorization: "Bearer " + getToken() },
       // 文件上传地址
       url: process.env.VUE_APP_BASE_API + "/system/sys/app/version/record/upload",
       // 查询参数
@@ -137,7 +142,8 @@ export default {
       // 上传信息
       fileList: [],
       // 日期范围
-      dateRange:[]
+      dateRange:[],
+      
     }
   },
   created(){
@@ -158,13 +164,23 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        content:undefined,
+        createTime:undefined,
+        createdBy:undefined,
+        versionName:undefined,
+        pkSize:undefined,
         appId:undefined,
         appName:undefined,
-        content:undefined,
-        pkSize:undefined,
         appType:undefined,
-        createTime:undefined,
-        createdBy:undefined
+        fileName:undefined,
+        uploadFileName:undefined,
+         // this.form.versionName = item.response.data.versionName;
+            // this.form.pkSize = item.response.data.pkSize;
+            // this.form.appId = item.response.data.appId;
+            // this.form.appName = item.response.data.appName;
+            // this.form.appType = item.response.data.appType;
+            // this.form.fileName = item.response.data.fileName;
+            // this.form.uploadFileName = item.response.data.uploadFileName;
       };
       this.fileList=[];
       this.resetForm("form");
@@ -185,22 +201,26 @@ export default {
           done()
         },
       //文件上传中处理
-      handleFileUploadProgress(file) {
-        let fileParam = new FormData();
-        fileParam.append("file", file);
-        uploadFile(fileParam).then( (response)=>{
-          if (response.code == 200) {
-            this.msgSuccess("上传已成功");
-            this.form=response.data;
-            const file = {"name":response.data.uploadFileName,"url":response.data.appId};
-            this.fileList.push(file);
+      handleChange(file, fileList) {
+        this.reset();
+        this.fileList = fileList;
+        fileList.map(item => {
+          if(item.response){
+            this.form = item.response.data;
+            // this.form.versionName = item.response.data.versionName;
+            // this.form.pkSize = item.response.data.pkSize;
+            // this.form.appId = item.response.data.appId;
+            // this.form.appName = item.response.data.appName;
+            // this.form.appType = item.response.data.appType;
+            // this.form.fileName = item.response.data.fileName;
+            // this.form.uploadFileName = item.response.data.uploadFileName;
           }
-        }).catch( ()=>{})
+        })
       },
     //提交按钮 
     submitForm() {
       this.$refs["form"].validate((valid) => {
-        if(this.form.uploadFileName){
+        if(this.fileList){
           addVersion(this.form).then((response)=>{
                 this.loading = false;
                 this.getList();
