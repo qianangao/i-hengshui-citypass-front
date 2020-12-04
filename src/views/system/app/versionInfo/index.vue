@@ -75,7 +75,7 @@
                               drag>
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                            <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过500kb</div>
+                            <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过300M</div>
                           </el-upload>
                 </el-form-item>
                 <el-form-item label="文件名" v-if="this.title=='查看版本'">
