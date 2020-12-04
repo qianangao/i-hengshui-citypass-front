@@ -40,7 +40,6 @@
      <!-- 版本表格数据展示 -->
        <el-table  v-loading="loading" :data="versionList" row-key="id">
         <el-table-column label="app名称" prop="appName" align="center" />
-        <el-table-column label="版本号"  prop="versionCode" align="center" />
         <el-table-column label="创建时间" prop="createTime" align="center">
             <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -67,8 +66,8 @@
                         :limit="1"
                         :action="url"
                         :before-upload="handleFileUploadProgress"
-                         :file-list="fileList"
-                          :on-remove="handleRemove"
+                        :file-list="fileList"
+                        :on-remove="handleRemove"
                         drag>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">
@@ -82,13 +81,6 @@
                 </el-form-item>
             </el-col>
           </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="版本号">
-              <el-input :disabled="true" v-model="form.versionCode"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="版本大小" >
@@ -161,7 +153,7 @@ export default {
       versionTable(this.queryParams).then((response) => {
         this.versionList = response.data.rows,
         this.loading = false;
-      }).catch( ()=>{})
+      }).catch( ()=>{});
     },
     // 表单重置
     reset() {
@@ -170,7 +162,6 @@ export default {
         appName:undefined,
         content:undefined,
         pkSize:undefined,
-        versionCode:undefined,
         appType:undefined,
         createTime:undefined,
         createdBy:undefined
