@@ -29,6 +29,11 @@ module.exports = {
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
   errorLog: 'production',
-// 图片请求地址封装
-   address:`http://10.92.119.10/`
+  // 图片请求地址封装
+  address:`http://10.92.119.10/`,
+  // i衡水---生成环境 
+  // 外网：121.17.30.245   内网：10.100.5.102
+  //  address: 'http://10.100.5.102:3000/',
+  //  address: 'http://121.17.30.245:3000/',
+  //  ipAddress: 'http://10.100.5.102/'
 }
