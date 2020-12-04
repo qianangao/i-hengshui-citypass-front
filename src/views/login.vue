@@ -20,7 +20,7 @@
           <img :src="codeUrl" @click="getCode" class="login-code-img"/>
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 15px 0px;">记住密码</el-checkbox>
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
@@ -129,25 +129,23 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/image/background.jpg");
+  background-image: url("../assets/image/background.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  background-size: cover;
 }
 .title {
-  margin: 0px auto 30px auto;
+  margin: 0px auto 15px auto;
   text-align: center;
   font-size: 32px;
-  // color: #707070;
   font-family: 'STKaiti',
 }
 
 .login-form {
   border-radius: 6px;
-  // background: #ffffff;
-  background: rgba($color:#ffffff, $alpha: 0.35);
-  width: 450px;
-  padding: 45px 45px 20px 45px;
+  background: rgba($color:#ffffff, $alpha: 0.25);
+  width: 360px;
+  padding: 37px 37px 12px 37px;
+  margin-left: 56%;
   .el-input {
     height: 38px;
     input {

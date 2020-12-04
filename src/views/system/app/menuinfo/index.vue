@@ -376,7 +376,7 @@ export default {
 }
 </script>
 
-<style>
+<style  scoped>
 .menuInput {
   width: 70%;
 }
@@ -386,6 +386,9 @@ export default {
 .el-upload__tip {
   display: inline-block;
 }
+
+</style>
+<style>
 .menu-uploader .el-upload {
   border: 1px dashed rgba(0, 0, 0, 0.3);
   border-radius: 6px;
