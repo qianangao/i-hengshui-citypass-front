@@ -190,7 +190,7 @@ export default {
         inUrl: [
           { required: true, message: "外链地址不能为空", trigger:[ 'blur', 'change'] },
           {
-            pattern: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&‘\*\+,;=.]+$/,
+            pattern: /(http|https):\/\/([\w.]+\/?)\S*/,
             message: "请输入正确的网址(以http://'或者'https://'格式开头)",
             trigger: ["blur", "change"]
           }
