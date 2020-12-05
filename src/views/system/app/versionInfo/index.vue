@@ -34,7 +34,7 @@
     <!-- 其他操作 -->
     <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus"  @click="handleAdd"  v-hasPermi="['system:app:versionInfo:add']" size="mini">新增版本</el-button>
+        <el-button type="primary" icon="el-icon-plus"  @click="handleAdd"  v-hasPermi="['system:app:versionInfo:add']" size="mini">新增</el-button>
       </el-col>
     </el-row>
      <!-- 版本表格数据展示 -->
@@ -45,13 +45,13 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="设备" prop="appType" align="center" />
+        <el-table-column label="版本类型" prop="appType" align="center" />
         <el-table-column label="APP包大小" prop="pkSize" align="center" />
         <el-table-column label="下载地址"  prop="appId" align="center" />
         <el-table-column label="操作" class-name="small-padding fixed-width" align="center">
             <template slot-scope="scope">
-                <el-button size="mini" type="text" icon="el-icon-plus" @click="handleShow(scope.row)">查看</el-button>
-                <el-button size="mini" type="text" icon="el-icon-plus" v-hasPermi="['system:versionInfo:remove']" @click="handleDelete(scope.row)">删除</el-button>
+                <el-button size="mini" type="text" icon="el-icon-view"  @click="handleShow(scope.row)">查看</el-button>
+                <el-button size="mini" type="text" icon="el-icon-delete" v-hasPermi="['system:versionInfo:remove']" @click="handleDelete(scope.row)">删除</el-button>
             </template>
         </el-table-column>
      </el-table>
@@ -61,17 +61,20 @@
           <el-row>
             <el-col :span="24">
                 <el-form-item label="上传文件" v-if="this.title=='添加版本'" >
-                   
                            <el-upload
                               class="upload-demo"    
                               ref="upload"
                               :limit="1"
                               :action="url"
+                              :disabled="this.disabled"
+                              :before-upload="beforeAvatarUpload"
                               :on-change="handleChange"
                               :file-list="fileList"
                               :on-remove="handleRemove"
                               :headers="headers"
-                              multiple
+                              :on-error="handlEerror"
+                              :on-exceed="handleExceed"
+                              :on-success="handleAvatarSuccess"
                               drag>
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -143,7 +146,8 @@ export default {
       fileList: [],
       // 日期范围
       dateRange:[],
-      
+       // 表单禁用
+      disabled:false
     }
   },
   created(){
@@ -174,13 +178,6 @@ export default {
         appType:undefined,
         fileName:undefined,
         uploadFileName:undefined,
-         // this.form.versionName = item.response.data.versionName;
-            // this.form.pkSize = item.response.data.pkSize;
-            // this.form.appId = item.response.data.appId;
-            // this.form.appName = item.response.data.appName;
-            // this.form.appType = item.response.data.appType;
-            // this.form.fileName = item.response.data.fileName;
-            // this.form.uploadFileName = item.response.data.uploadFileName;
       };
       this.fileList=[];
       this.resetForm("form");
@@ -202,21 +199,37 @@ export default {
         },
       //文件上传中处理
       handleChange(file, fileList) {
-        this.reset();
-        this.fileList = fileList;
-        fileList.map(item => {
-          if(item.response){
-            this.form = item.response.data;
-            // this.form.versionName = item.response.data.versionName;
-            // this.form.pkSize = item.response.data.pkSize;
-            // this.form.appId = item.response.data.appId;
-            // this.form.appName = item.response.data.appName;
-            // this.form.appType = item.response.data.appType;
-            // this.form.fileName = item.response.data.fileName;
-            // this.form.uploadFileName = item.response.data.uploadFileName;
-          }
-        })
+          this.reset();
+          this.fileList = fileList;
+          fileList.map(item => {
+            if(item.response){
+              this.form = item.response.data;
+            }
+          })  
       },
+      // 上传之前的校验
+        beforeAvatarUpload(file){
+           let fileName=file.name.substring(file.name.lastIndexOf('.')+1)
+            const extension = fileName === 'apk'||fileName === 'ipa'
+            if(!extension ) {
+               this.$message.error('上传文件只能是 apk、ipa格式!');
+               this.fileList=[]
+            }
+        },
+        // 上传成功
+        handleAvatarSuccess(file){
+            console.log(file)
+            if(file.code==200){
+              this.$message.success("上传成功")
+            }
+        },
+        handleExceed(files, fileList){
+            this.$message.error("只能上传单个文件");
+        },
+      // 上传失败
+      handlEerror(){
+       this.$message.error("上传失败");
+     },
     //提交按钮 
     submitForm() {
       this.$refs["form"].validate((valid) => {
