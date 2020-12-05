@@ -53,85 +53,6 @@
     </el-table>
     <!-- 分页器 -->
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
-    <!-- 对话框 -->
-    <!-- <el-dialog :visible.sync="open" :title="title" :close-on-press-escape="false" :close-on-click-modal="false"  width="900px">
-      <el-form ref="form" :model="form" :rules="rules"   label-width="120px">
-          <el-row>
-            <el-col :span="22">
-            <el-form-item label="文章标题" prop="title">
-              <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
-            </el-form-item>
-            </el-col>
-          </el-row> 
-          <el-row>
-           <el-col :span="22">
-            <el-form-item label="是否banner" prop="ifBanner">
-              <el-radio-group v-model="form.ifBanner" :disabled="this.disabled">
-                  <el-radio v-for="dict in dictionaryBanner"
-                    :key="dict.dictSort"
-                    :label="dict.dictSort">
-                    {{ dict.dictLabel }}
-                  </el-radio>
-              </el-radio-group>
-            </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="22">
-              <el-form-item label="是否为链接" prop="ifLink">
-                <el-radio-group v-model="form.ifLink"  @change="agreeChange" :disabled="this.disabled">
-                  <el-radio v-for="dict in dictionaryLink"
-                    :key="dict.dictSort"
-                    :label="dict.dictSort">
-                    {{ dict.dictLabel }}
-                  </el-radio>
-              </el-radio-group>
-            </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="22">
-              <el-form-item label="网址链接" prop="url" v-if="form.ifLink === 0">
-                  <el-input v-model="form.url" placeholder="请输入链接" :disabled="this.disabled"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="22">
-              <el-form-item label="图片上传" prop="pic" >
-                <el-upload class="avatar-uploader" 
-                  :action="url" 
-                  :disabled="this.disabled"
-                  :headers="headers"
-                  :show-file-list="false"
-                  :before-upload="beforeAvatarUpload"
-                  :on-success="handlePreview"
-                  :on-error="handlEerror">
-                  <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                   <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
-                </el-upload>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="文章内容" v-if="form.ifLink!==0"> -->
-                <!-- <Editor v-model="form.content"  :min-height="160"/> -->
-                <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
-                <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
-                <!-- <vue-ueditor-wrap v-model="form.content" @ready="ready" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
-              </el-form-item>
-            </el-col>
-          </el-row>
-      </el-form> -->
-      <!-- 模态框操作 -->
-      <!-- <div slot="footer" class="dialog-footer">
-          <el-button type="primary" v-if=" this.submitButton!==0"  @click="oksubmi" >确认</el-button>
-          <el-button @click="handleCancel">取 消</el-button>
-      </div>
-    </el-dialog> -->
-  
   </div>
     <div v-if="this.ly==1" >
             <el-form ref="form" :model="form" :rules="rules"   label-width="120px" >
@@ -197,10 +118,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
-                <!-- <Editor v-model="form.content"  :min-height="160"/> -->
-                <!-- <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button> -->
-                <!-- <UEditor :config="config" ref="ueditor"></UEditor> -->
-                <vue-ueditor-wrap  v-model="form.content" :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
+                <vue-ueditor-wrap v-if="form.ifLink!==0" @addListener="addListener" v-model="form.content"  :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
               </el-form-item>
             </el-col>
           </el-row>
@@ -265,8 +183,8 @@ export default {
             }
         ],
       },
+      // 是否显示弹出层
       ly:0,
-      ue:"",
       // 全局地址变量
        address:settings.address,
       // 提交按钮状态
@@ -300,8 +218,6 @@ export default {
       dictionaryLink:[],
       // s是否轮播
       dictionaryBanner:[],
-      // 是否显示弹出层
-      open: false,
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -378,12 +294,11 @@ export default {
         'tolowercase', //字母小写
            ]
           ],
-      
           readonly:false,
           autoFloatEnabled :false,
           autoHeightEnabled: false,      // 编辑器不自动被内容撑高
           initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
-          autoClearinitialContent:false,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+          autoClearinitialContent:true,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
           initialFrameWidth: null,       // 初始容器宽度
           initialFrameHeight: 300,       // 初始容器高度
           BaseUrl: '',
@@ -412,10 +327,12 @@ export default {
     })
   },
   methods: {
-    //  实例化是吧文字改为36px
-  //    ready (editorInstance) {
-  //      editorInstance.execCommand("fontsize","36px");
-  //  },
+     //监听富文本setContent
+     addListener(editorInstance) {
+      //  editorInstance.execCommand("fontsize","36px");
+        // editorInstance.setContent('')
+        editorInstance.setContent();
+   },
   
     //获取富文本文档内容
     getContent(){
@@ -480,8 +397,7 @@ export default {
         // 弹出框单选按钮参数
         msgType: 1,
       };
-      this.resetForm("form");
-      
+      this.resetForm("form"); 
     },
     /** 查询用户列表 */
     getList() {
@@ -500,6 +416,8 @@ export default {
       this.imageUrl =  this.address + file.data;
       if(file.code==200){
         this.$message.success("上传成功")
+      }else{
+         this.$message.error("上传失败");
       }
     },
      handlEerror(){
@@ -512,8 +430,6 @@ export default {
         if (!isPNG) {
           this.$message.error('只能上传图片格式文件!');
         }
-        
-  
         if (!isLt5M) {
           this.$message.error('上传5头像图片大小不能超过 5MB!');
         }
@@ -522,19 +438,16 @@ export default {
       
     // 模态框确认按钮
     oksubmi() {
-      this.open = false;
       this.ly=0
     },
     // 模态框取消按钮
     handleCancel(){
-       this.open = false;
        this.addHandleReset()
        this.ly=0
     },
     // 新增文章按钮
     Addsubmi() {
       this.addHandleReset();
-      this.open = true;
       this.title = "新增文章";
       this.config.initialContent="请输入内容";
       this.config.autoClearinitialContent=true
@@ -547,9 +460,9 @@ export default {
     // 查看
     handleLook(row){
       this.updataHandleReset();
-      this.open = true;
       const id = row.id || this.id;
       getArticle(id).then((response) => {
+        if(response.code==200){
         this.config.autoClearinitialContent=false;
         this.config.initialContent=response.data.content;
         this.imageUrl= this.address + response.data.pic;
@@ -557,20 +470,24 @@ export default {
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
         this.form.msgType = Number(response.data.msgType);
-        this.open = true;
         this.title = "查看文章";
         this.submitButton=0;
         this.disabled=true;
         this.config.readonly=true;
         this.ly=1
+        }else{
+        this.$message.error("查看失败")
+        this.ly=0
+        }
+  
       });
     },
     // 修改文章按钮
     handleUpdate(row) {
       this.updataHandleReset();
-      this.open = true;
       const id = row.id || this.id;
       getArticle(id).then((response) => {
+        if(response.code==200){
         this.config.autoClearinitialContent=false;
         this.config.initialContent=response.data.content;
         this.imageUrl= this.address + response.data.pic;
@@ -578,35 +495,45 @@ export default {
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
         this.form.msgType = Number(response.data.msgType);
-        this.open = true;
         this.title = "修改文章";
         this.submitButton=1;
         this.disabled=false;
         this.config.readonly=false;
         this.ly=1
+        }else{
+        this.$message.error("修改操作失败")
+        this.ly=0
+        }
+     
       });
     },
     // 模态框确认事件
     oksubmi() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          // if(this.form.ifLink!==0){
-          //     this.getContent()
-          // }
           if (this.form.id !== undefined) {
-           
               updateArticle(this.form).then((response) => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
+                if(response.code==200){
+                  this.msgSuccess("修改成功");
+                  this.ly=0;
+                  this.getList(); 
+                }else{
+                  this.$message.error("修改失败")
+                  this.ly=1;
+                }
+
             });
           } else {
-            
             addArticle(this.form).then((response) => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-             this.ly=0
+              if(response.code==200){
+                this.msgSuccess("新增成功");
+                this.getList();
+                this.ly=0
+              }else{
+                  this.$message.error("新增失败")
+                  this.ly=1;
+              }
+              
             });
           }
         }
@@ -628,7 +555,9 @@ export default {
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
-      }).catch(() => {})
+      }).catch(() => {
+        
+      })
     },
   },
 };
