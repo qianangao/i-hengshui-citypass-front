@@ -161,7 +161,7 @@ export default {
       this.queryParams["startTime"]= this.dateRange[0];
       this.queryParams["endTime"]= this.dateRange[1];
       versionTable(this.queryParams).then((response) => {
-        this.versionList = response.data.rows,
+        this.versionList= response.data.rows,
         this.loading = false;
       }).catch( ()=>{});
     },
@@ -209,8 +209,8 @@ export default {
       },
       // 上传之前的校验
         beforeAvatarUpload(file){
-           let fileName=file.name.substring(file.name.lastIndexOf('.')+1)
-            const extension = fileName === 'apk'||fileName === 'ipa'
+          let fileName=file.name.substring(file.name.lastIndexOf('.')+1)
+          const extension = fileName === 'apk'||fileName === 'ipa'
             if(!extension ) {
                this.$message.error('上传文件只能是 apk、ipa格式!');
                this.fileList=[]
@@ -218,7 +218,6 @@ export default {
         },
         // 上传成功
         handleAvatarSuccess(file){
-            console.log(file)
             if(file.code==200){
               this.$message.success("上传成功")
             }

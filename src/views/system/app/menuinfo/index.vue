@@ -61,7 +61,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+              <el-input v-model.trim="form.menuName" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -96,7 +96,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入应用名称" />
+              <el-input v-model.trim="form.menuName" placeholder="请输入应用名称" />
             </el-form-item>
           </el-col>
         </el-row>

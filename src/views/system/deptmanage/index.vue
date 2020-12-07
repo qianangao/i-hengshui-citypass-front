@@ -31,14 +31,14 @@
     <el-table class="table-list" v-loading="loading" :data="deptList">
       <el-table-column prop="deptName" label="部门名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
+      <el-table-column prop="LandNumber" label="座机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column label="创建时间"  prop="createTime" align="center">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180">
+      <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
@@ -66,8 +66,15 @@
         </el-row>
         <el-row>
           <el-col :span="22">
-            <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
+            <el-form-item label="座机号" prop="LandNumber">
+              <el-input v-model="form.LandNumber" placeholder="请输入座机号码" maxlength="16" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="22">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号码" maxlength="11" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -144,12 +151,19 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
+        LandNumber: [
+          { required: true, message: "座机号不能为空", trigger: "blur" },
+          {
+            pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/,
+            message: "请输入正确座机号码",
+            trigger: ["blur", "change"]
+          }
+        ],
         phone: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" },
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: ["blur", "change"]
+            trigger: "blur"
           }
         ]
       }
@@ -183,6 +197,7 @@ export default {
         deptName: undefined,
         leader: undefined,
         phone: undefined,
+        LandNumber: undefined,
         email: undefined,
         status: "0",
         remark: undefined
