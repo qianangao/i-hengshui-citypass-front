@@ -5,7 +5,12 @@
       <el-form :model="queryParams" ref="queryForm">
         <el-col :span="6">
           <el-form-item label="版本类型" prop="appType">
-            <el-input  placeholder="请输入版本类型" v-model="queryParams.appType" clearable size="small" class="versionInfo"/>
+            <el-select v-model="queryParams.appType" placeholder="请选择版本类型"  clearable size="small" class="versionInfo">
+                <el-option v-for="dict in statusOptions" 
+                :key="dict.dictValue" 
+                :label="dict.dictLabel" 
+                :value="dict.dictValue"/>
+              </el-select>
           </el-form-item>
         </el-col>
          <el-col :span="8">
@@ -47,7 +52,11 @@
         </el-table-column>
         <el-table-column label="版本类型" prop="appType" align="center" />
         <el-table-column label="APP包大小" prop="pkSize" align="center" />
-        <el-table-column label="下载地址"  prop="appId" align="center" />
+        <el-table-column label="下载地址"  prop="downloadUrl" align="center">
+          <template slot-scope="scope">
+                <a :href="scope.row.downloadUrl" target="_blank" class="buttonText">{{scope.row.downloadUrl}}</a>
+            </template>
+        </el-table-column>
         <el-table-column label="操作" class-name="small-padding fixed-width" align="center">
             <template slot-scope="scope">
                 <el-button size="mini" type="text" icon="el-icon-view"  @click="handleShow(scope.row)">查看</el-button>
@@ -55,12 +64,14 @@
             </template>
         </el-table-column>
      </el-table>
+     <!-- 分页器 -->
+    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
      <!-- 添加新版本信息 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false"  :before-close='closeDialog'>
-      <el-form ref="form" :model="form" label-width="90px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
           <el-row>
             <el-col :span="24">
-                <el-form-item label="上传文件" v-if="this.title=='添加版本'" >
+                <el-form-item label="上传文件" v-if="this.title=='添加版本'" prop='uploadFile'>
                            <el-upload
                               class="upload-demo"    
                               ref="upload"
@@ -97,6 +108,13 @@
           <el-col :span="24">
             <el-form-item label="版本名称">
               <el-input :disabled="true" v-model="form.versionName"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+         <el-row v-if="this.title=='查看版本'">
+          <el-col :span="24">
+            <el-form-item label="下载地址">
+              <el-input :disabled="true" v-model="form.downloadUrl"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -138,6 +156,8 @@ export default {
       url: process.env.VUE_APP_BASE_API + "/system/sys/app/version/record/upload",
       // 查询参数
       queryParams: {
+        pageNum: 1,
+        pageSize: 10,
         appType: undefined
       },
       // 上传图标
@@ -146,8 +166,25 @@ export default {
       fileList: [],
       // 日期范围
       dateRange:[],
+      // 总条数
+      total: 0,
        // 表单禁用
-      disabled:false
+      disabled:false,
+       //状态
+      statusOptions: [
+        {
+          dictValue: 'ios',
+          dictLabel: 'ios'
+        }, {
+          dictValue: 'android',
+          dictLabel: 'android'
+        }
+      ],
+      rules:{
+        uploadFile:[
+            { required: true, message: "请上传图片" },
+        ]
+      }
     }
   },
   created(){
@@ -161,7 +198,8 @@ export default {
       this.queryParams["startTime"]= this.dateRange[0];
       this.queryParams["endTime"]= this.dateRange[1];
       versionTable(this.queryParams).then((response) => {
-        this.versionList= response.data.rows,
+        this.versionList= response.data.rows;
+        this.total = response.data.total;
         this.loading = false;
       }).catch( ()=>{});
     },
@@ -283,9 +321,9 @@ export default {
     },
     // 删除按钮操作
     handleDelete(row) {
-      const id = row.id;
+      const appName= row.appName;
       this.$confirm(
-        '是否确认删除用户编号为"' + id + '"的数据项?',
+        '是否确认删除app名称为"' + appName + '"的版本信息数据?',
         "警告",
         {
           confirmButtonText: "确定",

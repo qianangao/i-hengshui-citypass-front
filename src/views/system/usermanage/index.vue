@@ -83,7 +83,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名称" prop="userName">
-              <el-input class="inputContent" :disabled="form.userId !== undefined" v-model="form.userName" placeholder="请输入用户名称" maxlength="15"/>
+              <el-input class="inputContent" :disabled="form.userId !== undefined" v-model.trim="form.userName" placeholder="请输入用户名称" maxlength="15"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -107,7 +107,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input class="inputContent" v-model="form.email" placeholder="请输入邮箱" maxlength="50"/>
+              <el-input class="inputContent" v-model.trim="form.email" placeholder="请输入邮箱" maxlength="50"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -124,7 +124,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户昵称">
-              <el-input class="inputContent" v-model="form.nickName" placeholder="请输入用户昵称" maxlength="10"/>
+              <el-input class="inputContent" v-model.trim="form.nickName" placeholder="请输入用户昵称" maxlength="10"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -285,7 +285,7 @@ export default {
           { required: true, message: "角色不能为空", trigger: "blur" },
         ],
         email: [
-          { required: true, trigger: "blur" },
+          { required: true, message: "email不能为空", trigger: "blur" },
           {
             type: "email",
             message: "请输入正确的邮箱地址",

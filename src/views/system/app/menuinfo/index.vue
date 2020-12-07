@@ -19,7 +19,7 @@
     <!-- 其他操作 -->
     <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus"  @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']" size="mini">新增菜单</el-button>
+        <el-button type="primary" icon="el-icon-plus"  @click="handleAdd(null, 0)" v-hasPermi="['system:app:menuinfo:add']" size="mini">新增</el-button>
       </el-col>
     </el-row>
     <!-- table 展示 -->
@@ -32,12 +32,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" align="center" >
+      <el-table-column prop="createTime" label="创建时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="编辑时间" align="center" >
+      <el-table-column prop="updateTime" label="更新时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
@@ -107,23 +107,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-         <el-row>
-          <el-col :span="22">
-            <el-form-item label="应用简介" prop="content">
-              <el-input type="textarea" placeholder="请输入内容" v-model="form.content" :rows="3"  maxlength='300'></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="22">
-            <el-form-item label="应用图标" prop="icon">
-              <el-upload  class="menu-uploader"  action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"  :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <i v-else class="el-icon-plus menu-uploader-icon"></i>
-              </el-upload>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="是否首页" prop="ifHome">
@@ -140,6 +123,24 @@
             </el-form-item>
           </el-col>
         </el-row>
+         <el-row>
+          <el-col :span="22">
+            <el-form-item label="应用图标" prop="icon">
+              <el-upload  class="menu-uploader"  action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"  :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus menu-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="22">
+            <el-form-item label="应用简介" prop="content">
+              <el-input type="textarea" placeholder="请输入内容" v-model="form.content" :rows="3"  maxlength='300'></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+       
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -196,14 +197,11 @@ export default {
             message: "请输入正确的网址(以http://'或者'https://'格式开头)",
             trigger: ["blur", "change"]
           }
-
         ],
         icon: [
           { required: true, message: "icon不能为空", trigger:[ 'blur', 'change'] },
-        ],
-         content:[
-            { min: 20, max: 150,message: "长度在20 到 150 个字符", trigger:[ 'blur', 'change'] }
         ]
+        
       },
       rules: {
         menuName: [

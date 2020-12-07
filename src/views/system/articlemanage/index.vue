@@ -21,7 +21,7 @@
     <!-- 新增按钮 -->
     <el-row :gutter="10" class="addBut" >
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi"  v-hasPermi="['system:articlemanage:add']">新增文章</el-button >
+        <el-button type="primary" icon="el-icon-plus"  size="small " @click="Addsubmi"  v-hasPermi="['system:articlemanage:add']">新增</el-button >
       </el-col>
     </el-row>
     <!-- 文章表格数据 -->
@@ -60,7 +60,7 @@
           <el-row>
             <el-col :span="22">
             <el-form-item label="文章标题" prop="title">
-              <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
+              <el-input v-model.trim="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
