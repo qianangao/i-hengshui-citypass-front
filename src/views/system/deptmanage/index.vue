@@ -31,7 +31,7 @@
     <el-table class="table-list" v-loading="loading" :data="deptList">
       <el-table-column prop="deptName" label="部门名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="LandNumber" label="座机号" align="center"></el-table-column>
+      <el-table-column prop="fixedPhone" label="座机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="创建时间"  prop="createTime" align="center">
         <template slot-scope="scope">
@@ -53,21 +53,21 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="部门名称" prop="deptName">
-              <el-input v-model="form.deptName" placeholder="请输入部门名称" />
+              <el-input v-model.trim="form.deptName" placeholder="请输入部门名称" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="22">
             <el-form-item label="部门负责人" prop="leader">
-              <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" />
+              <el-input v-model.trim="form.leader" placeholder="请输入负责人" maxlength="20" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="22">
-            <el-form-item label="座机号" prop="LandNumber">
-              <el-input v-model="form.LandNumber" placeholder="请输入座机号码" maxlength="16" />
+            <el-form-item label="座机号" prop="fixedPhone">
+              <el-input v-model.trim="form.fixedPhone" placeholder="请输入座机号码" maxlength="16" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -81,7 +81,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+              <el-input v-model.trim="form.email" placeholder="请输入邮箱" maxlength="50" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -151,7 +151,7 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        LandNumber: [
+        fixedPhone: [
           { required: true, message: "座机号不能为空", trigger: "blur" },
           {
             pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/,
@@ -197,7 +197,7 @@ export default {
         deptName: undefined,
         leader: undefined,
         phone: undefined,
-        LandNumber: undefined,
+        fixedPhone: undefined,
         email: undefined,
         status: "0",
         remark: undefined

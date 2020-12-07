@@ -72,14 +72,14 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="form.roleName" placeholder="请输入角色名称" />
+              <el-input v-model.trim="form.roleName" placeholder="请输入角色名称" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="22">
             <el-form-item label="权限字符" prop="roleKey">
-              <el-input class="roleKeyInput" v-model="form.roleKey" placeholder="请输入权限字符" clearable />
+              <el-input class="roleKeyInput" v-model.trim="form.roleKey" placeholder="请输入权限字符" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -174,8 +174,7 @@ export default {
       // 表单校验
       rules: {
         roleName: [
-          { required: true, message: "角色名称不能为空", trigger:[ 'blur', 'change'] },
-          { pattern: /^[^ ]+$/, message: "不能存在空格",trigger: ["blur", "change"] }
+          { required: true, message: "角色名称不能为空", trigger:[ 'blur', 'change'] }
         ],
         roleKey: [
           { required: true, message: "权限字符不能为空", trigger:[ 'blur', 'change'] },

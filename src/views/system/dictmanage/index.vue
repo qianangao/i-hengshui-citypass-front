@@ -79,10 +79,10 @@
     <el-dialog :title="title" :visible.sync="open" :close-on-press-escape="false" :close-on-click-modal="false" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典名称" prop="dictName">
-          <el-input v-model="form.dictName" placeholder="请输入字典名称" />
+          <el-input v-model.trim="form.dictName" placeholder="请输入字典名称" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model="form.dictType" placeholder="请输入字典类型" />
+          <el-input v-model.trim="form.dictType" placeholder="请输入字典类型" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
