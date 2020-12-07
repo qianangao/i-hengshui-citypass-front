@@ -99,11 +99,12 @@
           </el-row>
           <el-row>
             <el-col :span="22">
-              <el-form-item label="图片上传" prop="pic" >
+              <el-form-item label="图片上传" prop="pic" ref="image">
                 <el-upload class="avatar-uploader" 
                   :action="url" 
                   :disabled="this.disabled"
                   :headers="headers"
+                  
                   :show-file-list="false"
                   :before-upload="beforeAvatarUpload"
                   :on-success="handlePreview"
@@ -118,7 +119,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
-                <vue-ueditor-wrap v-if="form.ifLink!==0" @addListener="addListener" v-model="form.content"  :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars"></vue-ueditor-wrap>
+                <vue-ueditor-wrap v-if="form.ifLink!==0"  @addListener="addListener" v-model="form.content"  :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars" ></vue-ueditor-wrap>
               </el-form-item>
             </el-col>
           </el-row>
@@ -173,11 +174,11 @@ export default {
             { required: true, message: "是否为链接不能为空", trigger: "blur" },
         ],
          pic:[
-            { required: true, message: "请上传图片", trigger: "blur" },
+            { required: true, message: "请上传图片" },
         ],
         url:[
           { required: true, message: "链接不能为空", trigger: "blur" },
-          { pattern: /^((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?)$/,
+          { pattern: /(http|https):\/\/([\w.]+\/?)\S*/,
             message: "请正确输入以http或https开头的网址",
             trigger: ["blur", "change"]
             }
@@ -189,6 +190,7 @@ export default {
        address:settings.address,
       // 提交按钮状态
       submitButton:0,
+      fileList:[],
       // 文件上传
         imageUrl: '',
       // 模态框标题
@@ -198,10 +200,10 @@ export default {
       // 图片上传地址
         url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
       // 上传图片
-      // fileList: undefined,
+      fileList: [],
       // 总条数
       total: 0,
-      fileList: [],
+      
       // 表单禁用
       disabled:false,
       // 文章表格数据
@@ -233,7 +235,7 @@ export default {
       // 4、根据项目需求自行配置,具体配置参见ueditor.config.js源码或 http://fex.baidu.com/ueditor/#start-start
       config: {
         zIndex : 1,
-        initialStyle:'p span{font-size:28px}' ,
+        initialStyle:'p{font-size:28px}' ,
         fontsize:[
              28,
              38,
@@ -297,7 +299,7 @@ export default {
           readonly:false,
           autoFloatEnabled :false,
           autoHeightEnabled: false,      // 编辑器不自动被内容撑高
-          initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
+          // initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
           autoClearinitialContent:true,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
           initialFrameWidth: null,       // 初始容器宽度
           initialFrameHeight: 300,       // 初始容器高度
@@ -313,7 +315,7 @@ export default {
     };
   },
   created() {
-     
+    
     this.getList();
     // 类型字典
       this.getDicts("sc_msg_type").then((response) => {
@@ -411,8 +413,10 @@ export default {
       );
     },
     // 图片上传
+
      handlePreview(file) {
       this.form.pic =  file.data;
+      this.$refs.image.clearValidate()
       this.imageUrl =  this.address + file.data;
       if(file.code==200){
         this.$message.success("上传成功")
@@ -449,7 +453,6 @@ export default {
     Addsubmi() {
       this.addHandleReset();
       this.title = "新增文章";
-      this.config.initialContent="请输入内容";
       this.config.autoClearinitialContent=true
       this.submitButton=1;
       this.disabled=false;
