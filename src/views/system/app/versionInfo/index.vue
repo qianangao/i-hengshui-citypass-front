@@ -95,8 +95,8 @@
               
           </el-col>
         </el-row>
-        <el-row  v-if="this.title=='查看版本'">
-          <el-col :span="24">
+        <el-row >
+          <el-col :span="24"  v-if="this.title=='查看版本'">
              <el-form-item label="文件名">
                   <el-input :disabled="true" v-model="form.uploadFileName"/>
               </el-form-item>
@@ -187,7 +187,7 @@ export default {
       ],
       rules:{
         uploadFile:[
-            { required: true, message: "请上传图片" , trigger:[ 'blur', 'change'] }
+            { required: true, message: "请上传文件" , trigger:[ 'blur', 'change'] }
         ]
       }
     }
@@ -275,7 +275,7 @@ export default {
     //提交按钮 
     submitForm() {
       this.$refs["form"].validate((valid) => {
-        if(this.fileList){
+        if(this.fileList.length>0){
           addVersion(this.form).then((response)=>{
                 this.loading = false;
                 this.getList();
