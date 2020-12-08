@@ -69,34 +69,39 @@
      <!-- 添加新版本信息 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false"  :before-close='closeDialog'>
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-          <el-row>
-            <el-col :span="24">
-                <el-form-item label="上传文件" v-if="this.title=='添加版本'" prop='uploadFile'>
-                           <el-upload
-                              class="upload-demo"    
-                              ref="upload"
-                              :limit="1"
-                              :action="url"
-                              :disabled="this.disabled"
-                              :before-upload="beforeAvatarUpload"
-                              :on-change="handleChange"
-                              :file-list="fileList"
-                              :on-remove="handleRemove"
-                              :headers="headers"
-                              :on-error="handlEerror"
-                              :on-exceed="handleExceed"
-                              :on-success="handleAvatarSuccess"
-                              drag>
-                            <i class="el-icon-upload"></i>
-                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                            <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过300M</div>
-                          </el-upload>
-                </el-form-item>
-                <el-form-item label="文件名" v-if="this.title=='查看版本'">
+        <el-row  v-if="this.title=='添加版本'">
+          <el-col :span="24">
+              <el-form-item label="上传文件" prop='uploadFile'>
+                          <el-upload
+                            class="upload-demo"    
+                            ref="upload"
+                            :limit="1"
+                            :action="url"
+                            :disabled="this.disabled"
+                            :before-upload="beforeAvatarUpload"
+                            :on-change="handleChange"
+                            :file-list="fileList"
+                            :on-remove="handleRemove"
+                            :headers="headers"
+                            :on-error="handlEerror"
+                            :on-exceed="handleExceed"
+                            :on-success="handleAvatarSuccess"
+                            drag>
+                          <i class="el-icon-upload"></i>
+                          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                          <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过300M</div>
+                        </el-upload>
+              </el-form-item>
+              
+          </el-col>
+        </el-row>
+        <el-row  v-if="this.title=='查看版本'">
+          <el-col :span="24">
+             <el-form-item label="文件名">
                   <el-input :disabled="true" v-model="form.uploadFileName"/>
-                </el-form-item>
-            </el-col>
-          </el-row>
+              </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="版本大小" >
@@ -111,12 +116,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-         <el-row v-if="this.title=='查看版本'">
-          <el-col :span="24">
-            <el-form-item label="下载地址">
-              <el-input :disabled="true" v-model="form.downloadUrl"/>
-            </el-form-item>
-          </el-col>
+         <el-row>
+            <el-col :span="24"  v-if="this.title=='查看版本'">
+              <el-form-item label="下载地址">
+                <el-input :disabled="true" v-model="form.downloadUrl"/>
+              </el-form-item>
+            </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -182,7 +187,7 @@ export default {
       ],
       rules:{
         uploadFile:[
-            { required: true, message: "请上传图片" },
+            { required: true, message: "请上传图片" , trigger:[ 'blur', 'change'] }
         ]
       }
     }
@@ -322,6 +327,7 @@ export default {
     // 删除按钮操作
     handleDelete(row) {
       const appName= row.appName;
+      const id= row.id;
       this.$confirm(
         '是否确认删除app名称为"' + appName + '"的版本信息数据?',
         "警告",
@@ -340,7 +346,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .versionInfo{
     width: 70%;
 }
