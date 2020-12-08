@@ -25,7 +25,7 @@
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="修改时间" prop="updateTime" align="center">
+        <el-table-column label="更新时间" prop="updateTime" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.updateTime) }}</span>
           </template>

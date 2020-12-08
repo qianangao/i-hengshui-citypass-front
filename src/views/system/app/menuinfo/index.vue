@@ -47,7 +47,7 @@
           <span>{{ scope.row.status === "0" ? "启用" : "禁用" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作" class-name="small-padding fixed-width" align="center"  width="160px">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add']">新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row, scope.row.level)" v-hasPermi="['system:app:menuinfo:edit']">编辑</el-button>
@@ -56,7 +56,7 @@
       </el-table-column>
     </el-table>
     <!-- 添加或修改二级菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false" v-if="open">
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-row>
           <el-col :span="22">
@@ -86,13 +86,13 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm('form')">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 添加或修改三级菜单菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="addOpen" width="600px"  :close-on-press-escape="false" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rulesThird" label-width="130px">
+    <el-dialog :title="title" :visible.sync="addOpen" width="600px"  :close-on-press-escape="false" :close-on-click-modal="false" v-if="addOpen">
+      <el-form ref="formThird" :model="form" :rules="rulesThird" label-width="130px">
         <el-row>
           <el-col :span="22">
             <el-form-item label="菜单名称" prop="menuName">
@@ -143,7 +143,7 @@
        
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm('formThird')">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -252,6 +252,7 @@ export default {
       };
       this.imageUrl = "";
       this.resetForm("form");
+      this.resetForm("formThird");
     },
     /** 新增按钮操作 */
     handleAdd(row, level) {
@@ -312,12 +313,11 @@ export default {
           this.open = true;
         }
           this.title = "修改菜单";
-
       }).catch( () =>{})
     },
     /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
+    submitForm(value) {
+      this.$refs[value].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
             updataMenu(this.form).then((response) => {
