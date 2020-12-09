@@ -20,6 +20,7 @@
                 type="daterange"
                 value-format="yyyy-MM-dd"
                 range-separator="-"
+                :picker-options="pickerOptions"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 style="width: 240px"
@@ -126,7 +127,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="版本内容" >
-              <el-input type="textarea" placeholder="请输入版本内容" v-model="form.content" :rows="3"  maxlength='500'></el-input>
+              <el-input type="textarea" placeholder="请输入版本内容" :disabled="this.disabled" v-model="form.content" :rows="3"  maxlength='500'></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -189,7 +190,13 @@ export default {
         uploadFile:[
             { required: true, message: "请上传文件" , trigger:[ 'blur', 'change'] }
         ]
-      }
+      },
+      //日期组件截至日期
+       pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now(); //设置选择今天以及今天以前的日期
+        },
+      },
     }
   },
   created(){
@@ -318,6 +325,7 @@ export default {
     handleShow(row){
       this.open = true;
       this.title ="查看版本"
+      this.disabled = true
       getFrom(row.id).then(response =>{
         this.form = response.data;
         const file = {"name":response.data.uploadFileName,"url":response.data.appId}
@@ -349,5 +357,11 @@ export default {
 <style scoped>
 .versionInfo{
     width: 70%;
+}
+.buttonText{
+  color: #409EFF;
+}
+.buttonText:hover{
+  border-bottom:1px solid #409EFF;
 }
 </style>

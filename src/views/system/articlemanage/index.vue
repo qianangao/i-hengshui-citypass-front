@@ -60,7 +60,7 @@
           <el-row>
             <el-col :span="22">
             <el-form-item label="文章标题" prop="title">
-              <el-input v-model.trim="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
+              <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
