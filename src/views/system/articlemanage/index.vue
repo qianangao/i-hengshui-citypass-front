@@ -453,7 +453,8 @@ export default {
     Addsubmi() {
       this.addHandleReset();
       this.title = "新增文章";
-      this.config.autoClearinitialContent=true
+      this.config.initialContent="请输入内容";
+      this.config.autoClearinitialContent=true;
       this.submitButton=1;
       this.disabled=false;
       this.config.readonly=false;
