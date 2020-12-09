@@ -546,7 +546,7 @@ export default {
     handleDelete(row){
       const userIds = row.id || this.ids;
       this.$confirm(
-        '是否确认删除编号为"' + userIds + '"的文章?',
+        '确认删除该文章？',
         "警告",
         {
           confirmButtonText: "确定",
