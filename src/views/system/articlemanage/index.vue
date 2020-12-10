@@ -28,7 +28,8 @@
     <el-table class="articlerForm" :data="articleList">
       <el-table-column label="编号" align="center">
         <template slot-scope="scope">
-          <span >{{scope.$index+1}}</span>
+          <span >{{scope.$index+(queryParams.pageNum - 1) * queryParams.pageSize + 1}} </span>
+         
         </template>
       </el-table-column>
       <el-table-column label="文章标题" :show-overflow-tooltip="true"  align="center" prop="title" />
@@ -329,19 +330,23 @@ export default {
     })
   },
   methods: {
+    
      //监听富文本setContent
      addListener(editorInstance) {
       //  editorInstance.execCommand("fontsize","36px");
         // editorInstance.setContent('')
         editorInstance.setContent();
    },
+     getUEContent() { // 获取内容方法
+        return this.editor.getContent()
+      },
   
     //获取富文本文档内容
-    getContent(){
-      let content = this.$refs.ueditor.getUEContent();
-      this.form.content = content;
-      console.log(content);
-    },
+    // getContent(){
+    //   let content = this.$refs.ueditor.getUEContent();
+    //   this.form.content = content;
+    //   console.log(content);
+    // },
 
     // 切换是否为链接让输入框为空
     agreeChange(){
