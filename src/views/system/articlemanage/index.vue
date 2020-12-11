@@ -648,4 +648,5 @@ img {
   float: right;
   margin: 10px 10px;
 }
+#edui1_imagescale{display:none !important;}
 </style>
