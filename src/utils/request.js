@@ -53,7 +53,15 @@ service.interceptors.response.use(res => {
         type: 'error'
       })
       return Promise.reject(new Error(msg))
-    } else if (code !== 200) {
+    }else if(code === 201){
+      // router.push("/")
+      Message({
+        message: msg,
+        type: 'error'
+      });
+      location.reload() // 为了重新实例化vue-router对象 避免bug
+    }
+     else if (code !== 200) {
       Notification.error({
         title: msg
       })
