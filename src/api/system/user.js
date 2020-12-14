@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import { praseStrEmpty } from "@/utils/chinaunicom";
 import md5 from "md5";
-
+import {Decrypt,Encrypt} from "@/utils/aes/security.js";
 // 查询用户列表
 export function listUser(query) {
   return request({
     url: '/system/user/list',
     method: 'get',
-    params: query
+    params: {"param":Encrypt(JSON.stringify(query))}
   })
 }
 
@@ -24,7 +24,7 @@ export function addUser(data) {
   return request({
     url: '/system/user',
     method: 'post',
-    data: data
+    data: Encrypt(JSON.stringify(data))
   })
 }
 
@@ -33,7 +33,7 @@ export function updateUser(data) {
   return request({
     url: '/system/user',
     method: 'put',
-    data: data
+    data: Encrypt(JSON.stringify(data))
   })
 }
 

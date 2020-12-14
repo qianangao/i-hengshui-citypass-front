@@ -112,24 +112,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="归属部门">
-              <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
-                <el-option v-for="item in deptOption"
-                  :key="item.deptId"
-                  :label="item.deptName"
-                  :value="item.deptId"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="用户昵称">
-              <el-input class="inputContent" v-model.trim="form.nickName" placeholder="请输入用户昵称" maxlength="10"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
+             <el-col :span="12">
             <el-form-item label="用户性别">
               <el-select class="inputContent" v-model="form.sex" placeholder="请选择">
                 <el-option v-for="dict in sexOptions"
@@ -140,6 +123,24 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="归属部门">
+              <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
+                <el-option v-for="item in deptOption"
+                  :key="item.deptId"
+                  :label="item.deptName"
+                  :value="item.deptId"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item label="用户昵称">
+              <el-input class="inputContent" v-model.trim="form.nickName" placeholder="请输入用户昵称" maxlength="10"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+       
           <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
@@ -204,7 +205,7 @@
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
 import { getDeptSelect } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
-
+import {Decrypt,Encrypt} from "@/utils/aes/security.js";
 export default {
   name: "User",
   data() {
@@ -313,8 +314,9 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.queryParams).then((response) => {
-          this.userList = response.data.rows;
-          this.total = response.data.total;
+          var systemUserInfo= JSON.parse(Decrypt(response.data)) 
+          this.userList = systemUserInfo.data.rows;
+          this.total = systemUserInfo.data.total;
           this.loading = false;
         }
       );
@@ -323,7 +325,7 @@ export default {
     handleReset() {
       this.form = {
         userId: undefined,
-        deptId: undefined,
+        // deptId: undefined,
         userName: undefined,
         nickName: undefined,
         phone: undefined,
