@@ -76,10 +76,22 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+         <el-row>
           <el-col :span="22">
             <el-form-item label="权限字符" prop="roleKey">
               <el-input class="roleKeyInput" v-model.trim="form.roleKey" placeholder="请输入权限字符" clearable />
+            </el-form-item>
+          </el-col>
+        </el-row>
+           <el-row>
+          <el-col :span="22">
+            <el-form-item label="归属部门">
+              <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
+                <el-option v-for="item in deptOption"
+                  :key="item.deptId"
+                  :label="item.deptName"
+                  :value="item.deptId"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -121,6 +133,7 @@
 <script>
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/rolemanage";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
+import { getDeptSelect } from "@/api/system/dept";
 
 export default {
   name: "Role",
@@ -140,6 +153,8 @@ export default {
       total: 0,
       // 角色表格数据
       roleList: [],
+        // 部门选项
+      deptOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -195,6 +210,12 @@ export default {
     });
   },
   methods: {
+      // 获取部门select
+    handleDept() {
+      getDeptSelect().then(response => {
+        this.deptOption = response.data;
+      })
+    },
     /** 查询角色列表 */
     getList() {
       this.loading = true;
@@ -264,6 +285,8 @@ export default {
 	    this.menuExpand = false,
       this.menuNodeAll = false,
       this.form = {
+        // 部门id区别 deptIds
+        deptId: undefined,
         roleId: undefined,
         roleName: undefined,
         roleKey: undefined,
@@ -325,6 +348,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.handleDept();
       this.reset();
       this.getMenuTreeselect();
       this.open = true;
@@ -332,6 +356,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.handleDept();
       this.reset();
       const roleId = row.roleId || this.ids
       const roleMenu = this.getRoleMenuTreeselect(roleId);

@@ -44,6 +44,8 @@
 
 <script>
 import {appUserList} from "@/api/app/user";
+import {Decrypt,decrypt} from "@/utils/aes/security.js";
+
 export default {
   data(){
     return {
@@ -65,8 +67,12 @@ export default {
    getList() {
       this.loading = true;
       appUserList(this.queryParams).then((response) => {
-         this.articleList=response.data.rows;
-         this.total = response.data.total;
+      
+     
+         var appUserInfo= JSON.parse(Decrypt(response.data))
+         console.log(appUserInfo)
+         this.articleList=appUserInfo.data.rows;
+         this.total = appUserInfo.data.total;
          this.loading = false;
         }
       );
