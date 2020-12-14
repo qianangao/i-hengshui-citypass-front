@@ -314,7 +314,8 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.queryParams).then((response) => {
-          var systemUserInfo= JSON.parse(Decrypt(response.data)) 
+        console.log(response)
+          var systemUserInfo= JSON.parse(Decrypt(response.data))
           this.userList = systemUserInfo.data.rows;
           this.total = systemUserInfo.data.total;
           this.loading = false;
