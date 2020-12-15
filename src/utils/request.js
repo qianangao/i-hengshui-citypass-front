@@ -29,6 +29,7 @@ service.interceptors.request.use(config => {
 
 // 响应拦截器
 service.interceptors.response.use(res => {
+    console.log("res",res);
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
@@ -53,20 +54,23 @@ service.interceptors.response.use(res => {
         type: 'error'
       })
       return Promise.reject(new Error(msg))
-    }else if(code === 201){
+    }else if(code === 2001){
       // router.push("/")
       Message({
         message: msg,
         type: 'error'
       });
       location.reload() // 为了重新实例化vue-router对象 避免bug
-    }
-     else if (code !== 200) {
+    }else if (code !== 200) {
       Notification.error({
         title: msg
       })
       return Promise.reject('error')
     } else {
+      // Message({
+      //   message: res.data.msg,
+      //   type: 'error'
+      // });
       return res.data
     }
   },
