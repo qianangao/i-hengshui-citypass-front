@@ -126,7 +126,13 @@
          <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon">
-              <el-upload  class="menu-uploader"  action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"  :before-upload="beforeAvatarUpload">
+              <el-upload 
+               class="menu-uploader" 
+                :action="url" 
+                :headers="headers"
+                :show-file-list="false" 
+                :on-success="handleAvatarSuccess" 
+                :before-upload="beforeAvatarUpload">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
               </el-upload>
@@ -152,12 +158,16 @@
 
 <script>
 import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
-
+import { getToken } from "@/utils/auth";
 import settings from '@/settings.js'
 export default {
   name: "Menu",
   data() {
     return {
+          // 文件上传格式刷
+      headers: { Authorization: "Bearer " + getToken() },
+        // 图片上传地址
+      url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -361,14 +371,14 @@ export default {
         this.$message.error("上传头像图片大小不能超过 10MB!");
         return false;
       }
-      let fileParam = new FormData();
-      fileParam.append("file", file);
-       uploadImg(fileParam).then(res => {
-      if (res.code == 200) {
-        this.form.icon =  res.data;
-        }
-        this.loading = false;
-      }).catch(()=>{}) 
+      // let fileParam = new FormData();
+      // fileParam.append("file", file);
+      //  uploadImg(fileParam).then(res => {
+      // if (res.code == 200) {
+      //   this.form.icon =  res.data;
+      //   }
+      //   this.loading = false;
+      // }).catch(()=>{}) 
     }
   }
 }
