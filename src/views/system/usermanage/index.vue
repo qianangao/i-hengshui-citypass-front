@@ -314,10 +314,9 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.queryParams).then((response) => {
-        console.log(response)
           var systemUserInfo= JSON.parse(Decrypt(response.data))
-          this.userList = systemUserInfo.data.rows;
-          this.total = systemUserInfo.data.total;
+          this.userList = systemUserInfo.rows;
+          this.total = systemUserInfo.total;
           this.loading = false;
         }
       );

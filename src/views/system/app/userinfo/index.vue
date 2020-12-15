@@ -67,12 +67,9 @@ export default {
    getList() {
       this.loading = true;
       appUserList(this.queryParams).then((response) => {
-      
-     
          var appUserInfo= JSON.parse(Decrypt(response.data))
-         console.log(appUserInfo)
-         this.articleList=appUserInfo.data.rows;
-         this.total = appUserInfo.data.total;
+         this.articleList=appUserInfo.rows;
+         this.total = appUserInfo.total;
          this.loading = false;
         }
       );
