@@ -126,7 +126,12 @@
          <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon">
-              <el-upload  class="menu-uploader"  action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"  :before-upload="beforeAvatarUpload">
+              <el-upload  class="menu-uploader"  
+                :action="urlPath"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :headers="headers">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
               </el-upload>
@@ -152,8 +157,9 @@
 
 <script>
 import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
+import settings from '@/settings.js';
+import { getToken } from "@/utils/auth";
 
-import settings from '@/settings.js'
 export default {
   name: "Menu",
   data() {
@@ -182,6 +188,10 @@ export default {
       },
       // 上传图标
       fileList: [],
+      // 图片上传地址
+      urlPath: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
+      // 文件上传格式刷
+      headers: { Authorization: "Bearer " + getToken() },
       form: {},
       // 地址
       address:settings.address,
@@ -199,7 +209,7 @@ export default {
           }
         ],
         icon: [
-          { required: true, message: "icon不能为空", trigger:[ 'blur', 'change'] },
+          { required: true, message: "应用图标不能为空", trigger:[ 'blur', 'change'] },
         ]
         
       },
@@ -345,6 +355,8 @@ export default {
     },
     // 上传地址
     handleAvatarSuccess(res, file) {
+      this.form.icon = res.data;
+      // this.imageUrl = URL.createObjectURL(file.raw);
       this.imageUrl = URL.createObjectURL(file.raw);
     },
     // 上传图片接口
@@ -361,14 +373,14 @@ export default {
         this.$message.error("上传头像图片大小不能超过 10MB!");
         return false;
       }
-      let fileParam = new FormData();
-      fileParam.append("file", file);
-       uploadImg(fileParam).then(res => {
-      if (res.code == 200) {
-        this.form.icon =  res.data;
-        }
-        this.loading = false;
-      }).catch(()=>{}) 
+      // let fileParam = new FormData();
+      // fileParam.append("file", file);
+      // uploadImg(fileParam).then(res => {
+      // if (res.code == 200) {
+      //   this.form.icon =  res.data;
+      //   }
+      //   this.loading = false;
+      // }).catch(()=>{}) 
     }
   }
 }
