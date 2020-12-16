@@ -394,16 +394,26 @@ export default {
       this.handleDept();
       const userId = row.userId || this.ids;
       getUser(userId).then((response) => {
+        if(response.code==200){
         this.form = response.data.userInfo;
         this.roleOptions = response.data.roles;
         this.open = true;
         this.title = "修改用户";
+        }else{
+        this.open = false;
+        this.$message.error(response.msg)
+        }
+      
       });
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
       resetUserPwd(row.userId).then((response) => {
+        if(response.code===200){
         this.msgSuccess("重置密码成功，新密码是：123456" );
+        }else{
+        this.$message.error(response.msg)
+        }
       });
       // this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
       //   confirmButtonText: "确定",
@@ -420,15 +430,25 @@ export default {
         if (valid) {
           if (this.form.userId != undefined) {
             updateUser(this.form).then((response) => {
+             if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              }else{
+              this.open = true;
+              this.$message.error(response.msg)
+              }
             });
           } else {
             addUser(this.form).then((response) => {
+              if(response.code===200){
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+               }else{
+              this.open = true;
+              this.$message.error(response.msg)
+               }
             });
           };
         }

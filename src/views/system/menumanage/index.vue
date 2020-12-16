@@ -306,9 +306,13 @@ export default {
       this.reset();
       this.getTreeselect();
       getMenu(row.menuId).then(response => {
+        if(response.code===200){
         this.form = response.data;
         this.open = true;
         this.title = "修改菜单";
+        }else{
+        this.$message.error(response.msg)
+        }
       });
     },
     /** 提交按钮 */
@@ -317,15 +321,23 @@ export default {
         if (valid) {
           if (this.form.menuId != undefined) {
             updateMenu(this.form).then(response => {
+              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)
+              }
             });
           } else {
             addMenu(this.form).then(response => {
+              if(response.code===code){
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)
+              }
             });
           }
         }

@@ -59,10 +59,10 @@ export function changeMenuStatus(id, status) {
   }
 
 //   上传图标接口
-export function uploadImg(data){
-    return request({
-        url:'/file/ftpUpload',
-        method: 'post',
-        data: data
-    })
-}
+// export function uploadImg(data){
+//     return request({
+//         url:'/file/ftpUpload',
+//         method: 'post',
+//         data: data
+//     })
+// }

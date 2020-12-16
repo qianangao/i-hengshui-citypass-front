@@ -201,7 +201,12 @@ export default {
         this.open = true;
         this.title = row.replyStatus === "0" ?"查看":"回复";
         getFrom(row.id).then(response =>{
+          if(response.code===200){
           this.showFrom = response.data;
+          }else{
+          this.$message.error(response.msg)
+          }
+          
         })
       },
       /** 回复按钮 */
@@ -210,9 +215,14 @@ export default {
             this.msgError("请填写回复内容");
         } else {
           replyMenu(this.showFrom.id,this.showFrom.replyContent).then( response =>{
+            if(response.code===200){
             this.msgSuccess("回复成功");
             this.getList();
             this.open = false;
+            }else{
+            this.$message.error(response.msg)
+            }
+           
           }).catch( ()=>{})
         }
       },

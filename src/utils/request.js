@@ -23,13 +23,11 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
     Promise.reject(error)
 })
 
 // 响应拦截器
 service.interceptors.response.use(res => {
-    console.log("res",res);
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
@@ -61,12 +59,69 @@ service.interceptors.response.use(res => {
         type: 'error'
       });
       location.reload() // 为了重新实例化vue-router对象 避免bug
-    }else if (code !== 200) {
+    }else if(code ===3000){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===3001){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4000){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4002){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4003){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4004){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4005){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4006){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4007){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===5001){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===5004){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }
+    else if (code !== 200) {
       Notification.error({
         title: msg
       })
       return Promise.reject('error')
-    } else {
+    }
+     else {
       // Message({
       //   message: res.data.msg,
       //   type: 'error'
@@ -75,7 +130,6 @@ service.interceptors.response.use(res => {
     }
   },
   error => {
-    console.log('err' + error)
     let { message } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";

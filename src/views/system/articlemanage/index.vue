@@ -484,7 +484,7 @@ export default {
         this.config.readonly=true;
         this.ly=1
         }else{
-        this.$message.error("查看失败")
+        this.$message.error(response.msg)
         this.ly=0
         }
   
@@ -509,10 +509,9 @@ export default {
         this.config.readonly=false;
         this.ly=1
         }else{
-        this.$message.error("修改操作失败")
+        this.$message.error(response.msg)
         this.ly=0
         }
-     
       });
     },
     // 模态框确认事件
@@ -526,7 +525,7 @@ export default {
                   this.ly=0;
                   this.getList(); 
                 }else{
-                  this.$message.error("修改失败")
+                  this.$message.error(response.msg)
                   this.ly=1;
                 }
 
@@ -538,8 +537,8 @@ export default {
                 this.getList();
                 this.ly=0
               }else{
-                  this.$message.error("新增失败")
-                  this.ly=1;
+                this.$message.error(response.msg)
+                this.ly=1;
               }
               
             });

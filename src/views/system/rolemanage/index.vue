@@ -45,6 +45,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="角色编号" prop="roleId" align="center" width="100"/>
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
+       <el-table-column label="归属部门" prop="deptName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" >
         <template slot-scope="scope">
@@ -85,7 +86,7 @@
         </el-row>
            <el-row>
           <el-col :span="22">
-            <el-form-item label="归属部门">
+            <el-form-item label="归属部门" prop="deptId">
               <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
                 <el-option v-for="item in deptOption"
                   :key="item.deptId"
@@ -197,6 +198,9 @@ export default {
         ],
         roleSort: [
           { required: true, message: "角色顺序不能为空", trigger:[ 'blur', 'change'] }
+        ],
+        deptId:[
+          { required: true, message: "部门不能为空", trigger:[ 'blur', 'change']}
         ]
       },
     };
@@ -361,6 +365,7 @@ export default {
       const roleId = row.roleId || this.ids
       const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {
+        if(response.code===200){
         this.form = response.data;
         this.open = true;
         this.$nextTick(() => {
@@ -369,6 +374,11 @@ export default {
           });
         });
         this.title = "修改角色";
+        }else{
+        this.$message.error(response.msg)
+        this.open = false;
+        }
+     
       });
     },
     /** 提交按钮 */
@@ -378,16 +388,24 @@ export default {
           if (this.form.roleId != undefined) {
             this.form.menuIds = this.getMenuAllCheckedKeys();
             updateRole(this.form).then(response => {
+              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)
+              }
             })
           } else {
             this.form.menuIds = this.getMenuAllCheckedKeys();
             addRole(this.form).then(response => {
+               if(response.code===200){
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+               }else{
+               
+               }
             });
           }
         }
@@ -398,9 +416,14 @@ export default {
       if (this.form.roleId != undefined) {
         this.form.deptIds = this.getDeptAllCheckedKeys();
         dataScope(this.form).then(response => {
+          if(response.code===200){
           this.msgSuccess("修改成功");
           this.openDataScope = false;
           this.getList();
+          }else{
+          this.$message.error(response.msg)
+          }
+
         }).catch(()=>{})
       }
     },

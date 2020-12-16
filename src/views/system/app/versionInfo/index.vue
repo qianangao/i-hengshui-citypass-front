@@ -327,9 +327,13 @@ export default {
       this.title ="查看版本"
       this.disabled = true
       getFrom(row.id).then(response =>{
+        if(response.code===200){
         this.form = response.data;
         const file = {"name":response.data.uploadFileName,"url":response.data.appId}
         this.fileList.push(file)
+        }else{
+        this.$message.error(response.msg)
+        }
       })
     },
     // 删除按钮操作
