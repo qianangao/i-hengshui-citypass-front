@@ -223,9 +223,13 @@ export default {
       this.reset();
       const dictId = row.dictId || this.ids
       getType(dictId).then(response => {
+        if(response.code===200){
         this.form = response.data;
         this.open = true;
         this.title = "修改字典类型";
+        }else{
+        this.$message.error(response.msg)
+        }
       });
     },
     /** 提交按钮 */
@@ -234,15 +238,24 @@ export default {
         if (valid) {
           if (this.form.dictId != undefined) {
             updateType(this.form).then(response => {
+              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)
+              }
             });
           } else {
             addType(this.form).then(response => {
+              if(response.code===200){
               this.msgSuccess("新增成功");
               this.open = false;
-              this.getList();
+              this.getList(); 
+              }else{
+                this.$message.error(response.msg)
+              }
+ 
             });
           }
         }
@@ -271,7 +284,11 @@ export default {
     /** 清理缓存按钮操作 */
     handleClearCache() {
       clearCache().then(response => {
+        if(response.code===200){
         this.msgSuccess("清理成功");
+        }else{
+        this.$message.error(response.msg)   
+        }
       });
     }
   }

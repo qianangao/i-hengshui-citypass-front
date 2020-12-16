@@ -317,7 +317,8 @@ export default {
     handleUpdate(row, level) {
       this.reset();
       getMenu(row.id).then((response) => {
-        this.form = response.data;
+        if (response.code===200) {
+          this.form = response.data;
         if(this.form.icon != null) {
           this.imageUrl = this.address + this.form.icon;
         }
@@ -327,6 +328,10 @@ export default {
           this.open = true;
         }
           this.title = "修改菜单";
+        }else{
+          this.$message.error(response.msg)
+        }
+      
       }).catch( () =>{})
     },
     /** 提交按钮 */
@@ -335,17 +340,25 @@ export default {
         if (valid) {
           if (this.form.id != undefined) {
             updataMenu(this.form).then((response) => {
+              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.addOpen = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)  
+              }
             });
           }else{
               addMenu(this.form).then((response) => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.addOpen = false;
-              this.getList();
+                if(response.code===200){
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.addOpen = false;
+                this.getList();
+                }else{
+                 this.$message.error(response.msg)
+                }
             });
           }
         }

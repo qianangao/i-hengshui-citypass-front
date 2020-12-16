@@ -228,9 +228,15 @@ export default {
     handleUpdate(row) {
       this.reset();
       getDept(row.deptId).then(response => {
+        if (response.code===200) {
         this.form = response.data;
         this.open = true;
         this.title = "修改部门";
+        }else{
+        this.$message.error(response.msg)
+        this.open = false;
+        }
+     
       });
     },
     /** 提交按钮 */
@@ -239,15 +245,23 @@ export default {
         if (valid) {
           if (this.form.deptId != undefined) {
             updateDept(this.form).then(response => {
+              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              }else{
+              this.$message.error(response.msg)
+              }
             });
           } else {
             addDept(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
+                if(response.code===200){
+                 this.msgSuccess("新增成功");
+                 this.open = false;
+                 this.getList();
+                }else{
+                 this.$message.error(response.msg)   
+                }
             });
           }
         }

@@ -59,12 +59,69 @@ service.interceptors.response.use(res => {
         type: 'error'
       });
       location.reload() // 为了重新实例化vue-router对象 避免bug
-    }else if (code !== 200) {
+    }else if(code ===3000){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===3001){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4000){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4002){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4003){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4004){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4005){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4006){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===4007){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===5001){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }else if(code ===5004){
+      Message({
+        message: msg,
+        type: 'error'
+      });  
+    }
+    else if (code !== 200) {
       Notification.error({
         title: msg
       })
       return Promise.reject('error')
-    } else {
+    }
+     else {
       // Message({
       //   message: res.data.msg,
       //   type: 'error'
