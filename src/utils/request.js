@@ -23,13 +23,11 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
     Promise.reject(error)
 })
 
 // 响应拦截器
 service.interceptors.response.use(res => {
-    console.log("res",res);
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
@@ -75,7 +73,6 @@ service.interceptors.response.use(res => {
     }
   },
   error => {
-    console.log('err' + error)
     let { message } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";
