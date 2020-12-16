@@ -105,7 +105,6 @@
                   :action="url" 
                   :disabled="this.disabled"
                   :headers="headers"
-                  
                   :show-file-list="false"
                   :before-upload="beforeAvatarUpload"
                   :on-success="handlePreview"
@@ -199,7 +198,7 @@ export default {
       // 文件上传格式刷
       headers: { Authorization: "Bearer " + getToken() },
       // 图片上传地址
-        url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
+      url: process.env.VUE_APP_BASE_API + "/file/ftpUpload",
       // 上传图片
       fileList: [],
       // 总条数
