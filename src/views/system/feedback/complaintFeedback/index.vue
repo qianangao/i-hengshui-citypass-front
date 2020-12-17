@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click='handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
+          <el-button size="mini" type="text" v-hasPermi="[scope.row.replyStatus==1?'system:feedback:complaintFeedback:reply':'']" @click='handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
         </template>
       </el-table-column>
     </el-table>

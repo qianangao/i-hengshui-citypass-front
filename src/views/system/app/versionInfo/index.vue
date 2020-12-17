@@ -145,6 +145,13 @@ import {getToken} from '@/utils/auth';
 import { versionTable, addVersion, uploadFile, delVersion, getFrom, closeButton } from "@/api/app/versionInfo";
 export default {
   data(){
+     var valiIcon = (rule, value, callback) => {
+      // 图片验证
+      if (!this.form.uploadFile) { 
+        callback(new Error("请上传文件"));
+      } else {
+        callback();
+      }}
     return {
        // 遮罩层
       loading: true,
@@ -188,7 +195,7 @@ export default {
       ],
       rules:{
         uploadFile:[
-            { required: true, message: "请上传文件" , trigger:[ 'blur', 'change'] }
+           { required: true,validator: valiIcon  },
         ]
       },
       //日期组件截至日期

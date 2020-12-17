@@ -25,7 +25,7 @@
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="tree"/><span class="personInfo">所属部门</span>
-                <div class="pull-right" v-if="user.dept">{{ user.dept.deptName }} / {{ postGroup }}</div>
+                <div class="pull-right" v-if="user.deptName">{{ user.deptName }}</div>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="peoples"/><span class="personInfo">所属角色</span>
