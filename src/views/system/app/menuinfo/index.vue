@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" align="center"  width="160px">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add']">新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add:child']">新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row, scope.row.level)" v-hasPermi="['system:app:menuinfo:edit']">编辑</el-button>
           <el-button size="mini" type="text" icon="el-icon-disable" @click="handleStatusChange(scope.row)" v-if="scope.row.level > 1" >{{ scope.row.status === "0" ? "禁用" : "启用" }}</el-button>
         </template>
@@ -163,6 +163,13 @@ import { getToken } from "@/utils/auth";
 export default {
   name: "Menu",
   data() {
+     var valiIcon = (rule, value, callback) => {
+      // 图片验证
+      if (!this.form.icon) { 
+        callback(new Error("请上传icon"));
+      } else {
+        callback();
+      }}
     return {
           // 文件上传格式刷
       headers: { Authorization: "Bearer " + getToken() },
@@ -213,7 +220,7 @@ export default {
           }
         ],
         icon: [
-          { required: true, message: "应用图标不能为空", trigger:[ 'blur', 'change'] },
+         { required: true,validator: valiIcon  },
         ]
         
       },

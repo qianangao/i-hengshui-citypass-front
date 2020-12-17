@@ -162,6 +162,13 @@ export default {
   },
 
   data() {
+    var valiIcon = (rule, value, callback) => {
+      // 图片验证
+      if (!this.form.pic) { 
+        callback(new Error("请上传图片"));
+      } else {
+        callback();
+      }}
     return {
      rules: {
         title: [
@@ -174,7 +181,7 @@ export default {
             { required: true, message: "是否为链接不能为空", trigger: "blur" },
         ],
          pic:[
-            { required: true, message: "请上传图片" },
+            { required: true,validator: valiIcon  },
         ],
         url:[
           { required: true, message: "链接不能为空", trigger: "blur" },
@@ -516,6 +523,7 @@ export default {
     },
     // 模态框确认事件
     oksubmi() {
+ 
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
