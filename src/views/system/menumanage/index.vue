@@ -331,7 +331,7 @@ export default {
             });
           } else {
             addMenu(this.form).then(response => {
-              if(response.code===code){
+              if(response.code===200){
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
