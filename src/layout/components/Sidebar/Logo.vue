@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: 'i衡水管理系统',
+      title: 'I衡水管理系统',
       logo: logoImg
     }
   }
