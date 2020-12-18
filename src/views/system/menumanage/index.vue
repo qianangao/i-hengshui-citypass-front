@@ -45,7 +45,7 @@
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" align="center" ></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" class="menuPerms" align="center" ></el-table-column>
       <el-table-column prop="status" label="状态" :formatter="statusFormat" class="status" align="center"></el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="menuOptaion" width="160px">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="menuOptaion" width="160px" v-if="checkPermi(['system:menu:edit', 'system:menu:add:child','system:menu:remove'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-plus" v-if="scope.row.menuType!=='F'" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add:child']">新增</el-button>
@@ -157,7 +157,7 @@ import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/me
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
-
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   name: "Menu",
   components: { Treeselect, IconSelect },
@@ -213,6 +213,8 @@ export default {
     });
   },
   methods: {
+     checkPermi,
+     checkRole,
     // 选择图标
     selected(name) {
       this.form.icon = name;

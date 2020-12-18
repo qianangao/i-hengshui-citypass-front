@@ -44,11 +44,11 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
-      <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" >
+      <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" v-if="checkPermi(['system:articlemanage:edit', 'system:articlemanage:remove','system:articlemanage:look'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:articlemanage:remove']">删除</el-button>
-          <el-button size="mini" type="text" icon="el-icon-view" v-if="scope.row.url==''" @click="handleLook(scope.row)">查看</el-button>
+          <el-button size="mini" type="text" icon="el-icon-view" v-if="scope.row.url==''" @click="handleLook(scope.row)" v-hasPermi="['system:articlemanage:look']" >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -142,6 +142,7 @@ import { getToken } from "@/utils/auth";
 // 1、引入UEditor组件
 // import UEditor from '@/components/Ueditor/ueditor.vue';
 import VueUeditorWrap from 'vue-ueditor-wrap';
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 // 从全局工具类引入全局地址变量
 import settings from "@/settings.js";
 import {
@@ -336,7 +337,8 @@ export default {
     })
   },
   methods: {
-    
+     checkPermi,
+    checkRole,
      //监听富文本setContent
      addListener(editorInstance) {
       //  editorInstance.execCommand("fontsize","36px");

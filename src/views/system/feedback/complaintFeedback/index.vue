@@ -37,7 +37,7 @@
           <span>{{ scope.row.replyStatus === "0" ?"已回复":"未回复" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" v-if="checkPermi(['system:feedback:complaintFeedback:reply'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" v-hasPermi="[scope.row.replyStatus==1?'system:feedback:complaintFeedback:reply':'']" @click='handleShow(scope.row)'>{{ scope.row.replyStatus === "1" ? "回复" : "查看"}}</el-button>
         </template>
@@ -110,7 +110,7 @@
 
 <script>
 import { listMenu, getFrom, replyMenu } from "@/api/feedback/complaintFeedback";
-
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   name: "dict",
   components: { },
@@ -165,6 +165,8 @@ export default {
         this.getList();
     },
     methods: {
+       checkPermi,
+    checkRole,
       /** 查询菜单列表 */
       getList() {
         this.loading = true;
