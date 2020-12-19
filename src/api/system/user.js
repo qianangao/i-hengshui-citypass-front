@@ -18,7 +18,12 @@ export function getUser(userId) {
     method: 'get'
   })
 }
-
+// export function getUser(userId) {
+//   return request({
+//     url: 'system/role/getSysRoleListByCurrentUser' + praseStrEmpty(userId),
+//     method: 'get'
+//   })
+// }
 // 新增用户
 export function addUser(data) {
   return request({

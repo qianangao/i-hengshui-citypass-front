@@ -11,6 +11,8 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
+          <div class="name">{{name}}</div>
+          <!-- <i class="name">{{name}}</i> -->
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -49,7 +51,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'name'
     ]),
     setting: {
       get() {
@@ -83,6 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -145,13 +149,19 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 10px
         }
+        .name{
+          float: right;
+        margin-left: 3px;
+        height: 40px;
+        line-height: 40px;
+        }
+        
 
         .el-icon-caret-bottom {
           cursor: pointer;
