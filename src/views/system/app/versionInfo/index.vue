@@ -58,9 +58,9 @@
                 <a :href="scope.row.downloadUrl" target="_blank" class="buttonText">{{scope.row.downloadUrl}}</a>
             </template>
         </el-table-column>
-        <el-table-column label="操作" class-name="small-padding fixed-width" align="center">
+        <el-table-column label="操作" class-name="small-padding fixed-width" align="center" v-if="checkPermi(['system:versionInfo:look', 'system:versionInfo:remove'])">
             <template slot-scope="scope">
-                <el-button size="mini" type="text" icon="el-icon-view"  @click="handleShow(scope.row)">查看</el-button>
+                <el-button size="mini" type="text" icon="el-icon-view" v-hasPermi="['system:versionInfo:look']" @click="handleShow(scope.row)">查看</el-button>
                 <el-button size="mini" type="text" icon="el-icon-delete" v-hasPermi="['system:versionInfo:remove']" @click="handleDelete(scope.row)">删除</el-button>
             </template>
         </el-table-column>
@@ -143,6 +143,7 @@
 <script>
 import {getToken} from '@/utils/auth';
 import { versionTable, addVersion, uploadFile, delVersion, getFrom, closeButton } from "@/api/app/versionInfo";
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   data(){
      var valiIcon = (rule, value, callback) => {
@@ -211,6 +212,7 @@ export default {
     this.getList();
   },
   methods:{
+    checkPermi, checkRole,
     // 查询版本列表 
     getList() {
       this.loading = true;

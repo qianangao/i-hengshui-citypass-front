@@ -91,7 +91,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" v-if="checkPermi(['system:dict:edit','system:dict:remove'])">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -158,7 +158,7 @@
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
 import { listType, getType } from "@/api/system/dict/type";
-
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   name: "Data",
   data() {
@@ -220,6 +220,8 @@ export default {
     });
   },
   methods: {
+       checkPermi,
+    checkRole,
     /** 查询字典类型详细 */
     getType(dictId) {
       getType(dictId).then(response => {

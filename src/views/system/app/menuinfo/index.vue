@@ -47,11 +47,11 @@
           <span>{{ scope.row.status === "0" ? "启用" : "禁用" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" align="center"  width="160px">
+      <el-table-column label="操作" class-name="small-padding fixed-width" align="center"  width="160px" v-if="checkPermi(['system:app:menuinfo:add:child', 'system:app:menuinfo:edit','system:app:menuinfo:enable'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add:child']">新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row, scope.row.level)" v-hasPermi="['system:app:menuinfo:edit']">编辑</el-button>
-          <el-button size="mini" type="text" icon="el-icon-disable" @click="handleStatusChange(scope.row)" v-if="scope.row.level > 1" >{{ scope.row.status === "0" ? "禁用" : "启用" }}</el-button>
+          <el-button size="mini" type="text" icon="el-icon-disable" @click="handleStatusChange(scope.row)" v-if="scope.row.level > 1" v-hasPermi="['system:app:menuinfo:enable']" >{{ scope.row.status === "0" ? "禁用" : "启用" }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -159,7 +159,7 @@
 import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
 import settings from '@/settings.js';
 import { getToken } from "@/utils/auth";
-
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   name: "Menu",
   data() {
@@ -249,6 +249,8 @@ export default {
     }).catch( ()=>{})
   },
   methods: {
+     checkPermi,
+    checkRole,
     /** 查询菜单列表 */
     getList() {
       this.loading = true;

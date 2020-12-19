@@ -56,9 +56,10 @@
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
       <el-table-column label="角色权限" align="center" prop="roleName"/>
       <el-table-column label="手机号码" align="center" prop="phone" width="120"/>
-      <el-table-column label="状态" align="center">
-        <template slot-scope="scope">
+      <el-table-column label="状态"  align="center" v-if="checkPermi(['system:user:export:enable'])" >
+        <template slot-scope="scope" >
           <el-switch
+            v-hasPermi="['system:user:export:enable']"
             v-model="scope.row.status"
             active-value="0"
             inactive-value="1"
@@ -66,7 +67,7 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width" v-if="checkPermi(['system:user:edit','system:user:remove','system:user:resetPwd'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">修改</el-button>
           <el-button v-if="scope.row.userId !== 1" size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']">删除</el-button>
@@ -205,6 +206,7 @@
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
 import { getDeptSelect } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 import {Decrypt,Encrypt} from "@/utils/aes/security.js";
 export default {
   name: "User",
@@ -310,6 +312,8 @@ export default {
     });
   },
   methods: {
+     checkPermi,
+    checkRole,
     /** 查询用户列表 */
     getList() {
       this.loading = true;
@@ -515,6 +519,7 @@ export default {
         this.deptOption = response.data;
       })
     }
+    
   },
 };
 </script>

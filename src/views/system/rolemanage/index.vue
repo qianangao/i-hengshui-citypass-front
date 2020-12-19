@@ -49,7 +49,7 @@
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" >
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
+          <el-switch  v-hasPermi="['system:role:enable']" v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" >
@@ -57,7 +57,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px" v-if="checkPermi(['system:role:edit', 'system:role:remove'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">删除</el-button>
@@ -135,6 +135,7 @@
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/rolemanage";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
 import { getDeptSelect } from "@/api/system/dept";
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 
 export default {
   name: "Role",
@@ -214,6 +215,8 @@ export default {
     });
   },
   methods: {
+      checkPermi,
+    checkRole,
       // 获取部门select
     handleDept() {
       getDeptSelect().then(response => {

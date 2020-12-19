@@ -38,7 +38,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180">
+      <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180" v-if="checkPermi(['system:dept:edit', 'system:dept:remove'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
@@ -103,7 +103,7 @@
 
 <script>
 import { listDept, addDept, getDept, delDept, updateDept, listDeptExcludeChild } from "@/api/system/dept";
-
+import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 export default {
   name: "Dept",
   components: {},
@@ -178,6 +178,8 @@ export default {
     });
   },
   methods: {
+     checkPermi,
+    checkRole,
     /** 查询部门列表 */
     getList() {
       this.loading = true;
