@@ -32,17 +32,17 @@
       </el-form>
     </el-row>
     <!-- 其他操作 -->
-    <el-row :gutter="15" class="mb8">
+    <!-- <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:role:remove']">批量删除</el-button>
       </el-col>
-    </el-row>
+    </el-row> -->
     <!-- table 展示 -->
-    <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" :data="roleList" row-key="roleId" @selection-change="handleSelectionChange" :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
+  
       <el-table-column label="角色编号" prop="roleId" align="center" width="100"/>
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
        <el-table-column label="归属部门" prop="deptName" align="center" :show-overflow-tooltip="true" />
@@ -57,15 +57,16 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px" v-if="checkPermi(['system:role:edit', 'system:role:remove'])">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px" v-if="checkPermi(['system:role:edit', 'system:role:remove'])">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-if="scope.row.level < 3" v-hasPermi="['system:role:add']" >新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']" v-if="scope.row.roleId!==1">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete"  @click="handleDelete(scope.row)" v-if="scope.row.roleId!==1" v-hasPermi="['system:role:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页器 -->
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+    <!-- <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/> -->
 
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false">
@@ -141,6 +142,7 @@ export default {
   name: "Role",
   data() {
     return {
+        // level: undefined,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -152,7 +154,7 @@ export default {
       // 显示搜索条件
       showSearch: true,
       // 总条数
-      total: 0,
+      // total: 0,
       // 角色表格数据
       roleList: [],
         // 部门选项
@@ -215,12 +217,16 @@ export default {
     });
   },
   methods: {
+    sss(row){
+
+    },
       checkPermi,
     checkRole,
       // 获取部门select
-    handleDept() {
+    handleDept(w) {
       getDeptSelect().then(response => {
         this.deptOption = response.data;
+      
       })
     },
     /** 查询角色列表 */
@@ -228,8 +234,8 @@ export default {
       this.loading = true;
       listRole(this.queryParams).then(response => {
           this.loading = false;
-          this.roleList = response.data.rows;
-          this.total = response.data.total;
+          this.roleList = this.handleTree(response.data, "roleId");
+          // this.total = response.data.total;
         }
       );
     },
@@ -293,6 +299,7 @@ export default {
       this.menuNodeAll = false,
       this.form = {
         // 部门id区别 deptIds
+        level: undefined,
         deptId: undefined,
         roleId: undefined,
         roleName: undefined,
@@ -303,7 +310,8 @@ export default {
         deptIds: [],
         menuCheckStrictly: true,
         deptCheckStrictly: true,
-        remark: undefined
+        remark: undefined,
+        pid:0
       };
       this.resetForm("form");
     },
@@ -354,10 +362,22 @@ export default {
       }
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.handleDept();
-      this.reset();
+    handleAdd(row) {
+       this.reset();
+       this.form.level=row.level+1
+      if(row.deptName==null||undefined||''){
+         this.handleDept(row);
+      }else{
+        this.deptOption = [{'deptName':row.deptName,'deptId':row.deptId}];
+
+      }
+
       this.getMenuTreeselect();
+       if (row != null && row.roleId) {
+        this.form.pid = row.roleId;
+      } else {
+        this.form.pid = 0;
+      }
       this.open = true;
       this.title = "添加角色";
     },
@@ -386,6 +406,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+    
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.roleId != undefined) {
@@ -432,16 +453,16 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const roleIds = row.roleId || this.ids;
-      this.$confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?', "警告", {
+      const roleId = row.roleId || this.ids;
+      this.$confirm('是否确认删除角色编号为"' + roleId + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delRole(roleIds);
+          return delRole(roleId);
         }).then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+         
         }).catch ( () =>{
         })
     }

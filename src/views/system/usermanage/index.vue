@@ -387,6 +387,7 @@ export default {
       this.handleReset();
       this.handleDept();
       getUser().then((response) => {
+       
         this.roleOptions = response.data.roles;
         this.open = true;
         this.title = "添加用户";
@@ -400,7 +401,8 @@ export default {
       getUser(userId).then((response) => {
         if(response.code==200){
         this.form = response.data.userInfo;
-        this.roleOptions = response.data.roles;
+        this.roleOptions = response.data.userInfo.roles;
+       
         this.open = true;
         this.title = "修改用户";
         }else{

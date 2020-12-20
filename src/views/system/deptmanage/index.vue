@@ -67,7 +67,7 @@
         <el-row>
           <el-col :span="22">
             <el-form-item label="座机号" prop="fixedPhone">
-              <el-input v-model.trim="form.fixedPhone" placeholder="请输入座机号码" maxlength="16" />
+              <el-input v-model.trim="form.fixedPhone" placeholder="请输入座机号码" maxlength="12" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" align="center"  width="160px" v-if="checkPermi(['system:app:menuinfo:add:child', 'system:app:menuinfo:edit','system:app:menuinfo:enable'])">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 3" v-hasPermi="['system:app:menuinfo:add:child']">新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row, scope.row.level,scope.row.id)" v-if="scope.row.level < 4" v-hasPermi="['system:app:menuinfo:add:child']">新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row, scope.row.level)" v-hasPermi="['system:app:menuinfo:edit']">编辑</el-button>
           <el-button size="mini" type="text" icon="el-icon-disable" @click="handleStatusChange(scope.row)" v-if="scope.row.level > 1" v-hasPermi="['system:app:menuinfo:enable']" >{{ scope.row.status === "0" ? "禁用" : "启用" }}</el-button>
         </template>
@@ -74,6 +74,34 @@
                   :label="dict.dictValue" 
                   :value="dict.dictValue" />
               </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-row>
+            <el-col :span="24">
+            <el-form-item v-if="this.form.level != 1" label="菜单图标">
+              <el-popover placement="bottom-start" width="460" trigger="click" @show="$refs['iconSelect'].reset()"  >
+                <IconSelect ref="iconSelect" @selected="selected" />
+                <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
+                  <svg-icon v-if="form.icon" slot="prefix"  :icon-class="form.icon" class="el-input__icon" />
+                  <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+                </el-input>
+              </el-popover>
+            </el-form-item>
+          </el-col>
+        </el-row> -->
+         <el-row>
+          <el-col :span="22">
+            <el-form-item label="应用图标" prop="icon" v-if="this.form.level != 1">
+              <el-upload  class="menu-uploader"  
+                :action="urlPath"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :headers="headers">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus menu-uploader-icon"></i>
+              </el-upload>
             </el-form-item>
           </el-col>
         </el-row>
@@ -105,6 +133,29 @@
             <el-form-item label="外链地址" prop="inUrl">
               <el-input v-model="form.inUrl" placeholder="请输入外链地址" />
             </el-form-item>
+          </el-col>
+        </el-row>
+         <!-- <el-row>
+          <el-col :span="22">
+            <el-form-item label="菜单类型" prop="appMenuType">
+              <el-select v-model="form.menuCode" placeholder="请选择菜单类型" style="100%">
+                  <el-option v-for="dict in appMenuType" 
+                  :key="dict.dictLabel" 
+                  :label="dict.dictLabel" 
+                  :value="dict.dictLabel" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row> -->
+        
+        <el-row>
+          <el-col :span="22">
+          <el-form-item  label="是否大图展示">
+           <el-radio-group v-model="form.ifBigPicUrl">
+             <el-radio label="0">是</el-radio>
+             <el-radio label="1">否</el-radio>
+           </el-radio-group>
+         </el-form-item>
           </el-col>
         </el-row>
         <el-row>
@@ -193,6 +244,8 @@ export default {
       visibleOptions: [],
       // app菜单Code数据字典
       appMenuCode: [],
+      // app菜单类型
+      appMenuType:[],
       // 查询参数
       queryParams: {
         menuName: undefined,
@@ -246,11 +299,19 @@ export default {
     //  app菜单Code数据字典
     this.getDicts("app_menu_code").then(response => {
       this.appMenuCode = response.data;
-    }).catch( ()=>{})
+    }).catch( ()=>{});
+    // 获取app菜单分类
+    // this.getDicts("app_menu_classify").then(response => {
+    //  this.appMenuType=response.data;
+    // }).catch( ()=>{})
   },
   methods: {
      checkPermi,
     checkRole,
+        // 选择图标
+    selected(name) {
+      this.form.icon = name;
+    },
     /** 查询菜单列表 */
     getList() {
       this.loading = true;
@@ -266,12 +327,13 @@ export default {
         parentId: "0",
         menuName: undefined,
         sortNum: '',
-        icon: null,
+        icon: undefined,
         status: "0",
         level: undefined,
         ifHot: "1",
         ifHome: "1",
-        ifCarryUser: "1"
+        ifCarryUser: "1",
+        ifBigPicUrl:"1"
       };
       this.imageUrl = "";
       this.resetForm("form");
@@ -289,7 +351,10 @@ export default {
       this.title = "添加菜单";
       if (level === 2) {
         this.addOpen = true;
-      } else {
+      } else if (level === 3){
+        this.addOpen = true;
+      }
+       else {
         this.open = true;
       }
     },
@@ -333,7 +398,11 @@ export default {
         }
         if (level === 3) {
           this.addOpen = true;
-        } else {
+        } 
+        else if(level === 4){
+            this.addOpen = true;
+        }
+        else {
           this.open = true;
         }
           this.title = "修改菜单";
@@ -381,9 +450,14 @@ export default {
     },
     // 上传地址
     handleAvatarSuccess(res, file) {
-      this.form.icon = res.data;
+      if (file.response.code===200) {
+         this.form.icon = res.data;
       // this.imageUrl = URL.createObjectURL(file.raw);
       this.imageUrl = URL.createObjectURL(file.raw);
+      }else{
+        this.$message.error(file.response.msg);
+      }
+     
     },
     // 上传图片接口
     beforeAvatarUpload(file) {
