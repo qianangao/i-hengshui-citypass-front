@@ -111,7 +111,7 @@
                   :on-error="handlEerror">
                   <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                   <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
                 </el-upload>
               </el-form-item>
             </el-col>
