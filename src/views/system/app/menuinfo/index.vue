@@ -90,6 +90,13 @@
             </el-form-item>
           </el-col>
         </el-row> -->
+        <el-row>
+          <el-col :span="22">
+            <el-form-item label="显示排序" prop="sortNum">
+              <el-input-number v-model="form.sortNum" controls-position="right" :min="0" />
+            </el-form-item>
+          </el-col>
+        </el-row>
          <el-row>
           <el-col :span="22">
             <el-form-item label="应用图标" prop="icon" v-if="this.form.level != 1">
@@ -102,13 +109,6 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
               </el-upload>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="22">
-            <el-form-item label="显示排序" prop="sortNum">
-              <el-input-number v-model="form.sortNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -129,48 +129,50 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="22">
+          <el-col :span="22" v-if="this.form.level === 3">
+            <el-form-item label="外链地址">
+              <el-input v-model="form.inUrl" placeholder="请输入外链地址" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="22" v-else>
             <el-form-item label="外链地址" prop="inUrl">
               <el-input v-model="form.inUrl" placeholder="请输入外链地址" />
             </el-form-item>
           </el-col>
         </el-row>
-         <!-- <el-row>
-          <el-col :span="22">
-            <el-form-item label="菜单类型" prop="appMenuType">
-              <el-select v-model="form.menuCode" placeholder="请选择菜单类型" style="100%">
-                  <el-option v-for="dict in appMenuType" 
-                  :key="dict.dictLabel" 
-                  :label="dict.dictLabel" 
-                  :value="dict.dictLabel" />
-              </el-select>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="是否首页">
+              <el-radio-group v-model="form.ifHome">
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row> -->
-        
-        <el-row>
-          <el-col :span="22">
-          <el-form-item  label="是否大图展示">
-           <el-radio-group v-model="form.ifBigPicUrl">
-             <el-radio label="0">是</el-radio>
-             <el-radio label="1">否</el-radio>
-           </el-radio-group>
-         </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否首页" prop="ifHome">
-              <el-radio v-model="form.ifHome" label="0">是</el-radio>
-              <el-radio v-model="form.ifHome" label="1">否</el-radio>
+          <el-col :span="11">
+            <el-form-item  label="是否大图展示">
+              <el-radio-group v-model="form.ifBigPicUrl">
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="22">
-            <el-form-item label="是否携带用户信息" prop="ifCarryUser">
-              <el-radio v-model="form.ifCarryUser" label="0">是</el-radio>
-              <el-radio v-model="form.ifCarryUser" label="1">否</el-radio>
+          <el-col :span="11">
+            <el-form-item  label="是否热门">
+              <el-radio-group v-model="form.ifHot">
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="是否携带用户信息">
+              <el-radio-group v-model="form.ifCarryUser">
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,6 +187,10 @@
                 :headers="headers">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">
+                  <p>上传格式：大图分辨率：750 * 252，图片分辨率：70*60；</p>
+                  <p>只能上传jpg/png/jpeg格式的缩略图，且不超过10MB!</p>
+                </div>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -288,7 +294,7 @@ export default {
           { required: true, message: "菜单Code不能为空", trigger:[ 'blur', 'change'] },
         ],
       },
-      supportPicFormat: ["jpg", "png", "gif", "JPEG"],
+      supportPicFormat: ["jpg", "png", "JPEG"],
       imageUrl: "",
       value:''
     };
@@ -333,7 +339,8 @@ export default {
         ifHot: "1",
         ifHome: "1",
         ifCarryUser: "1",
-        ifBigPicUrl:"1"
+        ifBigPicUrl:"1",
+        ifHot: "1"
       };
       this.imageUrl = "";
       this.resetForm("form");
@@ -465,7 +472,7 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 10;
       // 文件类型进行判断 
        if (!supportPicFormat) {
-        this.$message.error("上传头像图片只能是只能上传jpg/png文件!");
+        this.$message.error("上传头像图片只能是只能上传jpg/png/文件!");
         return false;
       }
       // 文件大小进行判断 
