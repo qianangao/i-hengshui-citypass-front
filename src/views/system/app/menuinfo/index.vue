@@ -106,6 +106,7 @@
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
                 :headers="headers">
+                <div slot="tip" class="scti"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
               </el-upload>
@@ -185,12 +186,9 @@
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
                 :headers="headers">
+                <div slot="tip" class="sctier"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
-                <div slot="tip" class="el-upload__tip">
-                  <p>上传格式：大图分辨率：750 * 252，图片分辨率：70*60；</p>
-                  <p>只能上传jpg/png/jpeg格式的缩略图，且不超过10MB!</p>
-                </div>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -503,7 +501,28 @@ export default {
 .el-upload__tip {
   display: inline-block;
 }
-
+.scti{
+  float: right;
+  margin-right: 40%;
+  margin-top: 8px;
+}
+.scti p{
+  margin: -10px;
+  padding: -10px;
+  font-size: 12px;
+  color: #606266;
+}
+.sctier{
+  float: right;
+  margin-right: 35%;
+  margin-top: 8px;
+}
+.sctier p{
+  margin: -10px;
+  padding: -10px;
+  font-size: 12px;
+  color: #606266;
+}
 </style>
 <style>
 .menu-uploader .el-upload {
