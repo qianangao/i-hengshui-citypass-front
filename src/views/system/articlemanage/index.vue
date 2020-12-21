@@ -109,6 +109,7 @@
                   :before-upload="beforeAvatarUpload"
                   :on-success="handlePreview"
                   :on-error="handlEerror">
+                   <div slot="tip" class="scti"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
                   <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
@@ -646,7 +647,17 @@ img {
   .addBut{
     margin-bottom: 10px;
   }
-
+.scti{
+  float: right;
+  margin-right: 72%;
+  margin-top: 10px;
+}
+.scti p{
+  margin: -10px;
+  padding: -10px;
+  font-size: 12px;
+  color: #606266;
+}
 
  
 </style>
