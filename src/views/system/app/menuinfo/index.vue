@@ -77,19 +77,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row>
-            <el-col :span="24">
-            <el-form-item v-if="this.form.level != 1" label="菜单图标">
-              <el-popover placement="bottom-start" width="460" trigger="click" @show="$refs['iconSelect'].reset()"  >
-                <IconSelect ref="iconSelect" @selected="selected" />
-                <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
-                  <svg-icon v-if="form.icon" slot="prefix"  :icon-class="form.icon" class="el-input__icon" />
-                  <i v-else slot="prefix" class="el-icon-search el-input__icon" />
-                </el-input>
-              </el-popover>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
         <el-row>
           <el-col :span="22">
             <el-form-item label="显示排序" prop="sortNum">
@@ -106,9 +93,14 @@
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
                 :headers="headers">
-                <div slot="tip" class="scti"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
+                <div slot="tip" class="scti">
+                  <p>建议上传</p>
+                  <p>图标分辨率：70*70</p>
+                  <p>大图分辨率：750*252</p>
+                </div>
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -120,7 +112,7 @@
       </div>
     </el-dialog>
     <!-- 添加或修改三级菜单菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="addOpen" width="600px"  :close-on-press-escape="false" :close-on-click-modal="false" v-if="addOpen">
+    <el-dialog :title="title" :visible.sync="addOpen" width="800px"  :close-on-press-escape="false" :close-on-click-modal="false" v-if="addOpen">
       <el-form ref="formThird" :model="form" :rules="rulesThird" label-width="130px">
         <el-row>
           <el-col :span="22">
@@ -178,17 +170,31 @@
           </el-col>
         </el-row>
          <el-row>
-          <el-col :span="22">
-            <el-form-item label="应用图标" prop="icon">
+          <el-col :span="11">
+            <el-form-item label="图标" prop="icon">
               <el-upload  class="menu-uploader"  
                 :action="urlPath"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
                 :headers="headers">
-                <div slot="tip" class="sctier"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus menu-uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">图标分辨率：70*70，只能上传jpg/png/jpeg格式，且不超过5MB!</div>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" v-if="form.ifBigPicUrl==='0'">
+            <el-form-item label="大图" prop="bigIcon">
+              <el-upload  class="menu-uploader"  
+                :action="urlPath"
+                :show-file-list="false"
+                :on-success="handleBigIcon"
+                :before-upload="beforeAvatarUpload"
+                :headers="headers">
+                <img v-if="imageBigIcon" :src="imageBigIcon" class="avatar" />
+                <i v-else class="el-icon-plus menu-uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">大图分辨率：750*252，只能上传jpg/png/jpeg格式，且不超过5MB!</div>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -220,11 +226,12 @@ export default {
   data() {
      var valiIcon = (rule, value, callback) => {
       // 图片验证
-      if (!this.form.icon) { 
-        callback(new Error("请上传icon"));
+      if (!this.form.icon || !this.form.bigIcon) { 
+        callback(new Error("请上传图片"));
       } else {
         callback();
-      }}
+      }
+    }
     return {
           // 文件上传格式刷
       headers: { Authorization: "Bearer " + getToken() },
@@ -278,8 +285,10 @@ export default {
         ],
         icon: [
          { required: true,validator: valiIcon  },
+        ],
+        bigIcon: [
+         { required: true,validator: valiIcon  },
         ]
-        
       },
       rules: {
         menuName: [
@@ -292,8 +301,9 @@ export default {
           { required: true, message: "菜单Code不能为空", trigger:[ 'blur', 'change'] },
         ],
       },
-      supportPicFormat: ["jpg", "png", "JPEG"],
+      supportPicFormat: ["jpg", "png", "jpeg","JPG","PNG","JPEG"],
       imageUrl: "",
+      imageBigIcon: "",
       value:''
     };
   },
@@ -332,6 +342,7 @@ export default {
         menuName: undefined,
         sortNum: '',
         icon: undefined,
+        bigIcon: undefined,
         status: "0",
         level: undefined,
         ifHot: "1",
@@ -341,6 +352,7 @@ export default {
         ifHot: "1"
       };
       this.imageUrl = "";
+      this.imageBigIcon = "";
       this.resetForm("form");
       this.resetForm("formThird");
     },
@@ -401,6 +413,9 @@ export default {
         if(this.form.icon != null) {
           this.imageUrl = this.address + this.form.icon;
         }
+        if(this.form.bigIcon != null){
+          this.imageBigIcon = this.address + this.form.bigIcon;
+        }
         if (level === 3) {
           this.addOpen = true;
         } 
@@ -456,8 +471,11 @@ export default {
     // 上传地址
     handleAvatarSuccess(res, file) {
       if (file.response.code===200) {
-         this.form.icon = res.data;
-      // this.imageUrl = URL.createObjectURL(file.raw);
+      if(this.form.icon){
+        this.form.icon = res.data;
+      }else {
+        this.form.bigIcon = res.data;
+      }
       this.imageUrl = URL.createObjectURL(file.raw);
       }else{
         this.$message.error(file.response.msg);
@@ -467,26 +485,28 @@ export default {
     // 上传图片接口
     beforeAvatarUpload(file) {
       const supportPicFormat = file.type;
-      const isLt2M = file.size / 1024 / 1024 < 10;
+      const isLt5M = file.size / 1024 / 1024 < 5;
       // 文件类型进行判断 
        if (!supportPicFormat) {
-        this.$message.error("上传头像图片只能是只能上传jpg/png/文件!");
+        this.$message.error("只能上传jpg/png/jpeg文件!");
         return false;
       }
       // 文件大小进行判断 
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 10MB!");
+      if (!isLt5M) {
+        this.$message.error("上传图标大小不能超过5MB!");
         return false;
       }
-      // let fileParam = new FormData();
-      // fileParam.append("file", file);
-      // uploadImg(fileParam).then(res => {
-      // if (res.code == 200) {
-      //   this.form.icon =  res.data;
-      //   }
-      //   this.loading = false;
-      // }).catch(()=>{}) 
-    }
+    },
+    // 上传大图
+    handleBigIcon(res, file) {
+      if (file.response.code===200) {
+        this.form.bigIcon = res.data;
+        this.imageBigIcon = URL.createObjectURL(file.raw);
+      }else{
+        this.$message.error(file.response.msg);
+      }
+     
+    },
   }
 }
 </script>
