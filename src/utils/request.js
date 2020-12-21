@@ -52,7 +52,7 @@ service.interceptors.response.use(res => {
         type: 'error'
       })
       return Promise.reject(new Error(msg))
-    }else if(code === 2001){
+    }else if(code == 2001){
       // router.push("/")
       Message({
         message: msg,

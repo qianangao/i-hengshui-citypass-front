@@ -109,10 +109,10 @@
                   :before-upload="beforeAvatarUpload"
                   :on-success="handlePreview"
                   :on-error="handlEerror">
-                   <div slot="tip" class="scti"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div>
+                  <!-- <div slot="tip" class="scti"><p>建议上传</p><p>大图分辨率：750*252</p><p>图片分辨率：70*60</p></div> -->
                   <img v-if="imageUrl" :src="imageUrl" class="avatarImg">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图，且不超过5MB!</div>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg格式的缩略图,且不超过20MB!</div>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -444,14 +444,14 @@ export default {
       beforeAvatarUpload(file) {
         // 图片上传限制
        const isPNG = file.type === 'image/png'||file.type === 'image/jpeg' || file.type === 'image/jpg' ;
-        const isLt5M = file.size / 1024 / 1024 < 5;
+        const isLt20M = file.size / 1024 / 1024 < 20;
         if (!isPNG) {
-          this.$message.error('只能上传图片格式文件!');
+          this.$message.error('只能上传jpg/png/jpeg格式文件!');
         }
-        if (!isLt5M) {
-          this.$message.error('上传5头像图片大小不能超过 5MB!');
+        if (!isLt20M) {
+          this.$message.error('上传头像图片大小不能超过20MB!');
         }
-        return isPNG||isJPG &&isLt5M;
+        return isPNG||isJPG &&isLt20M;
       },
       
     // 模态框确认按钮
