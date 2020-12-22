@@ -43,7 +43,7 @@
     <!-- table 展示 -->
     <el-table v-loading="loading" :data="roleList" row-key="roleId" @selection-change="handleSelectionChange" :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
   
-      <el-table-column label="角色编号" prop="roleId" align="center" width="100"/>
+      <!-- <el-table-column label="角色编号" prop="roleId" align="center" width="100"/> -->
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
        <el-table-column label="归属部门" prop="deptName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
@@ -454,7 +454,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const roleId = row.roleId || this.ids;
-      this.$confirm('是否确认删除角色编号为"' + roleId + '"的数据项?', "警告", {
+      const roleName =row.roleName
+      this.$confirm('是否确认删除角色"' + roleName + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
