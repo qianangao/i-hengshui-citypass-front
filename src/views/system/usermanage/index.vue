@@ -50,7 +50,12 @@
     <!-- table 展示 -->
     <el-table class="table-list" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center"/>
-      <el-table-column label="用户编号" align="center" prop="userId"/>
+       <el-table-column label="用户编号" align="center">
+        <template slot-scope="scope">
+          <span >{{scope.$index+(queryParams.pageNum - 1) * queryParams.pageSize + 1}} </span>
+         
+        </template>
+      </el-table-column>
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
       <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
@@ -462,9 +467,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      console.log(row)
       const userIds = row.userId || this.ids;
+      const userName = row.userName 
       this.$confirm(
-        '是否确认删除用户编号为"' + userIds + '"的数据项?',
+        '是否确认删除用户"' + userName + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
