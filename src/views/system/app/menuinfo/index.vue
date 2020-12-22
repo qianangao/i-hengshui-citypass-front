@@ -24,7 +24,7 @@
     </el-row>
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  ></el-table-column>
       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
       <el-table-column prop="ifHome" label="是否首页" align="center">
           <template slot-scope="scope">
@@ -37,11 +37,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="更新时间" align="center" width="160px">
+      <!-- <el-table-column prop="updateTime" label="更新时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column  class="status" v-model="queryParams.status" prop="status" label="菜单状态"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.status === "0" ? "启用" : "禁用" }}</span>
