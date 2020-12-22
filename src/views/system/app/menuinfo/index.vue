@@ -226,7 +226,15 @@ export default {
   data() {
      var valiIcon = (rule, value, callback) => {
       // 图片验证
-      if (!this.form.icon || !this.form.bigIcon) { 
+      if (!this.form.icon ) { 
+        callback(new Error("请上传图片"));
+      } else {
+        callback();
+      }
+    }
+    var bigvaliIcon = (rule, value, callback) => {
+      // 图片验证
+      if (!this.form.bigIcon ) { 
         callback(new Error("请上传图片"));
       } else {
         callback();
@@ -287,7 +295,7 @@ export default {
          { required: true,validator: valiIcon  },
         ],
         bigIcon: [
-         { required: true,validator: valiIcon  },
+         { required: true,validator: bigvaliIcon  },
         ]
       },
       rules: {
@@ -470,13 +478,12 @@ export default {
     },
     // 上传地址
     handleAvatarSuccess(res, file) {
-      if (file.response.code===200) {
-      if(this.form.icon){
-        this.form.icon = res.data;
-      }else {
-        this.form.bigIcon = res.data;
-      }
+       this.form.icon = res.data;
+        console.log(this.form.icon)
+     
       this.imageUrl = URL.createObjectURL(file.raw);
+      if (res.code===200) {
+        this.$message.success("上传成功")
       }else{
         this.$message.error(file.response.msg);
       }
@@ -499,9 +506,10 @@ export default {
     },
     // 上传大图
     handleBigIcon(res, file) {
-      if (file.response.code===200) {
         this.form.bigIcon = res.data;
         this.imageBigIcon = URL.createObjectURL(file.raw);
+      if (res.code===200) {
+       this.$message.success("上传成功")
       }else{
         this.$message.error(file.response.msg);
       }
