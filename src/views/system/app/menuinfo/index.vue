@@ -134,6 +134,20 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="22">
+            <el-form-item label="访问方式">
+              <el-select v-model="form.ifCarryUser">
+                <el-option
+                  v-for="item in carryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="11">
             <el-form-item label="是否首页">
               <el-radio-group v-model="form.ifHome">
@@ -155,14 +169,6 @@
           <el-col :span="11">
             <el-form-item  label="是否热门">
               <el-radio-group v-model="form.ifHot">
-                <el-radio label="0">是</el-radio>
-                <el-radio label="1">否</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item label="是否携带用户信息">
-              <el-radio-group v-model="form.ifCarryUser">
                 <el-radio label="0">是</el-radio>
                 <el-radio label="1">否</el-radio>
               </el-radio-group>
@@ -312,7 +318,21 @@ export default {
       supportPicFormat: ["jpg", "png", "jpeg","JPG","PNG","JPEG"],
       imageUrl: "",
       imageBigIcon: "",
-      value:''
+      value:'',
+      carryOptions:[
+        {
+          value: '1',
+          label: '访客'
+        },
+        {
+          value: '0',
+          label: '未实名'
+        },
+        {
+          value: '2',
+          label: '实名'
+        }
+      ]
     };
   },
   created() {
@@ -328,7 +348,7 @@ export default {
     // }).catch( ()=>{})
   },
   methods: {
-     checkPermi,
+    checkPermi,
     checkRole,
         // 选择图标
     selected(name) {
@@ -478,9 +498,7 @@ export default {
     },
     // 上传地址
     handleAvatarSuccess(res, file) {
-       this.form.icon = res.data;
-        console.log(this.form.icon)
-     
+      this.form.icon = res.data;
       this.imageUrl = URL.createObjectURL(file.raw);
       if (res.code===200) {
         this.$message.success("上传成功")
@@ -506,14 +524,13 @@ export default {
     },
     // 上传大图
     handleBigIcon(res, file) {
-        this.form.bigIcon = res.data;
-        this.imageBigIcon = URL.createObjectURL(file.raw);
+      this.form.bigIcon = res.data;
+      this.imageBigIcon = URL.createObjectURL(file.raw);
       if (res.code===200) {
        this.$message.success("上传成功")
       }else{
         this.$message.error(file.response.msg);
       }
-     
     },
   }
 }
