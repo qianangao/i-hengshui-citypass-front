@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 用户查询条件 -->
      <el-row  class="el-center" :gutter="15">
-        <el-form  :model="queryParams" ref="queryForm">
+        <el-form  :model="queryParams" ref="queryForm" @submit.native.prevent>
           <el-col :span="6">
             <el-form-item label="菜单名称" prop="menuName">
               <el-input  class="menuInput" v-model="queryParams.menuName"  placeholder="请输入菜单名称"  clearable size="small" />

@@ -4,7 +4,7 @@
     <!-- 搜索框 -->
      <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch" @submit.native.prevent>
           <el-col :span="6">
             <el-form-item label="文章标题" prop="articleName">
               <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>

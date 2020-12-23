@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch" @submit.native.prevent>
         <el-col :span="6">
           <el-form-item label="部门名称" prop="deptName">
             <el-input class="deptInputQuery" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>

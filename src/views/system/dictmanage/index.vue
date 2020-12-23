@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="10">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm">
+      <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-col :span="6">
         <el-form-item label="字典名称" prop="dictName">
           <el-input class="inputQuery" v-model="queryParams.dictName" placeholder="请输入字典名称" clearable size="small" @keyup.enter.native="handleQuery"/>
