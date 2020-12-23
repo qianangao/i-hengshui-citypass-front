@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 文章查询条件 -->
-      <el-form :model="queryParams" ref="queryForm">
+      <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-col :span="6">
           <el-form-item label="用户名称" prop="userName">
             <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>

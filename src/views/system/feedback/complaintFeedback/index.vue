@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
-      <el-form  :model="queryParams" ref="queryForm">
+      <el-form  :model="queryParams" ref="queryForm"  @submit.native.prevent>
         <el-col :span="6">
           <el-form-item label="标题" prop="title">
             <el-input v-model="queryParams.title" placeholder="请输入标题名称" clearable size="small" class='feedInput'/>

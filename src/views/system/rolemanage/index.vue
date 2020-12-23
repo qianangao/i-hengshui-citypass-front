@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
         <el-col :span="6">
           <el-form-item label="角色名称" prop="roleName">
             <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small"/>
