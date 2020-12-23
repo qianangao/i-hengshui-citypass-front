@@ -55,8 +55,8 @@
         <el-table-column label="APP包大小" prop="pkSize" align="center" />
         <el-table-column label="下载地址"  prop="downloadUrl" align="center">
           <template slot-scope="scope">
-                <a :href="scope.row.downloadUrl" target="_blank" class="buttonText">{{scope.row.downloadUrl}}</a>
-            </template>
+              <a href="#" target="_blank" class="buttonText" @click="download(scope.row.downloadUrl)">{{scope.row.downloadUrl}}</a>
+          </template>
         </el-table-column>
         <el-table-column label="操作" class-name="small-padding fixed-width" align="center" v-if="checkPermi(['system:versionInfo:look', 'system:versionInfo:remove'])">
             <template slot-scope="scope">
@@ -90,7 +90,7 @@
                             drag>
                           <i class="el-icon-upload"></i>
                           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                          <div class="el-upload__tip" slot="tip">只能上传akp/ipa文件，且不超过300M</div>
+                          <div class="el-upload__tip" slot="tip">只能上传apk/ipa文件，且不超过300M</div>
                         </el-upload>
               </el-form-item>
               
@@ -144,6 +144,8 @@
 import {getToken} from '@/utils/auth';
 import { versionTable, addVersion, uploadFile, delVersion, getFrom, closeButton } from "@/api/app/versionInfo";
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
+import settings from '@/settings.js';
+
 export default {
   data(){
      var valiIcon = (rule, value, callback) => {
@@ -199,6 +201,8 @@ export default {
            { required: true,validator: valiIcon  },
         ]
       },
+      // 地址
+      address: settings.address,
       //日期组件截至日期
        pickerOptions: {
         disabledDate(time) {
@@ -363,6 +367,10 @@ export default {
         this.getList();
         this.msgSuccess("删除成功");
       }).catch( ()=>{});
+    },
+    //下载
+    download(downloadUrl){
+      window.open(this.address + downloadUrl);
     }
   }
 }
