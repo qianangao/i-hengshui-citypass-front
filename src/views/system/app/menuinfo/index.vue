@@ -374,7 +374,6 @@ export default {
       this.loading = true;
       listMenu(this.queryParams).then((response) => {
         this.menuList = response.data,
-        console.log(this.menuList)
         this.loading = false
       });
     },
