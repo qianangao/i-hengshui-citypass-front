@@ -31,12 +31,27 @@
           <span>{{ scope.row.ifHome === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="ifBigPicUrl" label="是否大图展示" align="center">
+          <template slot-scope="scope">
+          <span>{{ scope.row.ifBigPicUrl === "0"? "是":"否" }}</span>
+        </template>
+      </el-table-column>
+        <el-table-column prop="ifHot" label="是否热门" align="center">
+          <template slot-scope="scope">
+          <span>{{ scope.row.ifHot === "0"? "是":"否" }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column prop="ifCarryUser" label="访问方式" align="center">
+          <template slot-scope="scope">
+          <span>{{ scope.row.ifCarryUser === "0"? "未实名": scope.row.ifCarryUser==='1'?'访客':'实名'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" align="center" width="160px">
+      <!-- <el-table-column prop="createTime" label="创建时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column prop="updateTime" label="更新时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
@@ -359,6 +374,7 @@ export default {
       this.loading = true;
       listMenu(this.queryParams).then((response) => {
         this.menuList = response.data,
+        console.log(this.menuList)
         this.loading = false
       });
     },
