@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px" v-if="checkPermi(['system:role:edit', 'system:role:remove'])">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-if="scope.row.level < 3" v-hasPermi="['system:role:add']" >新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-if="!((userAdminName =='admin' && scope.row.level ==2)||scope.row.level==3) " v-hasPermi="['system:role:add']" >新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']" v-if="scope.row.roleId!==1">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete"  @click="handleDelete(scope.row)" v-if="scope.row.roleId!==1" v-hasPermi="['system:role:remove']">删除</el-button>
         </template>
@@ -142,6 +142,7 @@ export default {
   name: "Role",
   data() {
     return {
+      userAdminName:this.$store.state.user.name,
         // level: undefined,
       // 遮罩层
       loading: true,
