@@ -198,7 +198,7 @@ export default {
         ],
         roleKey: [
           { required: true, message: "权限字符不能为空", trigger:[ 'blur', 'change'] },
-          { pattern: /^[a-zA-Z0-9_]{4,}$/, message: "仅支持字母,数字或者下划线,长度大于4",trigger: ["blur", "change"] }
+          { pattern: /^[a-zA-Z0-9_]{3,}$/, message: "仅支持字母,数字或者下划线,长度大于3",trigger: ["blur", "change"] }
         ],
         roleSort: [
           { required: true, message: "角色顺序不能为空", trigger:[ 'blur', 'change'] }
