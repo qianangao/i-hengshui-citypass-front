@@ -28,17 +28,17 @@
       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
       <el-table-column prop="ifHome" label="是否首页" align="center">
           <template slot-scope="scope">
-          <span>{{ scope.row.ifHome === "0"? "是":"否" }}</span>
+          <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifHome === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="ifBigPicUrl" label="是否大图展示" align="center">
           <template slot-scope="scope">
-          <span>{{ scope.row.ifBigPicUrl === "0"? "是":"否" }}</span>
+          <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifBigPicUrl === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
         <el-table-column prop="ifHot" label="是否热门" align="center">
           <template slot-scope="scope">
-          <span>{{ scope.row.ifHot === "0"? "是":"否" }}</span>
+          <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifHot === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
        <el-table-column prop="ifCarryUser" label="访问方式" align="center" >
@@ -163,12 +163,9 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11">
-            <el-form-item label="是否首页">
-              <el-radio-group v-model="form.ifHome">
-                <el-radio label="0">是</el-radio>
-                <el-radio label="1">否</el-radio>
-              </el-radio-group>
+           <el-col :span="10">
+            <el-form-item label="显示排序" prop="sortNum">
+              <el-input-number v-model="form.sortNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
           <el-col :span="11">
@@ -181,7 +178,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11">
+          <el-col :span="10">
             <el-form-item  label="是否热门">
               <el-radio-group v-model="form.ifHot">
                 <el-radio label="0">是</el-radio>
@@ -189,7 +186,16 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+         <el-col :span="11">
+            <el-form-item label="是否首页">
+              <el-radio-group v-model="form.ifHome">
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
         </el-row>
+        
          <el-row>
           <el-col :span="11">
             <el-form-item label="图标" prop="icon">
