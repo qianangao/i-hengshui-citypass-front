@@ -41,9 +41,9 @@
           <span>{{ scope.row.ifHot === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
-            <el-table-column prop="ifCarryUser" label="访问方式" align="center">
-          <template slot-scope="scope">
-          <span>{{ scope.row.ifCarryUser === "0"? "未实名": scope.row.ifCarryUser==='1'?'访客':'实名'}}</span>
+       <el-table-column prop="ifCarryUser" label="访问方式" align="center" >
+          <template slot-scope="scope" >
+          <span v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifCarryUser === "0"? "未实名": scope.row.ifCarryUser==='1'?'访客':'实名'}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
