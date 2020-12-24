@@ -43,7 +43,7 @@
       </el-table-column>
        <el-table-column prop="ifCarryUser" label="访问方式" align="center" >
           <template slot-scope="scope" >
-          <span v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifCarryUser === "0"? "未实名": scope.row.ifCarryUser==='1'?'访客':'实名'}}</span>
+          <span v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifCarryUser === "0"? "未认证": scope.row.ifCarryUser==='1'?'访客':'已认证'}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
@@ -341,11 +341,11 @@ export default {
         },
         {
           value: '0',
-          label: '未实名'
+          label: '未认证'
         },
         {
           value: '2',
-          label: '实名'
+          label: '已认证'
         }
       ]
     };
