@@ -26,6 +26,7 @@
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  ></el-table-column>
       <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="level" label="菜单层级" :show-overflow-tooltip="true"  align="center"></el-table-column>
       <el-table-column prop="ifHome" label="是否首页" align="center">
           <template slot-scope="scope">
           <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifHome === "0"? "是":"否" }}</span>
