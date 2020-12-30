@@ -25,29 +25,29 @@
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  ></el-table-column>
-      <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
-      <el-table-column prop="level" label="菜单层级" :show-overflow-tooltip="true"  align="center"></el-table-column>
-      <el-table-column prop="ifHome" label="是否首页" align="center">
+      <el-table-column prop="menuCode" label="菜单Code" width="90px" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="level" label="菜单层级" width="90px" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="ifHome" label="是否首页" width="90px" align="center">
           <template slot-scope="scope">
           <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifHome === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="ifBigPicUrl" label="是否大图展示" align="center">
+      <el-table-column prop="ifBigPicUrl" label="是否大图展示" width="100px" align="center">
           <template slot-scope="scope">
           <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifBigPicUrl === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
-        <el-table-column prop="ifHot" label="是否热门" align="center">
+        <el-table-column prop="ifHot" label="是否热门" width="90px" align="center">
           <template slot-scope="scope">
           <span  v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifHot === "0"? "是":"否" }}</span>
         </template>
       </el-table-column>
-       <el-table-column prop="ifCarryUser" label="访问方式" align="center" >
+       <el-table-column prop="ifCarryUser" label="访问方式" width="90px" align="center" >
           <template slot-scope="scope" >
           <span v-if="!(scope.row.level ==1)&&!(scope.row.level ==2)">{{ scope.row.ifCarryUser === "0"? "未认证": scope.row.ifCarryUser==='1'?'访客':'已认证'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="sortNum" label="排序" class="sortNum"  align="center"></el-table-column>
+      <el-table-column prop="sortNum" label="排序" width="90px" class="sortNum"  align="center"></el-table-column>
       <!-- <el-table-column prop="createTime" label="创建时间" align="center" width="160px">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
