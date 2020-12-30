@@ -14,7 +14,7 @@
             </el-form-item>
         </el-col>
         <el-col :span="6">
-            <el-form-item label="状态" prop="status">
+            <el-form-item label="状态" prop="status" v-if="checkPermi(['system:role:enable'])">
               <el-select v-model="queryParams.status" placeholder="请选择角色状态" clearable size="small" class="roleInput">
                 <el-option v-for="dict in statusOptions" 
                 :key="dict.dictValue" 
@@ -47,7 +47,7 @@
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
        <el-table-column label="归属部门" prop="deptName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="权限字符" prop="roleKey" align="center" :show-overflow-tooltip="true" />
-      <el-table-column label="状态" align="center" >
+      <el-table-column label="状态" align="center" v-if="checkPermi(['system:role:enable'])">
         <template slot-scope="scope">
           <el-switch  v-hasPermi="['system:role:enable']" v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
         </template>
