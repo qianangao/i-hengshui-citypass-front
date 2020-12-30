@@ -14,7 +14,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态" prop="status" v-if="checkPermi(['system:user:export:enable'])">
             <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择用户状态" clearable size="small">
               <el-option
                 v-for="dict in statusOptions"
