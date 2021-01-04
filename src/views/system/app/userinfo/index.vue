@@ -17,7 +17,7 @@
       </el-form>
     </el-row>
     <!-- 文章表格数据 -->
-      <el-table class="articlerForm" :data="articleList">
+      <el-table class="articlerForm" :data="articleList" @sort-change="changeTableSort" :default-sort = "{prop: 'updateTime', order: 'descending'}">
         <el-table-column label="用户名" align="center" prop="userName" :show-overflow-tooltip="true"/>
         <el-table-column label="手机号" align="center" prop="phone"/>
         <el-table-column label="创建时间" align="center" prop="createTime">
@@ -25,7 +25,7 @@
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" prop="updateTime" align="center">
+        <el-table-column label="更新时间" prop="updateTime" :sortable="'custom'" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.updateTime) }}</span>
           </template>
@@ -56,6 +56,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userName: undefined,
+         isAsc:'desc',
+         orderByColumn:'update_time'
       },
       showSearch: true,
     }
@@ -85,6 +87,18 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    // 列表排序
+    changeTableSort(k){
+      // console.log(k.prop)
+      // console.log(k.order)
+      if(k.order=='ascending'){
+        this.queryParams.isAsc='asc';
+        this.getList()
+      }else{
+         this.queryParams.isAsc='desc';
+         this.getList()
+      }
+    }
   }
 }
 </script>
