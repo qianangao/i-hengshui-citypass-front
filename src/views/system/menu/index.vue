@@ -281,7 +281,7 @@ export default {
         delete node.children;
       }
       return {
-        id: node.menuId,
+         id: node.menuId,
         label: node.menuName,
         children: node.children
       };

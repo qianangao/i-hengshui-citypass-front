@@ -28,7 +28,7 @@
       </el-col>
     </el-row>
      <!-- table 展示 -->
-    <el-table class="table-list" v-loading="loading" :data="deptList">
+    <el-table class="table-list" v-loading="loading" :data="deptList" row-key="deptId" :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
       <el-table-column prop="deptName" label="部门名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="fixedPhone" label="座机号" align="center"></el-table-column>
@@ -40,13 +40,14 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180" v-if="checkPermi(['system:dept:edit', 'system:dept:remove'])">
         <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">新增</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页器 -->
-    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+    <!-- <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/> -->
     <!-- 添加或修改部门对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -185,8 +186,8 @@ export default {
       this.loading = true;
       listDept(this.queryParams).then(response => {
         this.loading = false;
-        this.deptList = response.data.rows;
-        this.total = response.data.total;
+        this.deptList = response;
+        // this.total = response.data.total;
       });
     },
     /** 字典状态 */
@@ -202,7 +203,8 @@ export default {
         fixedPhone: undefined,
         email: undefined,
         status: "0",
-        remark: undefined
+        remark: undefined,
+         pid:0
       };
       this.resetForm("form");
     },
@@ -224,6 +226,13 @@ export default {
     handleAdd(row) {
       this.reset();
       this.open = true;
+       if (row != null && row.deptId) {
+        this.form.pid = row.deptId;
+      } else {
+        this.form.pid = 0;
+      }
+      this.open = true;
+      this.title = "添加角色";
       this.title = "添加部门";
     },
     /** 修改按钮操作 */

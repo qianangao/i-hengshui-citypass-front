@@ -1,14 +1,20 @@
 import request from '@/utils/request'
 
 // 查询部门列表
+// export function listDept(query) {
+//   return request({
+//     url: '/system/sys/app/dept/list',
+//     method: 'get',
+//     params: query
+//   })
+// }
 export function listDept(query) {
   return request({
-    url: '/system/sys/app/dept/list',
+    url: 'system/sys/app/dept/treeList',
     method: 'get',
     params: query
   })
 }
-
 // 新增部门
 export function addDept(data) {
   return request({
