@@ -1,21 +1,21 @@
 import request from '@/utils/request'
 
 // 查询角色列表
-// export function listRole(query) {
-//   return request({
-//     url: '/system/role/list',
-//     method: 'get',
-//     params: query
-//   })
-// }
-// 查询角色tree列表
 export function listRole(query) {
   return request({
-    url: '/system/role/getRoleTree',
+    url: '/system/role/list',
     method: 'get',
     params: query
   })
 }
+// 查询角色tree列表
+// export function listRole(query) {
+//   return request({
+//     url: '/system/role/getRoleTree',
+//     method: 'get',
+//     params: query
+//   })
+// }
 // 查询角色详细
 export function getRole(roleId) {
   return request({

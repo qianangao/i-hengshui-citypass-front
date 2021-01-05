@@ -32,16 +32,16 @@
       </el-form>
     </el-row>
     <!-- 其他操作 -->
-    <!-- <el-row :gutter="15" class="mb8">
+    <el-row :gutter="15" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:role:remove']">批量删除</el-button>
-      </el-col>
-    </el-row> -->
+      </el-col> -->
+    </el-row>
     <!-- table 展示 -->
-    <el-table v-loading="loading" :data="roleList" row-key="roleId" @selection-change="handleSelectionChange" :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
+    <el-table v-loading="loading" :data="roleList"  @selection-change="handleSelectionChange" >
   
       <!-- <el-table-column label="角色编号" prop="roleId" align="center" width="100"/> -->
       <el-table-column label="角色名称" prop="roleName" align="center" :show-overflow-tooltip="true" />
@@ -59,14 +59,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px" v-if="checkPermi(['system:role:edit', 'system:role:remove'])">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-if="!((userAdminName =='admin' && scope.row.level ==2)||scope.row.level==3) " v-hasPermi="['system:role:add']" >新增</el-button>
+          <!-- <el-button size="mini" type="text" icon="el-icon-edit" @click="handleAdd(scope.row)" v-if="!((userAdminName =='admin' && scope.row.level ==2)||scope.row.level==3) " v-hasPermi="['system:role:add']" >新增</el-button> -->
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']" v-if="scope.row.roleId!==1">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete"  @click="handleDelete(scope.row)" v-if="scope.row.roleId!==1" v-hasPermi="['system:role:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页器 -->
-    <!-- <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/> -->
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
 
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false">
@@ -88,12 +88,13 @@
            <el-row>
           <el-col :span="22">
             <el-form-item label="归属部门" prop="deptId">
-              <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
+              <!-- <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
                 <el-option v-for="item in deptOption"
                   :key="item.deptId"
                   :label="item.deptName"
                   :value="item.deptId"></el-option>
-              </el-select>
+              </el-select> -->
+               <treeselect v-model="form.deptId"   :options="deptOption"  :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -135,11 +136,13 @@
 <script>
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/rolemanage";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
-import { getDeptSelect } from "@/api/system/dept";
+import { listDept } from "@/api/system/dept";
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
-
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   name: "Role",
+  components: { Treeselect },
   data() {
     return {
       userAdminName:this.$store.state.user.name,
@@ -155,7 +158,7 @@ export default {
       // 显示搜索条件
       showSearch: true,
       // 总条数
-      // total: 0,
+       total: 0,
       // 角色表格数据
       roleList: [],
         // 部门选项
@@ -180,7 +183,8 @@ export default {
         pageSize: 10,
         roleName: undefined,
         roleKey: undefined,
-        status: undefined
+        status: undefined,
+        deptId: undefined
       },
       // 权限字符数据字典
       permissionType: [],
@@ -225,18 +229,30 @@ export default {
     checkRole,
       // 获取部门select
     handleDept(w) {
-      getDeptSelect().then(response => {
-        this.deptOption = response.data;
+      listDept().then(response => {
+        this.deptOption = response;
       
       })
+    },
+        normalizer(node) {
+      if (node.childrenList && !node.childrenList.length) {
+        delete node.childrenList;
+      }
+      return {
+        id: node.deptId,
+        label: node.deptName,
+        children: node.childrenList
+      };
     },
     /** 查询角色列表 */
     getList() {
       this.loading = true;
       listRole(this.queryParams).then(response => {
+
           this.loading = false;
-          this.roleList = this.handleTree(response.data, "roleId");
-          // this.total = response.data.total;
+          this.roleList =response.data.rows
+          // this.roleList = this.handleTree(response.data, "roleId");
+           this.total = response.data.total;
         }
       );
     },

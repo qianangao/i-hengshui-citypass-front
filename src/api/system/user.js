@@ -12,18 +12,26 @@ export function listUser(query) {
 }
 
 // 查询用户详细
-export function getUser(userId) {
+export function getUser(deptId) {
   return request({
-    url: '/system/user/' + praseStrEmpty(userId),
+    url: '/system/role/optionselect/' + praseStrEmpty(deptId),
     method: 'get'
   })
 }
-// export function getUser(userId) {
+// export function geetUser(userId) {
 //   return request({
 //     url: 'system/role/getSysRoleListByCurrentUser' + praseStrEmpty(userId),
 //     method: 'get'
 //   })
 // }
+// 修改详情用户
+export function xgUser(userId) {
+  return request({
+    url: '/system/user/'+userId ,
+    method: 'get',
+    
+  })
+}
 // 新增用户
 export function addUser(data) {
   return request({
