@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="3">
+      <el-col :span="4">
          <div class="head-container">
           <el-tree
             :data="deptOptions"
@@ -14,7 +14,7 @@
           />
         </div>
         </el-col>
-        <el-col :span="21">
+    <el-col :span="20">
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
@@ -116,12 +116,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId"  @input="inputChange"  :options="deptOption"  :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门" />
+              <treeselect v-model="form.deptId"  @select="inputChange"  :options="deptOption"  :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色" prop="roleId">
-              <el-select class="inputContent" v-model="form.roleId" placeholder="请选择角色">
+              <el-select class="inputContent" v-model="form.roleId" :clearable="true" placeholder="请选择角色">
                 <el-option v-for="item in roleOptions" 
                   :key="item.roleId" 
                   :label="item.roleName" 
@@ -364,12 +364,13 @@ export default {
       );
     },
     inputChange(n, i) {
-   
+       this.RoleReset()
       if (n !== undefined||null) {
-        this.deptId=n;
+        this.deptId=n.deptId;
         getUser(this.deptId).then((response)=>{
            this.roleOptions = response.data;
         })
+        
       }},
        /** 转换菜单数据结构 */
     normalizer(node) {
@@ -398,10 +399,14 @@ export default {
       this.getList();
     },
     /** 表单重置 */
+     RoleReset() {
+      this.form. roleId = null
+      this.roleOptions=undefined
+    },
     handleReset() {
       this.form = {
         userId: undefined,
-         deptId: undefined,
+        deptId: undefined,
         userName: undefined,
         nickName: undefined,
         phone: undefined,
@@ -434,6 +439,7 @@ export default {
     },
     /** 取消按钮 */
     handleCancel() {
+      this.roleOptions=undefined
       this.open = false;
       this.handleReset();
     },
@@ -460,6 +466,7 @@ export default {
       this.handleDept();
          this.open = true;
         this.title = "添加用户"
+        // console.log(this.roleOptions)
       // getUser().then((response) => {
       //   this.roleOptions = response.data;
       //   this.open = true;
@@ -470,13 +477,11 @@ export default {
     handleUpdate(row) {
       this.handleReset();
       this.handleDept();
-      // console.log(response)
       const userId = row.userId || this.ids;
       xgUser(userId).then((response) => {
         if(response.code==200){
         this.form = response.data.userInfo;
         this.roleOptions = response.data;
-       
         this.open = true;
         this.title = "修改用户";
         }else{

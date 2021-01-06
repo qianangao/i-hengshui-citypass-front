@@ -1,19 +1,34 @@
 <template>
   <div class="app-container">
+     <el-row>
+        <el-col :span="4">
+         <div class="head-container">
+          <el-tree
+            :data="sscbl"
+            :props="ssProps"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            ref="tree"
+            default-expand-all
+            @node-click="handleNodeClick"
+          />
+        </div>
+        </el-col>
+    <el-col :span="20"> 
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
-        <el-col :span="6">
-          <el-form-item label="角色名称" prop="roleName">
+        <el-col :span="7">
+          <el-form-item label="角色名称" prop="roleName" label-width="70px">
             <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small"/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-            <el-form-item label="权限字符" prop="roleKey">
+        <el-col :span="7">
+            <el-form-item label="权限字符" prop="roleKey" label-width="70px">
               <el-input class="roleInput" v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable size="small"/>
             </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
             <el-form-item label="状态" prop="status" v-if="checkPermi(['system:role:enable'])">
               <el-select v-model="queryParams.status" placeholder="请选择角色状态" clearable size="small" class="roleInput">
                 <el-option v-for="dict in statusOptions" 
@@ -23,7 +38,7 @@
               </el-select>
             </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -67,7 +82,7 @@
     </el-table>
     <!-- 分页器 -->
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
-
+ </el-col>  
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -130,6 +145,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    </el-row>
   </div>
 </template>
 
@@ -145,6 +161,11 @@ export default {
   components: { Treeselect },
   data() {
     return {
+       sscbl:[],
+       ssProps: {
+        children: "childrenList",
+        label: "deptName"
+      },
       userAdminName:this.$store.state.user.name,
         // level: undefined,
       // 遮罩层
@@ -162,7 +183,7 @@ export default {
       // 角色表格数据
       roleList: [],
         // 部门选项
-      deptOption:[],
+       deptOption:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -214,6 +235,8 @@ export default {
     };
   },
   created() {
+    // 侧边搜索树
+    this.getTreeselect();
     // 获取菜单列表
     this.getList();
     // 状态数据字典
@@ -243,6 +266,20 @@ export default {
         label: node.deptName,
         children: node.childrenList
       };
+    },
+        // 获取部门树结构
+    getTreeselect() {
+      listDept().then(response => {
+        this.sscbl = response;
+      });
+    },
+      handleNodeClick(data){
+      this.queryParams.deptId = data.deptId;
+      this.getList();
+    },
+       filterNode(value, data) {
+      if (!value) return true;
+      return data.deptName.indexOf(value) !== -1;
     },
     /** 查询角色列表 */
     getList() {
