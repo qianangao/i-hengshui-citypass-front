@@ -227,7 +227,7 @@
 </template>
 
 <script>
-import { listUser, getUser,xgUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
+import { listUser, getUser,xgUser, delUser,deptSelect, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
 import { getDeptSelect,listDept } from "@/api/system/dept";
 import { getToken } from "@/utils/auth";
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
@@ -598,7 +598,7 @@ export default {
     },
     // 获取部门select
     handleDept() {
-      listDept().then(response => {
+      deptSelect().then(response => {
         this.deptOption = response;
         // console.log(this.deptOption)
       })
