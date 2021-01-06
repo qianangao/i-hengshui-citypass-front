@@ -28,8 +28,8 @@
       </el-col>
     </el-row> -->
      <!-- table 展示 -->
-    <el-table class="table-list" v-loading="loading" :data="deptList" row-key="deptId" :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
-      <el-table-column prop="deptName" label="部门名称" align="center" :show-overflow-tooltip="true"></el-table-column>
+    <el-table class="table-list" v-loading="loading" :data="deptList" row-key="deptId" default-expand-all :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
+      <el-table-column prop="deptName" label="部门名称"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="fixedPhone" label="座机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
@@ -38,11 +38,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180" v-if="checkPermi(['system:dept:edit', 'system:dept:remove'])">
+      <el-table-column label="操作" class-name="small-padding fixed-width" align="center" width="180" v-if="userAdminName =='admin'">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row)" v-if="scope.row.level<2" v-hasPermi="['system:dept:add']">新增</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row)" v-if="(userAdminName =='admin' &&scope.row.level<2)" v-hasPermi="['system:dept:add']">新增</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-if="userAdminName =='admin'" v-hasPermi="['system:dept:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-if="userAdminName =='admin' " v-hasPermi="['system:dept:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,6 +110,7 @@ export default {
   components: {},
   data() {
     return {
+       userAdminName:this.$store.state.user.name,
       // 遮罩层
       loading: true,
       // 显示搜索条件
