@@ -132,3 +132,11 @@ export function uploadAvatar(data) {
     data: data
   })
 }
+// 新增查树
+export function deptSelect(query) {
+  return request({
+    url: 'system/sys/app/dept/deptSelect',
+    method: 'get',
+    params: query
+  })
+}
