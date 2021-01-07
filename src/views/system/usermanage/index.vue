@@ -442,6 +442,7 @@ export default {
       this.roleOptions=undefined
       this.open = false;
       this.handleReset();
+      this.RoleReset()
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -518,6 +519,7 @@ export default {
              if(response.code===200){
               this.msgSuccess("修改成功");
               this.open = false;
+               this.RoleReset()
               this.getList();
               }else{
               this.open = true;
@@ -528,6 +530,7 @@ export default {
             addUser(this.form).then((response) => {
               if(response.code===200){
               this.msgSuccess("新增成功");
+               this.RoleReset()
               this.open = false;
               this.getList();
                }else{
