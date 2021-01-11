@@ -121,7 +121,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色" prop="roleId">
-              <el-select class="inputContent" v-model="form.roleId" :clearable="true" placeholder="请选择角色">
+              <el-select class="inputContent" no-data-text="请先选择归属部门" v-model="form.roleId" :clearable="true" placeholder="请选择角色">
                 <el-option v-for="item in roleOptions" 
                   :key="item.roleId" 
                   :label="item.roleName" 
@@ -404,6 +404,7 @@ export default {
       this.roleOptions=undefined
     },
     handleReset() {
+      this.roleOptions=undefined
       this.form = {
         userId: undefined,
         deptId: undefined,
@@ -414,7 +415,7 @@ export default {
         sex: undefined,
         status: "0",
         remark: undefined,
-        roleId: undefined
+        roleId: undefined,
       };
       this.resetForm("form");
     },
@@ -439,10 +440,11 @@ export default {
     },
     /** 取消按钮 */
     handleCancel() {
+      this.RoleReset()
       this.roleOptions=undefined
       this.open = false;
       this.handleReset();
-      this.RoleReset()
+      
     },
     /** 重置按钮操作 */
     resetQuery() {
