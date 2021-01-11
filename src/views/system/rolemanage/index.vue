@@ -153,6 +153,7 @@
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/rolemanage";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
 import { listDept } from "@/api/system/dept";
+import { deptSelect } from "@/api/system/user";
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -252,7 +253,7 @@ export default {
     checkRole,
       // 获取部门select
     handleDept(w) {
-      listDept().then(response => {
+      deptSelect().then(response => {
         this.deptOption = response;
       
       })
