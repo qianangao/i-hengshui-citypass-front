@@ -52,6 +52,7 @@
             </template>
         </el-table-column>
         <el-table-column label="版本类型" prop="appType" align="center" />
+        <el-table-column label="版本名称" prop="versionName" align="center" />
         <el-table-column label="APP包大小" prop="pkSize" align="center" />
         <el-table-column label="下载地址"  prop="downloadUrl" align="center">
           <template slot-scope="scope">
@@ -370,7 +371,8 @@ export default {
     },
     //下载
     download(downloadUrl){
-      window.open(this.address + downloadUrl);
+      window.open(downloadUrl);
+      // window.open(this.address + downloadUrl);
     }
   }
 }
