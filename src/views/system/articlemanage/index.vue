@@ -6,7 +6,7 @@
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" :inline="false" v-show="showSearch" @submit.native.prevent>
           <el-col :span="6">
-            <el-form-item label="文章标题" prop="articleName">
+            <el-form-item label="标题" prop="articleName">
               <el-input class="inputQuery" v-model="queryParams.title" placeholder="请输入标题" clearable size="small"/>
             </el-form-item>
           </el-col>
@@ -32,8 +32,8 @@
          
         </template>
       </el-table-column>
-      <el-table-column label="文章标题" :show-overflow-tooltip="true"  align="center" prop="title" />
-      <el-table-column label="是否是banner" :formatter="articleBanner"  align="center" prop="ifBanner" /> 
+      <el-table-column label="标题" :show-overflow-tooltip="true"  align="center" prop="title" />
+      <!-- <el-table-column label="是否是banner" :formatter="articleBanner"  align="center" prop="ifBanner" />  -->
       <el-table-column label="链接 " align="center"  prop="url"   :show-overflow-tooltip="true"/>
       <el-table-column align="center" label="缩略图" >
         <template slot-scope="scope">
@@ -60,12 +60,12 @@
              <h4 v-cloak>{{title}}</h4>
           <el-row>
             <el-col :span="22">
-            <el-form-item label="文章标题" prop="title">
+            <el-form-item label="标题" prop="title">
               <el-input v-model="form.title" :disabled="this.disabled" maxlength="150" placeholder="请输入标题"/>
             </el-form-item>
             </el-col>
           </el-row> 
-          <el-row>
+          <!-- <el-row>
            <el-col :span="22">
             <el-form-item label="是否banner" prop="ifBanner">
               <el-radio-group v-model="form.ifBanner" :disabled="this.disabled">
@@ -77,7 +77,7 @@
               </el-radio-group>
             </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <el-col :span="22">
               <el-form-item label="是否为链接" prop="ifLink">
@@ -174,11 +174,11 @@ export default {
     return {
      rules: {
         title: [
-          { required: true, message: "文章标题不能为空", trigger: "blur" },
+          { required: true, message: "标题不能为空", trigger: "blur" },
         ],
-        ifBanner:[
-          { required: true, message: "是否为轮播不能为空", trigger: "blur" },
-        ],
+        // ifBanner:[
+        //   { required: true, message: "是否为轮播不能为空", trigger: "blur" },
+        // ],
         ifLink:[
             { required: true, message: "是否为链接不能为空", trigger: "blur" },
         ],
@@ -363,14 +363,14 @@ export default {
        this.form.url="";
     },
     // 表格格式化数据
-    articleBanner(row, column){
-      let ifBanner=row.ifBanner;
-      if(ifBanner==0){
-        return "是"
-      }else{
-        return "否"
-      }
-    },
+    // articleBanner(row, column){
+    //   let ifBanner=row.ifBanner;
+    //   if(ifBanner==0){
+    //     return "是"
+    //   }else{
+    //     return "否"
+    //   }
+    // },
     // 查询按钮
     handleQuery(){
       this.queryParams.page = 1;
@@ -390,7 +390,8 @@ export default {
         editorOption: {},
         // num: 999,
         // 是否首页轮播
-        ifBanner: 1,
+        // ifBanner: 1,
+        ifBanner: 0,
         // 是否外联
         ifLink: 0,
         // 弹出框单选按钮参数

@@ -20,17 +20,17 @@
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
         <el-col :span="7">
           <el-form-item label="角色名称" prop="roleName" label-width="70px">
-            <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small"/>
+            <el-input class="roleInput" v-model="queryParams.roleName" placeholder="请输入" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="7">
             <el-form-item label="权限字符" prop="roleKey" label-width="70px">
-              <el-input class="roleInput" v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable size="small"/>
+              <el-input class="roleInput" v-model="queryParams.roleKey" placeholder="请输入" clearable size="small"/>
             </el-form-item>
         </el-col>
         <el-col :span="5">
             <el-form-item label="状态" prop="status" v-if="checkPermi(['system:role:enable'])">
-              <el-select v-model="queryParams.status" placeholder="请选择角色状态" clearable size="small" class="roleInput">
+              <el-select v-model="queryParams.status" placeholder="请选择" clearable size="small" class="roleInput">
                 <el-option v-for="dict in statusOptions" 
                 :key="dict.dictValue" 
                 :label="dict.dictLabel" 

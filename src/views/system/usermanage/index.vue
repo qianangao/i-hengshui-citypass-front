@@ -20,17 +20,17 @@
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
         <el-col :span="7">
           <el-form-item label="用户名称" prop="userName" label-width="70px">
-            <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
+            <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="7">
           <el-form-item label="手机号码" prop="phone" label-width="70px">
-            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入手机号码" clearable size="small"/>
+            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="5">
           <el-form-item label="状态" prop="status" v-if="checkPermi(['system:user:export:enable'])">
-            <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择用户状态" clearable size="small">
+            <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择" clearable size="small">
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -65,7 +65,7 @@
     <!-- table 展示 -->
     <el-table class="table-list" v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center"/>
-       <el-table-column label="用户编号" align="center">
+       <el-table-column label="编号" width="50" align="center">
         <template slot-scope="scope">
           <span >{{scope.$index+(queryParams.pageNum - 1) * queryParams.pageSize + 1}} </span>
          
