@@ -25,7 +25,7 @@
     <!-- table 展示 -->
     <el-table  v-loading="loading" :data="menuList" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName"  label="菜单名称" :show-overflow-tooltip="true"  ></el-table-column>
-      <el-table-column prop="menuCode" label="菜单Code" width="90px" :show-overflow-tooltip="true"  align="center"></el-table-column>
+      <el-table-column prop="menuCode" label="菜单Code" :show-overflow-tooltip="true"  align="center"></el-table-column>
       <el-table-column prop="level" label="菜单层级" width="90px" :show-overflow-tooltip="true"  align="center"></el-table-column>
       <el-table-column prop="ifHome" label="是否首页" width="90px" align="center">
           <template slot-scope="scope">

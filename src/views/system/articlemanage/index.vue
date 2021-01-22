@@ -44,6 +44,7 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间"   align="center" prop="createTime" :show-overflow-tooltip="true" />
+       <el-table-column label="修改时间"   align="center" prop="updateTime" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width" v-if="checkPermi(['system:articlemanage:edit', 'system:articlemanage:remove','system:articlemanage:look'])">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:articlemanage:edit']">修改</el-button>
@@ -419,8 +420,8 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listArticle(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
+      listArticle(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+      
           this.articleList = response.data.rows;
           this.total = response.data.total;
           this.loading = false;

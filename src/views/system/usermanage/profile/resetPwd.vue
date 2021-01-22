@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { updateUserPwd,userPasd } from "@/api/system/user";
+import { updateUserPwd, userPasd } from "@/api/system/user";
 
 export default {
   data() {
@@ -49,7 +49,11 @@ export default {
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" },
-          { required: true, validator: equalToPassword, trigger: ["blur","change"] }
+          {
+            required: true,
+            validator: equalToPassword,
+            trigger: ["blur", "change"]
+          }
         ]
       }
     };
@@ -58,11 +62,17 @@ export default {
     submit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          userPasd(this.user.oldPassword=this.user.oldPassword,this.user.newPassword=this.user.newPassword).then(response => {
+          userPasd(
+            (this.user.oldPassword = this.user.oldPassword),
+            (this.user.newPassword = this.user.newPassword)
+          ).then(response => {
             this.resetForm("form");
-            this.msgSuccess("修改成功");
-          }
-          );
+            if (response !== undefined) {
+              if (response.code == 200) {
+                this.msgSuccess(response.msg);
+              }
+            }
+          });
         }
       });
     },
