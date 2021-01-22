@@ -38,8 +38,8 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://localhost:8080`,
         // target: `http://121.17.30.245:8081`,     //245服务器
-         target: `http://10.92.119.10:8081`,    //10开发服务器
-        // target: `http://121.17.30.248:8081`,        //248测试服务器
+        //  target: `http://10.92.119.10:8081`,    //10开发服务器
+        target: `http://121.17.30.248:8081`,        //248测试服务器
         // target: `http://218.11.12.14:8081`,      //14生产服务器
         changeOrigin: true,
         pathRewrite: {
