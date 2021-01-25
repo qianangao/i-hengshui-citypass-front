@@ -35,7 +35,7 @@
         // serverUrl: "http://10.92.119.10:8081/ueditor/exec"
         // serverUrl: "http://121.17.30.245:8081/ueditor/exec"
         serverUrl: "http://121.17.30.248:8081/ueditor/exec"
-        // serverUrl: "http://10.100.5.105:8081/ueditor/exec"
+        // serverUrl: "http://218.11.12.14:8081/file/ueditor/exec"
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         , toolbars: [[

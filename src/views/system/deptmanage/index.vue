@@ -4,8 +4,8 @@
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch" @submit.native.prevent>
         <el-col :span="6">
-          <el-form-item label="部门名称" prop="deptName">
-            <el-input class="deptInputQuery" v-model="queryParams.deptName" placeholder="请输入部门名称" clearable size="small"/>
+          <el-form-item label="机构名称" prop="deptName">
+            <el-input class="deptInputQuery" v-model="queryParams.deptName" placeholder="请输入机构名称" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -29,7 +29,7 @@
     </el-row> -->
      <!-- table 展示 -->
     <el-table class="table-list" v-loading="loading" :data="deptList" row-key="deptId" default-expand-all :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
-      <el-table-column prop="deptName" label="部门名称"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="deptName" label="机构名称"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="fixedPhone" label="座机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
@@ -53,8 +53,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="22">
-            <el-form-item label="部门名称" prop="deptName">
-              <el-input v-model.trim="form.deptName" placeholder="请输入部门名称" />
+            <el-form-item label="机构名称" prop="deptName">
+              <el-input v-model.trim="form.deptName" placeholder="请输入机构名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -140,7 +140,7 @@ export default {
       // 表单校验
       rules: {
         deptName: [
-          { required: true, message: "部门名称不能为空", trigger: ["blur", "change"] }
+          { required: true, message: "机构名称不能为空", trigger: ["blur", "change"] }
         ],
         leader: [
           { required: true, message: "部门负责人不能为空", trigger: ["blur", "change"] }
@@ -156,6 +156,7 @@ export default {
         fixedPhone: [
           { required: true, message: "座机号不能为空", trigger: "blur" },
           {
+            // pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/,
             pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,11})+(\-[0-9]{1,6})?$/,
             message: "请输入正确座机号码",
             trigger: ["blur", "change"]
