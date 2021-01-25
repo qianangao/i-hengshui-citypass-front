@@ -4,10 +4,13 @@
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
+    
     <div class="right-menu">
+      <span class="monitoring-platform">
+        <el-button size="mini" type="primary" @click="handleOpen()">监控平台</el-button>
+      </span>
       <!-- <template v-if="device!=='mobile'">
       </template> -->
-
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
@@ -80,20 +83,21 @@ export default {
           location.href = '/index';
         })
       })
+    },
+    handleOpen() {
+      this.$router.push({ path: '/monitor' });
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -101,30 +105,25 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
-
     &:hover {
       background: rgba(0, 0, 0, .025)
     }
   }
-
   .breadcrumb-container {
     float: left;
   }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
   .right-menu {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
+    justify-content: center;
+    .monitoring-platform {
+      margin-right: 20px;
+    }
     &:focus {
       outline: none;
     }
-
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
@@ -132,20 +131,16 @@ export default {
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
-
       &.hover-effect {
         cursor: pointer;
         transition: background .3s;
-
         &:hover {
           background: rgba(0, 0, 0, .025)
         }
       }
     }
-
     .avatar-container {
       margin-right: 30px;
-
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
@@ -157,17 +152,15 @@ export default {
         }
         .name{
           float: right;
-        margin-left: 3px;
-        height: 40px;
-        line-height: 40px;
+          margin-left: 5px;
+          height: 40px;
+          line-height: 40px;
         }
-        
-
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 15px;
           font-size: 12px;
         }
       }
