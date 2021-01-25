@@ -60,7 +60,13 @@ export default {
         if (valid) {
           userPasd(this.user.oldPassword=this.user.oldPassword,this.user.newPassword=this.user.newPassword).then(response => {
             this.resetForm("form");
-            this.msgSuccess("修改成功");
+            if(response!==undefined){
+               if(response.code==200){
+                   this.msgSuccess(response.msg);
+               }
+            }
+           
+           
           }
           );
         }

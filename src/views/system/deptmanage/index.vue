@@ -156,7 +156,7 @@ export default {
         fixedPhone: [
           { required: true, message: "座机号不能为空", trigger: "blur" },
           {
-            pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/,
+            pattern: /^(0[0-9]{2,3}\-)([2-9][0-9]{6,11})+(\-[0-9]{1,6})?$/,
             message: "请输入正确座机号码",
             trigger: ["blur", "change"]
           }

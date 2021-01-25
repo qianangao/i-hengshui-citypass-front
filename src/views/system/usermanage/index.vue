@@ -546,10 +546,25 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      // console.log(row)
       const userIds = row.userId || this.ids;
       const userName = row.userName 
-      this.$confirm(
+      if(userName==undefined){
+         this.$confirm(
+        "是否删除该批次用户",
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(function () {
+        return delUser(userIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
+      }else{
+         this.$confirm(
         '是否确认删除用户"' + userName + '"的数据项?',
         "警告",
         {
@@ -563,6 +578,8 @@ export default {
         this.getList();
         this.msgSuccess("删除成功");
       });
+      }
+     
     },
     /** 导出按钮操作 */
     handleExport() {

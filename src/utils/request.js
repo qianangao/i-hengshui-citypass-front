@@ -68,8 +68,13 @@ service.interceptors.response.use(res => {
       Message({
         message: msg,
         type: 'error'
-      });  
-    }else if(code ===4000){
+      }) 
+    }else if(code ===6003){
+      Message({
+        message: msg,
+        type: 'error'
+      }) 
+    } else if(code ===4000){
       Message({
         message: msg,
         type: 'error'
