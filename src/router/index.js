@@ -65,6 +65,12 @@ export const constantRoutes = [
       }
     ]
   },
+  //监控平台
+  {
+    path: '/monitor',
+    name: 'monitor',
+    component: () => import('@/views/system/monitor/index.vue'),
+  },
   {
     path: '/user',
     component: Layout,

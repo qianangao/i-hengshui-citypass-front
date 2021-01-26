@@ -222,4 +222,7 @@ export default {
 /deep/.select-dow .el-select-dropdown__item:hover {
   width: 80% !important;
 }
+/deep/.select-dow .el-select-dropdown__item:hover{
+     width: 70% !important;
+  }
 </style>
