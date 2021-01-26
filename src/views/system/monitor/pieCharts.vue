@@ -151,10 +151,10 @@ export default {
       distribution().then((response) => {
          this.ageGroup=response.data.ageGroup
          this.gender=response.data.gender
-           this.initBarData();
-      this.initData();
+          
       this.$nextTick(() => {
-  
+         this.initBarData();
+          this.initData();
     });
         }
       );

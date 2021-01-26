@@ -16,17 +16,22 @@
 // https://a.amap.com/jsapi_demos/static/resource/heatmapData.js
 import { heatmapData } from "./heatmapData";
 import { mapList } from "@/api/map/map";
-
+import {hotMap} from "@/api/system/bigScreen/map";
 export default {
   data() {
     return {
+      hotmap:undefined,
       map: null,
       heatmap: null,
       layer: null,
       colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#225ea8']
     };
   },
+  created(){
+    
+  },
   mounted() {
+    this.getUserNum()
     // 延迟加载，防止出现AMap not defined
     setTimeout(() => {
       this.initMap();
@@ -38,11 +43,19 @@ export default {
     this.map && this.map.destroy();
   },
   methods: {
+          // 获取用户数量frequency
+    getUserNum() {
+      hotMap().then((response) => {
+      //  console.log(response)
+       this.hotmap=response.data
+        }
+      );
+    },
     initMap() {
       this.map = new AMap.Map("container", {
         resizeEnable: true,
         // center: [116.480983, 39.989628],
-        center: [116.4073963, 39.9041999],
+        center: [115.67001720703126, 37.73570969510259],
         zoom: 11,
         mapStyle: "amap://styles/blue" // 极夜蓝
         //自定义地图样式：https://lbs.amap.com/dev/mapstyle/index
@@ -54,6 +67,7 @@ export default {
       return !!(elem.getContext && elem.getContext("2d"));
     },
     createHeatMap() {
+     
       if (!this.isSupportCanvas()) {
         return this.$msg.error(
           "热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试。"
@@ -61,6 +75,7 @@ export default {
       }
       let __this = this;
       this.map.plugin(["AMap.Heatmap"], function() {
+       
         //初始化heatmap对象
         __this.heatmap = new AMap.Heatmap(__this.map, {
           visible: false,
@@ -69,7 +84,7 @@ export default {
         });
         //设置数据集：该数据为北京部分“公园”数据
         __this.heatmap.setDataSet({
-          data: heatmapData,
+          data:  __this.hotmap,
           max: 100
         });
       });

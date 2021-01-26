@@ -43,46 +43,35 @@ methods:{
       // 绘制图表
       this.ros.setOption({
   
-    toolbox: {
-        show: true,
-        feature: {
-            mark: {show: true},
-            dataView: {show: true, readOnly: false},
-            restore: {show: true},
-            saveAsImage: {show: true}
-        }
-    },
+  
     series: [
         {
-            // name: '面积模式',
+            name: '面积模式',         
             type: 'pie',
-            radius: [10, 80],
+            radius: [10, 60],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
                 borderRadius: 8,
-            //       normal: {
-            //   color: function(params) {
-            //     //自定义颜色
-            //     var colorList = [
-            //       "rgba(131,119,233.1)",
-            //       "rgba(231,188,242.1)",
-            //       "rgba(251,115,148.1)",
-            //       "rgba(251,158,127.1)",
-            //       "rgba(251,199,116.1)",
-            //       "rgba(159,230,184.1)",
-            //       "rgba(22,253,255.1)",
-            //       "rgba(53,157,255.1)",
-            //     ];
-            //     return colorList[params.dataIndex];
-            //   }
-            // }
-            },
+              }, 
+            
+              labelLine:{  
+                   normal:{  
+                        length:1,  // 改变标示线的长度
+                   }},
+     
+             label: {
+             fontSize:12,
+             show: true,
+             width:1,
+            overflow :'break',
+             },
             
             data: this.affair,
             color: ['#8377E9', '#E7BCF2', '#FB7394', '#FB9E7F', '#FBC774', '#9FE6B8','#10C0CB','#359DFF']
 
         }
+        
     ]
 
 
