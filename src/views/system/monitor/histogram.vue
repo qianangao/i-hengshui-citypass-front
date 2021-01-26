@@ -78,23 +78,25 @@ methods:{
         },
         axisLabel: {
             textStyle: {
-                  color: '#fff'
+                  color: 'rgba(96,255,249,1)',
+                   fontWeight:'100',
+                   
              }
         }
     },
     
      grid: {
-         left: 80,
+         left: 100,
          top: 20, // 设置条形图的边距
          right: 80,
-        bottom: 30
+        bottom: 20
     },
     series: [{
          label: {
               normal: {
                 show: true,
                 position: "right",
-                color:"#fff"
+                color:"'rgba(96,255,249,1)'"
               }
             },
         data: this.value,

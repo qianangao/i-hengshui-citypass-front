@@ -69,8 +69,9 @@ export default {
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
           textStyle: {
-            fontSize: 12,
-            color: "#fff"
+            
+            color: "rgba(96,255,249,1)",
+            fontWeight:'100'
           },
           padding: 10
         },
@@ -104,7 +105,7 @@ export default {
         //定义折线图距离左边多少右边多少的距离
         grid: {
           left: "2%",
-          right: "5%",
+          right: "8%",
           bottom: "16%",
           containLabel: true //区域是否包含坐标轴的刻度标签
         },
@@ -128,7 +129,8 @@ export default {
               rotate: -45, //标签旋转的角度
               margin: 15,
               textStyle: {
-                color: "#fff"
+                color: "rgba(96,255,249,1)",
+                 fontWeight:'100',
               }
             }
           }
@@ -138,14 +140,14 @@ export default {
           {
             nameTextStyle: {
               color: "#666666",
-              fontSize: 14
+              fontSize: 12
             },
             show: true,
             type: "value",
             axisLabel: {
               // 坐标轴刻度标签的相关设置
               textStyle: {
-                color: "#fff"
+                color: "rgb(96,255,249)",
               }
             },
             axisLine: {
