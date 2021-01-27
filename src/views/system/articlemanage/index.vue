@@ -468,7 +468,7 @@ export default {
     // 新增文章按钮
     Addsubmi() {
       this.addHandleReset();
-      this.title = "新增文章";
+      this.title = "新增Banner";
       this.config.initialContent="请输入内容";
       this.config.autoClearinitialContent=true;
       this.submitButton=1;
@@ -490,7 +490,7 @@ export default {
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
         this.form.msgType = Number(response.data.msgType);
-        this.title = "查看文章";
+        this.title = "查看Banner";
         this.submitButton=0;
         this.disabled=true;
         this.config.readonly=true;
@@ -515,7 +515,7 @@ export default {
         this.form.ifBanner = Number(response.data.ifBanner);
         this.form.ifLink = Number(response.data.ifLink);
         this.form.msgType = Number(response.data.msgType);
-        this.title = "修改文章";
+        this.title = "修改Banner";
         this.submitButton=1;
         this.disabled=false;
         this.config.readonly=false;
@@ -563,7 +563,7 @@ export default {
     handleDelete(row){
       const userIds = row.id || this.ids;
       this.$confirm(
-        '确认删除该文章？',
+        '确认删除该Banner？',
         "警告",
         {
           confirmButtonText: "确定",
