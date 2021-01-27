@@ -45,8 +45,8 @@
         </template>
       </el-table-column>
       <el-table-column label="违章地点" align="center" prop="videoCameraName" :show-overflow-tooltip="true"/>
-      <el-table-column label="经度" width="180" align="center" prop="latitude" />
-      <el-table-column label="纬度" width="180" align="center" prop="longitude" />
+      <el-table-column label="经度" width="180" align="center" prop="longitude" />
+      <el-table-column label="纬度" width="180" align="center" prop="latitude"   />
       <el-table-column label="导入时间" width="180" prop="importTime" align="center">
         <!-- <template slot-scope="scope">
             <span>{{ parseTime(scope.row.importTime) }}</span>

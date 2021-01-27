@@ -419,6 +419,7 @@ export default {
     },
     handleNodeClick(data) {
       this.queryParams.deptId = data.deptId;
+       this.queryParams.pageNum=1
       this.getList();
     },
     filterNode(value, data) {
@@ -677,7 +678,7 @@ export default {
   width: 70%;
 }
 </style>
-<style>
+<style >
 .treeBorder {
   height: 142px;
   overflow: auto;

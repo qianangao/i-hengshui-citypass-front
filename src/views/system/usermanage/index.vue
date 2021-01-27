@@ -55,9 +55,9 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">批量删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="info" icon="el-icon-upload2" size="mini" @click="handleImport" v-hasPermi="['system:user:import']">导入</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button type="warning" icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['system:user:export']">导出</el-button>
       </el-col>
@@ -396,6 +396,7 @@ export default {
     },
     handleNodeClick(data){
       this.queryParams.deptId = data.deptId;
+      this.queryParams.pageNum=1
       this.getList();
     },
     /** 表单重置 */
@@ -478,21 +479,30 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      // getUser(this.deptId).then((response)=>{
+      //      this.roleOptions = response.data;
+      //   })
+      
       this.handleReset();
       this.handleDept();
       const userId = row.userId || this.ids;
       xgUser(userId).then((response) => {
+        console.log(response)
         if(response.code==200){
         this.form = response.data.userInfo;
         this.roleOptions = response.data;
         this.open = true;
         this.title = "修改用户";
+         getUser(this.form.deptId).then((response)=>{
+           this.roleOptions = response.data;
+        })
         }else{
         this.open = false;
         this.$message.error(response.msg)
         }
       
       });
+      
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {

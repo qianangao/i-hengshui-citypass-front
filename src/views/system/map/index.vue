@@ -97,9 +97,11 @@ export default {
   }
 };
 </script>
+<style  src="@/views/system/map/demo-center.css" scoped>
 
+</style>
 <style lang="scss" scoped>
-@import url("https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css");
+/* @import url("https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"); */
 
 #container {
   margin: 0;
