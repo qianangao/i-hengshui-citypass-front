@@ -72,13 +72,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="22">
             <el-form-item label="手机号" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入手机号码" maxlength="11" />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <el-row>
           <el-col :span="22">
             <el-form-item label="邮箱" prop="email">
@@ -162,13 +162,13 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        phone: [
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
-        ]
+        // phone: [
+        //   {
+        //     pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+        //     message: "请输入正确的手机号码",
+        //     trigger: "blur"
+        //   }
+        // ]
       }
     };
   },
@@ -236,8 +236,8 @@ export default {
         this.form.pid = 0;
       }
       this.open = true;
-      this.title = "添加角色";
-      this.title = "添加部门";
+      // this.title = "添加角色";
+      this.title = "添加机构";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -246,7 +246,7 @@ export default {
         if (response.code===200) {
         this.form = response.data;
         this.open = true;
-        this.title = "修改部门";
+        this.title = "修改机构";
         }else{
         this.$message.error(response.msg)
         this.open = false;
