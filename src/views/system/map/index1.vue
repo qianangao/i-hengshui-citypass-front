@@ -108,9 +108,11 @@
     }
   };
 </script>
+<style  src="@/views/system/map/demo-center.css" >
 
+</style>
 <style lang="scss" scoped>
-  @import url('https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css');
+  /* @import url('https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css'); */
 
   #container {
     height: 500px;
