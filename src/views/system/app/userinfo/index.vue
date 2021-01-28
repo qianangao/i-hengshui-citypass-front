@@ -10,7 +10,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="手机号" prop="phone">
-            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入用户名称" clearable size="small"/>
+            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入手机号" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -153,19 +153,24 @@ export default {
   methods: {
     getList() {
       this.loading = true;
-      if (this.dateRange.length !== 0) {
-        this.queryParams["createStartTime"] = this.dateRange[0] + `00:00:00`;
-        this.queryParams["createEndTime"] = this.dateRange[1] + `23:59:59`;
+      if (this.dateRange != null){
+        if (this.dateRange.length > 0) {
+            this.queryParams["createStartTime"] = this.dateRange[0] + `00:00:00`;
+            this.queryParams["createEndTime"] = this.dateRange[1] + `23:59:59`;
+        }
       } else {
-        this.queryParams["createStartTime"] = this.dateRange[0];
-        this.queryParams["createEndTime"] = this.dateRange[1];
+        this.queryParams["createStartTime"] = undefined;
+        this.queryParams["createEndTime"] = undefined;
+     
       }
-      if (this.Logintime.length !== 0) {
-        this.queryParams["loginStartTime"] = this.Logintime[0] + `00:00:00`;
-        this.queryParams["loginEndTime"] = this.Logintime[1] + `23:59:59`;
-      } else {
-        this.queryParams["loginStartTime"] = this.Logintime[0];
-        this.queryParams["loginEndTime"] = this.Logintime[1];
+      if(this.Logintime!=null){
+        if (this.Logintime.length > 0) {
+          this.queryParams["loginStartTime"] = this.Logintime[0] + `00:00:00`;
+          this.queryParams["loginEndTime"] = this.Logintime[1] + `23:59:59`;
+        }
+      }else {
+        this.queryParams["loginStartTime"] = undefined;
+        this.queryParams["loginEndTime"] = undefined;
       }
 
       appUserList(this.queryParams).then(response => {

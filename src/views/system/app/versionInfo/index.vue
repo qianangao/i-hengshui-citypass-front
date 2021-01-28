@@ -221,8 +221,14 @@ export default {
     // 查询版本列表 
     getList() {
       this.loading = true;
+      if(this.dateRange!==null){
       this.queryParams["startTime"]= this.dateRange[0];
       this.queryParams["endTime"]= this.dateRange[1];
+      }else{
+      this.queryParams["startTime"]=undefined
+      this.queryParams["endTime"]= undefined
+      }
+  
       versionTable(this.queryParams).then((response) => {
         this.versionList= response.data.rows;
         this.total = response.data.total;
