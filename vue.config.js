@@ -41,7 +41,8 @@ module.exports = {
         // target: `http://10.92.119.167:8081`,     //马儿本地
         // target: `http://121.17.30.245:8081`,   //10服务器
         //  target: `http://121.17.30.245:8081`,   //245衡水服务器
-          target: `http://121.17.30.248:8081`,   //248衡水服务器
+        //   target: `http://121.17.30.248:8081`,   //248衡水服务器
+          target: `http://218.11.12.14:8081`,   //14衡水生产服务器
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
