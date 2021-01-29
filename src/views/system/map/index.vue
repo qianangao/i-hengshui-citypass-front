@@ -115,4 +115,10 @@ export default {
   margin-right: 1.2rem;
   width: 9rem;
 }
+
+</style>
+<style >
+.amap-logo{
+   opacity:0;
+}
 </style>
