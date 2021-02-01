@@ -73,7 +73,7 @@
       </el-table-column>
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
       <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
-      <el-table-column label="归属部门" align="center" prop="deptName" :show-overflow-tooltip="true"/>
+      <el-table-column label="所属机构" align="center" prop="deptName" :show-overflow-tooltip="true"/>
       <el-table-column label="角色权限" align="center" prop="roleName"/>
       <el-table-column label="手机号码" align="center" prop="phone" width="120"/>
       <el-table-column label="状态"  align="center" v-if="checkPermi(['system:user:export:enable'])" >
@@ -115,13 +115,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId"  @select="inputChange"  :options="deptOption"  :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门" />
+            <el-form-item label="所属机构" prop="deptId">
+              <treeselect v-model="form.deptId"  @select="inputChange"  :options="deptOption"  :normalizer="normalizer" :show-count="true" placeholder="请选择所属机构" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色" prop="roleId">
-              <el-select class="inputContent" no-data-text="请先选择归属部门" v-model="form.roleId" :clearable="true" placeholder="请选择角色">
+              <el-select class="inputContent" no-data-text="请先选择所属机构" v-model="form.roleId" :clearable="true" placeholder="请先选择所属机构">
                 <el-option v-for="item in roleOptions" 
                   :key="item.roleId" 
                   :label="item.roleName" 
@@ -322,7 +322,7 @@ export default {
           { required: true, message: "角色不能为空", trigger: "blur" },
         ],
         deptId:[
-          {required: true, message: "部门不能为空", trigger: "blur"}
+          {required: true, message: "机构不能为空", trigger: "blur"}
           ],
         email: [
           { required: true, message: "email不能为空", trigger: "blur" },

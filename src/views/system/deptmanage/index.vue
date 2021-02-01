@@ -30,7 +30,7 @@
      <!-- table 展示 -->
     <el-table class="table-list" v-loading="loading" :data="deptList" row-key="deptId" default-expand-all :tree-props="{children: 'childrenList', hasChildren: 'hasChildren'}">
       <el-table-column prop="deptName" label="机构名称"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="leader" label="部门负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="leader" label="机构负责人" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="fixedPhone" label="座机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="创建时间"  prop="createTime" align="center">
@@ -60,7 +60,7 @@
         </el-row>
         <el-row>
           <el-col :span="22">
-            <el-form-item label="部门负责人" prop="leader">
+            <el-form-item label="机构负责人" prop="leader">
               <el-input v-model.trim="form.leader" placeholder="请输入负责人" maxlength="20" />
             </el-form-item>
           </el-col>
@@ -88,8 +88,8 @@
         </el-row>
         <el-row>
           <el-col :span="22">
-            <el-form-item label="部门简介" prop="remark">
-              <el-input type="textarea" :rows="3" v-model="form.remark" placeholder="请输入部门简介" maxlength="200"/>
+            <el-form-item label="机构简介" prop="remark">
+              <el-input type="textarea" :rows="3" v-model="form.remark" placeholder="请输入机构简介" maxlength="200"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -143,7 +143,7 @@ export default {
           { required: true, message: "机构名称不能为空", trigger: ["blur", "change"] }
         ],
         leader: [
-          { required: true, message: "部门负责人不能为空", trigger: ["blur", "change"] }
+          { required: true, message: "机构负责人不能为空", trigger: ["blur", "change"] }
         ],
         email: [
           { required: true, message: "邮箱不能为空", trigger: "blur" },
