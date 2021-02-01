@@ -91,7 +91,7 @@
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="归属部门"
+            label="所属机构"
             prop="deptName"
             align="center"
             :show-overflow-tooltip="true"
@@ -185,7 +185,7 @@
           </el-row>
           <el-row>
             <el-col :span="22">
-              <el-form-item label="归属部门" prop="deptId">
+              <el-form-item label="所属机构" prop="deptId">
                 <!-- <el-select class="inputContent" v-model="form.deptId" placeholder="请选择部门">
                 <el-option v-for="item in deptOption"
                   :key="item.deptId"
@@ -197,7 +197,7 @@
                   :options="deptOption"
                   :normalizer="normalizer"
                   :show-count="true"
-                  placeholder="请选择归属部门"
+                  placeholder="请选择所属机构"
                 />
               </el-form-item>
             </el-col>
@@ -375,7 +375,7 @@ export default {
         deptId: [
           {
             required: true,
-            message: "部门不能为空",
+            message: "机构不能为空",
             trigger: ["blur", "change"]
           }
         ]

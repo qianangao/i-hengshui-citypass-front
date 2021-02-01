@@ -30,8 +30,8 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <p>联通系统集成有限公司 西安研发中心</p>
-      <p>Copyright © 2020 联通系统集成有限公司所有</p>
+      <!-- <p>联通系统集成有限公司 西安研发中心</p>
+      <p>Copyright © 2020 联通系统集成有限公司所有</p> -->
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   name: "Login",
   data() {
     return {
+      timer:"",
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
@@ -75,6 +76,12 @@ export default {
       immediate: true
     }
   },
+   mounted() {
+        this.timer = setInterval(this.getCode, 60000);
+    },
+   beforeDestroy() {
+        clearInterval(this.timer);
+    },
   created() {
     this.getCode();
     this.getCookie();
