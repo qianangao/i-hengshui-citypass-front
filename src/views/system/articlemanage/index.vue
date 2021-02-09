@@ -121,7 +121,8 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="文章内容" v-if="form.ifLink!==0">
-                <vue-ueditor-wrap v-if="form.ifLink!==0"  @addListener="addListener" v-model="form.content"  :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars" ></vue-ueditor-wrap>
+                <!-- <vue-ueditor-wrap v-if="form.ifLink!==0"  @addListener="addListener" v-model="form.content"  :initialStyle="config.initialStyle" :customstyle="config.customstyle" :config="config" :toolbars="config.toolbars" ></vue-ueditor-wrap> -->
+              <quill-editor ref="myQuillEditor" :disabled="this.disabled" v-model="form.content" :options="editorOption"  @blur="onEditorBlur($event)" @focus="onEditorFocus($event)" @ready="onEditorReady($event)" /> 
               </el-form-item>
             </el-col>
           </el-row>
@@ -143,7 +144,13 @@
 import { getToken } from "@/utils/auth";
 // 1、引入UEditor组件
 // import UEditor from '@/components/Ueditor/ueditor.vue';
-import VueUeditorWrap from 'vue-ueditor-wrap';
+// import VueUeditorWrap from 'vue-ueditor-wrap';
+import { quillEditor,Quill } from 'vue-quill-editor'
+import {container, ImageExtend, QuillWatch} from 'quill-image-extend-module'
+Quill.register('modules/ImageExtend', ImageExtend)
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
 // 从全局工具类引入全局地址变量
 import settings from "@/settings.js";
@@ -155,13 +162,13 @@ import {
   delArticle,
   uploadAvatar,
 } from "@/api/system/article";
- 
+ // 工具栏配置
+
 export default {
   // 2、注册组件
   components: {
-    // Editor,
-    // UEditor,
-    VueUeditorWrap
+    // VueUeditorWrap
+    quillEditor
   },
 
   data() {
@@ -173,6 +180,63 @@ export default {
         callback();
       }}
     return {
+     editorOption: {
+        placeholder: "请输入内容",
+        modules: {
+          ImageExtend: {
+            loading: true,
+            name:'file',
+             methods: 'post',  // 必填参数 图片上传方式
+            action:process.env.VUE_APP_BASE_API+ `/file/ftpUpload`,
+            response: res => {
+              return this.address+res.data;
+            },
+                headers: (xhr) => {
+                //关键是这句话
+                   xhr.setRequestHeader('Authorization', "Bearer " + getToken());
+                                return xhr
+               //    Authorization:localStorage.getItem("sessionKey")
+               },
+               
+            //  // 可选参数 设置请求头部
+            // sizeError: () => {
+            //   return this.$message.error("图片超过50kb");
+            // } // 图片超过大小的回调
+          },
+          toolbar: {
+            container: [
+              ["bold", "italic", "underline", "strike"], // 加粗，斜体，下划线，删除线
+              ["blockquote", "code-block"], //引用，代码块
+              [{ header: 1 }, { header: 2 }], // 几级标题
+              [{ list: "ordered" }, { list: "bullet" }], // 有序列表，无序列表
+              [{ script: "sub" }, { script: "super" }], // 下角标，上角标
+              [{ indent: "-1" }, { indent: "+1" }], // 缩进
+              [{ direction: "rtl" }], // 文字输入方向
+              [{ size: ["small", false, "large", "huge"] }], // 字体大小
+              [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+              [{ color: [] }, { background: [] }], // 颜色选择
+              [{ font: [] }], // 字体
+              [{ align: [] }], // 居中
+              ["link", "image"],
+              ["clean"]
+            ],
+            handlers: {
+              image: function() {
+                QuillWatch.emit(this.quill.id);
+              }
+            }
+          }
+        }
+      },
+      //  uniqueId: "uniqueId",
+      //   editorOption: {
+      //   //  富文本编辑器配置
+      //   modules: {
+      //     toolbar: toolbarOptions
+      //   },
+      //   theme: "snow",
+      //   placeholder: "请输入正文"
+      // },
      rules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
@@ -243,89 +307,16 @@ export default {
       },
       // 3、v-model绑定数据 form.content
       // 4、根据项目需求自行配置,具体配置参见ueditor.config.js源码或 http://fex.baidu.com/ueditor/#start-start
-      config: {
-        zIndex : 1,
-        initialStyle:'p{font-size:28px}' ,
-        fontsize:[
-             28,
-             38,
-             48,
-             58,
-             68
-        ],
-          //可以在此处定义工具栏的内容
-          toolbars: [
-           [
-        'undo', //撤销
-        'redo', //重做
-        'bold', //加粗
-        'indent', //首行缩进
-        'italic', //斜体
-        'underline', //下划线
-        'strikethrough', //删除线
-        'subscript', //下标
-        'fontborder', //字符边框
-        'superscript', //上标
-        'formatmatch', //格式刷
-        'source', //源代码
-        'blockquote', //引用
-        'pasteplain', //纯文本粘贴模式
-        'selectall', //全选
-        'horizontal', //分隔线
-        'removeformat', //清除格式
-        'time', //时间
-        'date', //日期
-        'unlink', //取消链接
-        'cleardoc', //清空文档
-        'insertcode', //代码语言
-        'fontfamily', //字体
-        'fontsize', //字号
-        'paragraph', //段落格式
-        'simpleupload', //单图上传
-        'insertimage', //多图上传
-        'imagecenter', //图片居中
-        'link', //超链接
-        'spechars', //特殊字符
-        'searchreplace', //查询替换
-        'map', //Baidu地图
-        'insertvideo', //视频
-        'justifyleft', //居左对齐
-        'justifyright', //居右对齐
-        'justifycenter', //居中对齐
-        'justifyjustify', //两端对齐
-        'forecolor', //字体颜色
-        'rowspacingtop', //段前距
-        'rowspacingbottom', //段后距
-        'pagebreak', //分页
-        'attachment', //附件
-        'lineheight', //行间距
-        'edittip ', //编辑提示
-        'customstyle', //自定义标题
-        'autotypeset', //自动排版
-        'touppercase', //字母大写
-        'tolowercase', //字母小写
-           ]
-          ],
-          readonly:false,
-          autoFloatEnabled :false,
-          autoHeightEnabled: false,      // 编辑器不自动被内容撑高
-          initialContent:'请输入内容',    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
-          autoClearinitialContent:true,  //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
-          initialFrameWidth: null,       // 初始容器宽度
-          initialFrameHeight: 300,       // 初始容器高度
-          BaseUrl: '',
-          UEDITOR_HOME_URL: process.env.BASE_URL + 'ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
-          // UEDITOR_HOME_URL: process.env.BASE_URL + 'static/ueditor/',   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况
-          // VUE CLI 3 会添加 process.env.BASE_URL 的环境变量，而 VUE CLI 2 没有，所以借此设置 UEDITOR_HOME_URL，能涵盖大部分 Vue 开发者的使用场景
-          // UEDITOR_HOME_URL: process.env.BASE_URL ? process.env.BASE_URL + 'ueditor/' : 'static/ueditor/',
-          // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-          // serverUrl: 'http://35.201.165.105:8000/controller.php',
-          // serverUrl:  'http://10.92.119.10:8081/ueditor/exec',
-        },
+    
     };
   },
+   computed: {
+    //当前富文本实例
+    editor() {
+      return this.$refs.myQuillEditor.quill;
+    }
+  },
   created() {
-    
     this.getList();
     // 类型字典
       this.getDicts("sc_msg_type").then((response) => {
@@ -341,37 +332,29 @@ export default {
   methods: {
      checkPermi,
     checkRole,
-     //监听富文本setContent
-     addListener(editorInstance) {
-      //  editorInstance.execCommand("fontsize","36px");
-        // editorInstance.setContent('')
-        editorInstance.setContent();
-   },
-     getUEContent() { // 获取内容方法
-        return this.editor.getContent()
+  //失去焦点事件
+      onEditorBlur(quill) {
+        // console.log('editor blur!', quill)
+      }, 
+      //获得焦点事件
+      onEditorFocus(quill) {
+        // console.log('editor focus!', quill)
       },
-  
-    //获取富文本文档内容
-    // getContent(){
-    //   let content = this.$refs.ueditor.getUEContent();
-    //   this.form.content = content;
-    //   console.log(content);
-    // },
-
+       // 准备富文本编辑器
+      onEditorReady(quill) {
+        // console.log('editor ready!', quill)
+      },
+      //内容改变事件
+      onEditorChange({ quill, html, text }) {
+        console.log('editor change!', quill, html, text)
+        this.content = html
+      },
+    
     // 切换是否为链接让输入框为空
     agreeChange(){
        this.form.content="";
        this.form.url="";
     },
-    // 表格格式化数据
-    // articleBanner(row, column){
-    //   let ifBanner=row.ifBanner;
-    //   if(ifBanner==0){
-    //     return "是"
-    //   }else{
-    //     return "否"
-    //   }
-    // },
     // 查询按钮
     handleQuery(){
       this.queryParams.page = 1;
@@ -469,11 +452,9 @@ export default {
     Addsubmi() {
       this.addHandleReset();
       this.title = "新增Banner";
-      this.config.initialContent="请输入内容";
-      this.config.autoClearinitialContent=true;
       this.submitButton=1;
       this.disabled=false;
-      this.config.readonly=false;
+      // this.config.readonly=false;
       this.ly=1
     },
     
@@ -483,8 +464,8 @@ export default {
       const id = row.id || this.id;
       getArticle(id).then((response) => {
         if(response.code==200){
-        this.config.autoClearinitialContent=false;
-        this.config.initialContent=response.data.content;
+        // this.config.autoClearinitialContent=false;
+        // this.config.initialContent=response.data.content;
         this.imageUrl= this.address + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
@@ -493,7 +474,7 @@ export default {
         this.title = "查看Banner";
         this.submitButton=0;
         this.disabled=true;
-        this.config.readonly=true;
+        // this.config.readonly=true;
         this.ly=1
         }else{
         this.$message.error(response.msg)
@@ -508,8 +489,8 @@ export default {
       const id = row.id || this.id;
       getArticle(id).then((response) => {
         if(response.code==200){
-        this.config.autoClearinitialContent=false;
-        this.config.initialContent=response.data.content;
+        // this.config.autoClearinitialContent=false;
+        // this.config.initialContent=response.data.content;
         this.imageUrl= this.address + response.data.pic;
         this.form = response.data;
         this.form.ifBanner = Number(response.data.ifBanner);
@@ -518,7 +499,7 @@ export default {
         this.title = "修改Banner";
         this.submitButton=1;
         this.disabled=false;
-        this.config.readonly=false;
+        // this.config.readonly=false;
         this.ly=1
         }else{
         this.$message.error(response.msg)
@@ -670,4 +651,84 @@ img {
   margin: 10px 10px;
 }
 #edui1_imagescale{display:none !important;}
+</style>
+<style lang='scss' >
+.editor {
+  line-height: normal !important;
+  height: 500px;
+}
+.ql-snow .ql-tooltip[data-mode="link"]::before {
+  content: "请输入链接地址:";
+}
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+  border-right: 0px;
+  content: "保存";
+  padding-right: 0px;
+}
+
+.ql-snow .ql-tooltip[data-mode="video"]::before {
+  content: "请输入视频地址:";
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: "14px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="small"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="small"]::before {
+  content: "10px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="large"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="large"]::before {
+  content: "18px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before {
+  content: "32px";
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-label::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item::before {
+  content: "文本";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  content: "标题1";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  content: "标题2";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+  content: "标题3";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+  content: "标题4";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="5"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
+  content: "标题5";
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="6"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
+  content: "标题6";
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+  content: "标准字体";
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+  content: "衬线字体";
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+  content: "等宽字体";
+}
+ .ql-editor{
+         height:300px;
+     }
 </style>
