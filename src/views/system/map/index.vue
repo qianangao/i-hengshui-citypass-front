@@ -48,6 +48,7 @@ export default {
       hotMap().then((response) => {
       //  console.log(response)
        this.hotmap=response.data
+       
         }
       );
     },

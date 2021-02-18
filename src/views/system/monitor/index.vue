@@ -25,7 +25,7 @@
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
-                        <div>本周用户分布</div>
+                        <div>访问数据统计</div>
                         <div>
                             <barCharts/>
                         </div>
