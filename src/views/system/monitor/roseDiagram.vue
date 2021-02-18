@@ -43,7 +43,10 @@ methods:{
       // 绘制图表
       this.ros.setOption({
   
-  
+     tooltip: {
+        trigger: 'item',
+        formatter: ' {c}次 ({d}%)'
+    },
     series: [
         {
             name: '面积模式',         
