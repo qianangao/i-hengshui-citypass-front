@@ -40,3 +40,10 @@ export function distribution() {
     // params: query
   })
 }
+// 本周用户访问分布
+export function userVisitDistributed() {
+  return request({
+    url: '/system/statistics/weekDistribution',
+    method: 'get'
+  })
+}
