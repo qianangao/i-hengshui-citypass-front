@@ -18,16 +18,24 @@
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>用户分布</div>
-                        <div>
+                        <div class="content-charts">
                             <pieCharts/>
                         </div>
                     </div>
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
-                        <div>访问数据统计</div>
-                        <div>
-                            <barCharts/>
+                        <div>本周用户访问分布</div>
+                        <div class="content-charts">
+                            <barAndLineCharts/>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-between-layout">
+                    <div class="between-layout">
+                        <div>本周应用访问分布</div>
+                        <div class="content-charts">
+                            <barChartsApply/>
                         </div>
                     </div>
                 </div>
@@ -72,18 +80,26 @@
             <div class="monitor-content-between">
                 <div class="content-between-layout">
                     <div class="between-layout">
-                        <div>常用办事</div>
-                        <div>
+                        <div>常用办事排行TOP10</div>
+                        <!-- <div class="content-charts">
                             <histogram/>
-                         </div>
+                         </div> -->
                     </div>
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
-                        <div>常用生活服务</div>
-                        <div>
+                        <div>常用生活服务TOP10</div>
+                        <!-- <div class="content-charts">
                            <roseDiagram/>
-                        </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="content-between-layout">
+                    <div class="between-layout">
+                        <div>委办局接入服务</div>
+                        <!-- <div class="content-charts">
+                           <roseDiagram/>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -93,7 +109,9 @@
 <script>
 import Map from "../map/index";
 import pieCharts from "./pieCharts";
-import barCharts from "./barCharts";
+import barAndLineCharts from "./barAndLineCharts";
+import barChartsApply from "./barChartsApply";
+// import barCharts from "./barCharts";
 import histogram from "./histogram";
 import roseDiagram from "./roseDiagram";
 import {amountoFusers,frequency} from "@/api/system/bigScreen/index";
@@ -101,7 +119,9 @@ export default {
     components: {
         Map,
         pieCharts,
-        barCharts,
+        barAndLineCharts,
+        barChartsApply,
+        // barCharts,
         histogram,
         roseDiagram
     },
@@ -246,25 +266,26 @@ export default {
 }
 .content-between-layout {
     width: 100%;
-    height: 46vh;
+    height: 40vh;
 }
 .between-layout {
     width: 100%;
-    height: 45vh;
+    height: 28vh;
     background-image: url(../../../assets/monitor/cardBg.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 .between-layout > div:first-child {
-    height: 30px;
-    padding-top: 3px;
+    // height: 30px;
+    height: 15px;
+    padding-top: 2px;
     background-image: url(../../../assets/monitor/cardTitle.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    font-size: 10px;
 }
-.between-layout > div:last-child {
-    color: #FFFFFF;
-    height: 41vh;
+.content-charts{
+    height: 100%;
 }
 // 中间的布局
 .monitor-content-middle {
@@ -366,7 +387,6 @@ export default {
     font-weight: 700;
 }
 .content-middle-bottom {
-    // border: 0.5px dashed yellowgreen;
     width: 100%;
     height: 79vh;
     margin-top: 1vh;

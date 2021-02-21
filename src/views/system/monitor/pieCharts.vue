@@ -26,7 +26,7 @@ export default {
   },
   data: () => ({
     ageGroup:undefined,
-     gender:undefined,
+    gender:undefined,
     chartBar: null,
     barOption: {
       tooltip: {
@@ -72,14 +72,18 @@ export default {
           name: "人数统计",
           type: "pie",
           radius: ["40%", "55%"],
+          textStyle:{
+            fontSize: 10
+          },
           label: {
             // formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
             // formatter: '{b|{b}: {c}} {abg|}\n{hr|}\n {per|{d}%}  ',
-            formatter: "{b|{b}：}{c}人{abg|}\n{hr|}\n\n  {per|{d}%}  ",
+            formatter: "  {b|{b}：}{c}人{abg|}\n{hr|}\n\n  {per|{d}%}  ",
             backgroundColor: "rgba(10,96,145,0.25)",
             borderColor: "rgba(10,96,145,0.25)",
             borderWidth: 1,
             borderRadius: 3,
+            
             rich: {
               a: {
                 color: "#999",
@@ -185,10 +189,12 @@ export default {
 <style lang="scss" scoped>
 .pie-chart-container {
   width: 100%;
-  padding-top: 8%;
+  height: 100%;
+  padding-top: 5px;
   .pie-chart {
     width: 100%;
-    height: 35vh;
+    height: 100%;
+    // height: 24vh;
   }
 }
 </style>    

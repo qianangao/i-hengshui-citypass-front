@@ -31,14 +31,12 @@ export default {
     this.getUseerwok()
   },
   mounted() {
-    
-    
   },
   methods: {
     // 获取本周分布用户
     getUseerwok() {
       distributionWeek().then((response) => {
-        this.distributionWeek=response.data
+        this.distributionWeek=response.data;
         let title = response.data.map(item => {
           return  item.title  
         });
@@ -69,7 +67,6 @@ export default {
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
           textStyle: {
-            
             color: "rgba(96,255,249,1)",
             fontWeight:'100'
           },
@@ -113,20 +110,14 @@ export default {
           //定义x轴
           {
             type: "category", //设置x轴的类型
-            data: this.title
-            // data:[
-            //   'aaa',
-            //   'bbb',
-            //   'ccc'
-            // ]
-            ,
+            data: this.title,
             nameTextStyle: {
-              fontSize: 14
+              fontSize: 10
             },
             axisLabel: {
               //坐标轴刻度的相关设置
               interval: 0, //设置成 0 强制显示所有标签。
-              rotate: -45, //标签旋转的角度
+              rotate: -15, //标签旋转的角度
               margin: 15,
               textStyle: {
                 color: "rgba(96,255,249,1)",
@@ -140,7 +131,7 @@ export default {
           {
             nameTextStyle: {
               color: "#666666",
-              fontSize: 12
+              fontSize: 10
             },
             show: true,
             type: "value",
@@ -184,36 +175,7 @@ export default {
             symbol: "circle",
             symbolSize: [10, 10],
             data: this.peopleNum
-          },
-          // {
-          //   name: "销售品种",
-          //   type: "line",
-          //   symbol: "circle",
-          //   symbolSize: [10, 10],
-          //   data: [
-          //     111,
-          //     122,
-          //     100,
-          //     104,
-          //     70,
-          //     210,
-          //     200,
-          //     160,
-          //     300,
-          //     400,
-          //     100,
-          //     102,
-          //     91,
-          //     124,
-          //     40,
-          //     210,
-          //     230,
-          //     140,
-          //     240,
-          //     180,
-          //     140
-          //   ]
-          // }
+          }
         ]
       });
     }
@@ -223,10 +185,11 @@ export default {
 <style lang="scss" scoped>
 .bar-chart-container {
   width: 100%;
-  padding-top: 8%;
+  height: 100%;
+  padding-top: 5px;
   .bar-chart {
     width: 100%;
-    height: 35vh;
+    height: 100%;
   }
 }
 </style> 
