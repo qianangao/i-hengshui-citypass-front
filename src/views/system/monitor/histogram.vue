@@ -15,7 +15,7 @@ require("echarts/lib/component/tooltip");
 require("echarts/lib/component/title");
 require("echarts/lib/component/legend");
 require("echarts/lib/component/legendScroll"); //导入模拟数据
-import {commonLight} from "@/api/system/bigScreen/index";
+import {commonWork} from "@/api/system/bigScreen/index";
 export default {
     
 data () {
@@ -34,11 +34,12 @@ mounted(){
 methods:{
  // 获取用户数据
     getUserwork() {
-      commonLight().then((response) => {
-         let name = response.data.work.map(item => {
+      commonWork('mouth').then((response) => {
+        //  console.log(response.data)
+         let name = response.data.map(item => {
           return  item.name  
         });
-         let value = response.data.work.map(item => {
+         let value = response.data.map(item => {
           return  item.value  
         });
         this.name=name

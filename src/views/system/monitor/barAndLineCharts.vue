@@ -21,7 +21,7 @@ export default {
     return {
       myBarAndLine: null,
       userwork:undefined,
-      title:[],
+      clickDate:[],
       visitsNum:[],
       peopleNum:[],
 
@@ -36,7 +36,21 @@ export default {
     // 获取本周用户访问分布
     getUserVisit() {
       userVisitDistributed().then((response) => {
-        console.log("response.data",response.data);
+        //  console.log("response.data",response.data);
+         this.distributionWeek=response.data;
+        let clickDate = response.data.map(item => {
+          return  item.clickDate  
+        });
+        let visitsNum = response.data.map(item => {
+          return  item.visitsNum  
+        });
+         let peopleNum = response.data.map(item => {
+          return  item.peopleNum
+        });
+        this.peopleNum=peopleNum
+        this.visitsNum=visitsNum
+        this.clickDate = clickDate;
+        this.drawLine();
       }).then(()=>{
         this.drawLine();
       });
@@ -109,7 +123,7 @@ export default {
           {
             type: 'category',
             name: "日期",
-            data: ['2.14', '2.15', '2.16', '2.17', '2.18', '2.19', '2.20'],
+            data: this.clickDate,
             axisPointer: {
                 type: 'shadow'
             },
@@ -213,7 +227,7 @@ export default {
                 position: "top"
               }
             },
-            data: [2, 7, 23, 25, 76, 135, 20]
+            data: this.visitsNum
           },
           {
             name: '访问人数',
@@ -221,7 +235,7 @@ export default {
             yAxisIndex: 1,
             symbol: "circle",
             symbolSize: [10, 10],
-            data: [2, 6, 10, 19, 20, 12, 6]
+             data: this.peopleNum
           }
         ]
       });

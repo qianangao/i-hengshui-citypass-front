@@ -15,15 +15,15 @@ require("echarts/lib/component/tooltip");
 require("echarts/lib/component/title");
 require("echarts/lib/component/legend");
 require("echarts/lib/component/legendScroll"); //导入模拟数据
-import {distributionWeek, userVisitDistributed} from "@/api/system/bigScreen/index";
+import {distributionWeek, commonAll} from "@/api/system/bigScreen/index";
 export default {
   data() {
     return {
       barChartsApply: null,
       userwork:undefined,
-      title:[],
-      visitsNum:[],
-      peopleNum:[],
+      name:[],
+      value:[],
+      leneght:[]
 
     };
   },
@@ -35,30 +35,33 @@ export default {
   methods: {
     // 获取本周用户访问分布
     getUserVisit() {
-      userVisitDistributed().then((response) => {
-        console.log("response.data",response.data);
+      commonAll().then((response) => {
+        // console.log("response",response);
+        this.commonAll=response.data;
+      let name = response.data.map(item => {
+          return  item.name  
+        });
+         let value = response.data.map(item => {
+          return  item.value  
+        });
+        this.name=name
+        this.value = value;
+        this.jishu()
+        this.drawLine();
       }).then(()=>{
         this.drawLine();
       });
     },
-    // getUseerwok() {
-    //   distributionWeek().then((response) => {
-    //     this.distributionWeek=response.data;
-    //     let title = response.data.map(item => {
-    //       return  item.title  
-    //     });
-    //    let visitsNum = response.data.map(item => {
-    //       return  item.visitsNum  
-    //     });
-    //      let peopleNum = response.data.map(item => {
-    //       return  item.peopleNum
-    //     });
-    //     this.peopleNum=peopleNum
-    //     this.visitsNum=visitsNum
-    //     this.title = title;
-    //     this.drawLine();
-    //   });
-    // },
+
+    jishu(){
+     
+      this.value.sort((a, b) => b - a)
+      
+      for (var i=0;i<this.value.length;i++) { 
+           this.leneght.push(this.value[0])
+          }
+    },
+ 
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       this.barChartsApply = echarts.init(document.getElementById("barChartsApply"));
@@ -129,7 +132,7 @@ export default {
           axisLine: {
               show: false
           },
-          data: ['电话缴费', '固话缴费', '常用电话', '家政服务', '手机缴费']
+          data:this.name
         }, {
           type: 'category',
           inverse: true,
@@ -142,7 +145,7 @@ export default {
                   fontSize: '10'
               }
           },
-          data: [30000, 22000, 10000, 5000, 1000]
+          data: this.value
         }],
         series: [{
           name: '次数',
@@ -161,14 +164,14 @@ export default {
               },
           },
           barWidth: 10,
-          data: [30000, 22000, 10000, 5000, 1000]
+          data: this.value
         },
         {
           name: '背景',
           type: 'bar',
           barWidth: 10,
           barGap: '-100%',
-          data: [30000, 30000, 30000, 30000, 30000],
+          data: this.leneght,
           itemStyle: {
             normal: {
                 color: 'rgba(24,31,68,1)',

@@ -30,9 +30,9 @@ mounted(){
 methods:{
      // 获取用户数据
     getUserwork() {
-      commonLight().then((response) => {
-        //   console.log(response.data.affair)
-        this.affair=response.data.affair
+      commonLight('mouth').then((response) => {
+          //  console.log(response.data)
+        this.affair=response.data
         // console.log(this.affair)
         this.rosCharts()
         }
@@ -52,7 +52,7 @@ methods:{
             name: '面积模式',         
             type: 'pie',
             radius: [10, 60],
-            center: ['50%', '50%'],
+            center: ['50%', '30%'],
             roseType: 'area',
             itemStyle: {
                 borderRadius: 8,
