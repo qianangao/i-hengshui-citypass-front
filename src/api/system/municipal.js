@@ -25,11 +25,18 @@ export function munxq (id) {
       method:"get",
     })
   }
-  // 数据清空
-  export function Empty () {
-    return request({
-      url: '/system/app/wism/point/handleMysqlTableDate',
-      method:"post",
-     
-    })
-  }
+ // 删除用户
+ export function delMun(id) {
+  return request({
+    url: `/system/app/engineer/delete/${id}`,
+    method: 'delete'
+  })
+}
+// 修改工程
+export function updategc(data) {
+  return request({
+    url: '/system/app/engineer/update',
+    method: 'put',
+    data: data
+  })
+}

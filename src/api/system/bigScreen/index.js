@@ -24,10 +24,18 @@ export function distributionWeek() {
     // params: query
   })
 }
-// 办事生活
-export function commonLight() {
+// 生活
+export function commonLight(mouth) {
   return request({
-    url: '/system/statistics/commonLight',
+    url: `/system/statistics/commonLife/${mouth}`,
+    method: 'get',
+    // params: query
+  })
+}
+// 办事
+export function commonWork(mouth) {
+  return request({
+    url: `/system/statistics/commonWork/${mouth}`,
     method: 'get',
     // params: query
   })
@@ -44,6 +52,22 @@ export function distribution() {
 export function userVisitDistributed() {
   return request({
     url: '/system/statistics/weekDistribution',
+    method: 'get'
+  })
+}
+// 前五统计
+// 本周用户访问分布
+export function commonAll() {
+  return request({
+    url: '/system/statistics/commonAll',
+    method: 'get'
+  })
+}
+// 委办局
+
+export function commiss() {
+  return request({
+    url: '/system/statistics/service',
     method: 'get'
   })
 }

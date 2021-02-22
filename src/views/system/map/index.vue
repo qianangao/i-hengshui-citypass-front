@@ -56,7 +56,10 @@ export default {
       this.map = new AMap.Map("container", {
         resizeEnable: true,
         // center: [116.480983, 39.989628],
-        center: [115.67001720703126, 37.73570969510259],
+        // 衡水
+        // center: [115.67001720703126, 37.73570969510259],
+        // 西安
+        center:[108.92326367187499,34.27593418470092],
         zoom: 11,
         mapStyle: "amap://styles/blue" // 极夜蓝
         //自定义地图样式：https://lbs.amap.com/dev/mapstyle/index

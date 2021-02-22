@@ -36,6 +36,7 @@ export default {
     // 获取本周分布用户
     getUseerwok() {
       distributionWeek().then((response) => {
+        console.log(response)
         this.distributionWeek=response.data;
         let title = response.data.map(item => {
           return  item.title  

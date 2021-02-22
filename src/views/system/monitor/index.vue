@@ -81,25 +81,26 @@
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>常用办事排行TOP10</div>
-                        <!-- <div class="content-charts">
+                        <div class="content-charts">
                             <histogram/>
-                         </div> -->
+                            
+                         </div>
                     </div>
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>常用生活服务TOP10</div>
-                        <!-- <div class="content-charts">
+                        <div class="content-charts">
                            <roseDiagram/>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>委办局接入服务</div>
-                        <!-- <div class="content-charts">
-                           <roseDiagram/>
-                        </div> -->
+                        <div class="content-charts">
+                           <commission/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,6 +114,7 @@ import barAndLineCharts from "./barAndLineCharts";
 import barChartsApply from "./barChartsApply";
 // import barCharts from "./barCharts";
 import histogram from "./histogram";
+import commission from "./commission";
 import roseDiagram from "./roseDiagram";
 import {amountoFusers,frequency} from "@/api/system/bigScreen/index";
 export default {
@@ -123,7 +125,8 @@ export default {
         barChartsApply,
         // barCharts,
         histogram,
-        roseDiagram
+        roseDiagram,
+        commission
     },
     data() {
         return {

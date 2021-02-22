@@ -38,9 +38,7 @@
       <el-col :span="1.5">
         <el-button type="info" icon="el-icon-upload2" size="mini" @click="handleImport">导入</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete">清空数据</el-button>
-      </el-col>
+    
     </el-row>
     <!-- 文章表格数据 -->
     <el-table class="articlerForm" :data="Traffic">
@@ -58,7 +56,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" class="menuOptaion" width="160px" >
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">详情</el-button>
+           <el-button size="mini" type="text" icon="el-icon-edit" @click="handlexg(scope.row)" >修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-view"  @click="handleUpdate(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -151,7 +151,7 @@
       
       </el-form>
       <div slot="footer" class="dialog-footer">
-       <el-button v-if="!disabled" type="primary" @click="submitForm()"  >上传</el-button>
+       <el-button v-if="!disabled" type="primary" @click="submitForm()"  >确认</el-button>
         <el-button  @click="open = false">返回</el-button>
       </div>
     </el-dialog>
@@ -160,10 +160,11 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-import { save, Empty,munlist,munxq } from "@/api/system/municipal";
+import { save, delMun,munlist,munxq ,updategc} from "@/api/system/municipal";
 export default {
   data() {
     return {
+      isadd:false,
       disabled:false,
         // 查看from列表数据
       showFrom: {},
@@ -232,7 +233,8 @@ export default {
     },
        /** 上传按钮 */
       submitForm() {
-          save(this.showFrom).then( response =>{
+        if( this.isadd===true){
+             save(this.showFrom).then( response =>{
             if(response.code===200){
             this.msgSuccess("上传成功");
              this.getList();
@@ -241,6 +243,18 @@ export default {
             this.$message.error(response.msg)
             }
           }).catch( ()=>{})
+        }else{
+              updategc(this.showFrom).then( response =>{
+            if(response.code===200){
+            this.msgSuccess("修改成功");
+             this.getList();
+            this.open = false;
+            }else{
+            this.$message.error(response.msg)
+            }
+          }).catch( ()=>{}) 
+        }
+     
       },
 // 详情
 handleUpdate(row){
@@ -292,6 +306,7 @@ munxq(row.id).then(response =>{
       this.$refs.upload.clearFiles();
       // this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
           this.open = true;
+           this.isadd=true
           this.disabled=false
           this.title="工程保存"
         this.showFrom = fileList[0].response.data;
@@ -301,15 +316,33 @@ munxq(row.id).then(response =>{
     submitFileForm() {
       this.$refs.upload.submit();
     },
-    /** 删除按钮操作 */
-    handleDelete() {
-      this.$confirm("是否确认清除所有数据?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+
+    // 修改
+    handlexg(row){
+      this.open = true;
+      this.title="详情修改"
+      this.disabled=false
+      this.isadd=false
+      munxq(row.id).then(response =>{
+       this.showFrom = response.data;
+     })
+
+    // updategc(row.id)
+    },
+      /** 删除按钮操作 */
+    handleDelete(row) {
+     
+    this.$confirm(
+        '确认删除'+"?",
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
         .then(function() {
-          return Empty();
+          return delMun(row.id);
         })
         .then(() => {
           this.getList();
