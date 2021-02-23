@@ -81,15 +81,19 @@
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>常用办事排行TOP10</div>
+                        <!-- <div class="zyqh">
+                            <span class="histogramy">月</span>/
+                            <span class="histogramz">周</span>
+                        </div> -->
                         <div class="content-charts">
                             <histogram/>
-                            
                          </div>
                     </div>
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
                         <div>常用生活服务TOP10</div>
+                         
                         <div class="content-charts">
                            <roseDiagram/>
                         </div>
@@ -277,6 +281,7 @@ export default {
     background-image: url(../../../assets/monitor/cardBg.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    position: relative;
 }
 .between-layout > div:first-child {
     // height: 30px;
@@ -394,4 +399,5 @@ export default {
     height: 79vh;
     margin-top: 1vh;
 }
+
 </style>

@@ -33,6 +33,7 @@ export default {
   mounted() {
   },
   methods: {
+    
     // 获取本周用户访问分布
     getUserVisit() {
       commonAll().then((response) => {
@@ -83,7 +84,7 @@ export default {
         grid: {
           left: '5%',
           right: '5%',
-          bottom: '0px',
+          bottom: '5%',
           top: '1px',
           containLabel: true
         },
