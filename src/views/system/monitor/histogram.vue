@@ -49,7 +49,7 @@ methods:{
  // 获取用户数据
     getUserwork() {
       commonWork(this.time).then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
          let name = response.data.map(item => {
           return  item.name  
         });
@@ -96,7 +96,14 @@ methods:{
                   color: 'rgba(96,255,249,1)',
                    fontWeight:'100',
                    
-             }
+             },
+                    formatter:function(name){
+              var res = name
+          if (res.length > 1) {
+            res = res.substring(0, 5) + '..'
+          }
+          return res
+            }
         }
     },
     

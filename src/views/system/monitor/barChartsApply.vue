@@ -100,9 +100,12 @@ export default {
             interval: 0, //设置成 0 强制显示所有标签。
             rotate: -30, //标签旋转的角度
             margin: 5,
+            
             textStyle: {
                 color: "rgba(1,196,249,1)",
-            }
+            },
+          
+            
           },
           axisLine: {
               // 坐标轴轴线相关设置
@@ -123,6 +126,13 @@ export default {
               textStyle: {
                   color: '#fff'
               },
+                formatter:function(name){
+              var res = name
+          if (res.length > 1) {
+            res = res.substring(0, 5) + '..'
+          }
+          return res
+            }
           },
           splitLine: {
               show: false
@@ -144,7 +154,8 @@ export default {
               textStyle: {
                   color: '#ffffff',
                   fontSize: '10'
-              }
+              },
+   
           },
           data: this.value
         }],
@@ -165,7 +176,8 @@ export default {
               },
           },
           barWidth: 10,
-          data: this.value
+          data: this.value,
+          
         },
         {
           name: '背景',
