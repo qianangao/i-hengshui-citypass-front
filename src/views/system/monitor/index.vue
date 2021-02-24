@@ -33,7 +33,7 @@
                 </div>
                 <div class="content-between-layout">
                     <div class="between-layout">
-                        <div>本周应用访问分布</div>
+                        <div>本周应用访问分布TOP5</div>
                         <div class="content-charts">
                             <barChartsApply/>
                         </div>
@@ -60,13 +60,13 @@
                             <el-col :span="6">
                                 <div class="content-middle-number">
                                     <div>{{this.visitsPeopleNum}}</div>
-                                    <div>当天访问人数</div>
+                                    <div>月均访问人数</div>
                                 </div>
                             </el-col>
                             <el-col :span="6">
                                 <div class="content-middle-times">
                                     <div>{{this.visitsFrequencyNum}}</div>
-                                    <div>当天访问次数</div>
+                                    <div>月均访问次数</div>
                                 </div>
                             </el-col>
                         </el-row>
@@ -204,7 +204,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-image: url(../../../assets/monitor/headerTitleImg.png);
+    background-image: url(../../../assets/monitor/headerTitleImg.gif);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }

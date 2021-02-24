@@ -49,7 +49,7 @@ methods:{
  // 获取用户数据
     getUserwork() {
       commonWork(this.time).then((response) => {
-          // console.log(response.data)
+          //  console.log(response.data)
          let name = response.data.map(item => {
           return  item.name  
         });
@@ -66,13 +66,20 @@ methods:{
         // 基于准备好的dom，初始化echarts实例
       this.his = echarts.init(document.getElementById("his"));
       this.his.setOption({
+         tooltip: {
+        trigger: 'item',
+        formatter: ' {b}</br> '+  
+         "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
+        '次数：{c}次'
+    },
       xAxis: {
-              type: 'value',
+         type: 'value',
          splitLine: {
             show: false
         },
         axisLine: {
-            show: false
+            show: false,
+             
         },
         axisLabel: {
             show: false
@@ -84,9 +91,10 @@ methods:{
     yAxis: {
       type: 'category',
       data: this.name,
-       inverse: false,
+       inverse: true,
+       
        axisLine: {
-            show: false
+            show: false,
         },
         axisTick: {
             show: false
@@ -94,7 +102,8 @@ methods:{
         axisLabel: {
             textStyle: {
                   color: 'rgba(96,255,249,1)',
-                   fontWeight:'100',
+                  //  fontWeight:'1',
+                   fontSize :    12  //更改坐标轴文字大小
                    
              },
                     formatter:function(name){
@@ -109,21 +118,26 @@ methods:{
     
      grid: {
          left: 100,
-         top: 10, // 设置条形图的边距
+         top: 5, // 设置条形图的边距
          right: 80,
-        bottom: 100
+        bottom: 123
     },
     series: [{
          label: {
               normal: {
                 show: true,
                 position: "right",
-                color:"'rgba(96,255,249,1)'"
+                color:"'rgba(96,255,249,1)'",
+                
               }
             },
         data: this.value,
+      
+
         type: 'bar',
-          barWidth: 14,
+          barWidth: 6,
+          // barCategoryGap:'30%',
+          // barGap: '70%',
           legendHoverLink: false,
           silent: true,
           itemStyle: {
@@ -223,7 +237,8 @@ float: left;
 }
 .back2{
   background-color: #1d3257;
-  color: #ffff;
+    color: #95CE5C;
+
   border: 1px solid #1890ff;
   border-radius: 2px;
   

@@ -136,14 +136,14 @@ float: left;
 }
 .back{
   background-color: #0053e5;
-  color: #ffff;
+  color: #fff;
   border: 1px solid #0053e5;
   border-radius: 2px;
   
 }
 .back2{
   background-color: #1d3257;
-  color: #ffff;
+  color: #95CE5C;
   border: 1px solid #1890ff;
   border-radius: 2px;
   
