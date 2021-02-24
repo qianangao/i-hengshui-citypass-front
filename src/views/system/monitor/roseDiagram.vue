@@ -1,5 +1,9 @@
 <template>
   <div class="ros-chart-container">
+     <div class="zyqh">
+       <div class="histogramy" @click="histogramy" :class="time=='mouth' ? 'back': 'back2' ">近一月</div>
+         <div class="histogramz" @click="histogramz" :class="time !=='mouth' ? 'back': 'back2' ">近一周</div>
+      </div>
     <div class="ros-chart" id="ros"></div>
   </div>
 </template>
@@ -18,7 +22,8 @@ export default {
 data () {
     return {
           ros:null,
-          affair:undefined
+          affair:undefined,
+           time:'mouth'
     }
 },
 created(){
@@ -28,6 +33,15 @@ mounted(){
 
 },
 methods:{
+    histogramy(){
+  //  this.time='week'
+    this.time='mouth'
+   this.getUserwork()
+  },
+    histogramz(){
+   this.time='week'
+   this.getUserwork()
+  },
      // 获取用户数据
     getUserwork() {
       commonLight('mouth').then((response) => {
@@ -95,4 +109,44 @@ methods:{
     height: 35vh;
   }
 }
+.zyqh{
+    position: absolute;
+    right: 0;
+   top: 20px;
+}
+.histogramy{
+    /* background-color: blue; */
+float: left;
+    width: 50px;
+    text-align: center;
+    font-size: 12px;
+    height: 20px;
+    color: #ffff;
+    line-height: 20px;
+}
+.histogramz{
+  line-height: 20px;
+    color: #ffff;
+     /* background-color: wheat; */
+   float: right;
+    width: 50px;
+    text-align: center;
+     font-size: 12px;
+       height: 20px;
+}
+.back{
+  background-color: #0053e5;
+  color: #ffff;
+  border: 1px solid #0053e5;
+  border-radius: 2px;
+  
+}
+.back2{
+  background-color: #1d3257;
+  color: #ffff;
+  border: 1px solid #1890ff;
+  border-radius: 2px;
+  
+}
+
 </style>    

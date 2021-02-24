@@ -1,5 +1,9 @@
 <template>
   <div class="his-chart-container">
+    <div class="zyqh">
+       <div class="histogramy" @click="histogramy" :class="time=='mouth' ? 'back': 'back2' ">近一月</div>
+         <div class="histogramz" @click="histogramz" :class="time !=='mouth' ? 'back': 'back2' ">近一周</div>
+      </div>
     <div class="his-chart" id="his"></div>
   </div>
 </template>
@@ -22,7 +26,8 @@ data () {
     return {
      his:null,
      name:[],
-     value:[]
+     value:[],
+     time:'mouth'
     }
 },
 created(){
@@ -32,10 +37,19 @@ mounted(){
  
 },
 methods:{
+  histogramy(){
+  //  this.time='week'
+    this.time='mouth'
+   this.getUserwork()
+  },
+    histogramz(){
+   this.time='week'
+   this.getUserwork()
+  },
  // 获取用户数据
     getUserwork() {
-      commonWork('mouth').then((response) => {
-        //  console.log(response.data)
+      commonWork(this.time).then((response) => {
+          // console.log(response.data)
          let name = response.data.map(item => {
           return  item.name  
         });
@@ -82,15 +96,22 @@ methods:{
                   color: 'rgba(96,255,249,1)',
                    fontWeight:'100',
                    
-             }
+             },
+                    formatter:function(name){
+              var res = name
+          if (res.length > 1) {
+            res = res.substring(0, 5) + '..'
+          }
+          return res
+            }
         }
     },
     
      grid: {
          left: 100,
-         top: 20, // 设置条形图的边距
+         top: 10, // 设置条形图的边距
          right: 80,
-        bottom: 20
+        bottom: 100
     },
     series: [{
          label: {
@@ -167,5 +188,44 @@ methods:{
     height: 35vh;
    
   }
+}
+.zyqh{
+    position: absolute;
+    right: 0;
+   top: 20px;
+}
+.histogramy{
+    /* background-color: blue; */
+float: left;
+    width: 50px;
+    text-align: center;
+    font-size: 12px;
+    height: 20px;
+    color: #ffff;
+    line-height: 20px;
+}
+.histogramz{
+  line-height: 20px;
+    color: #ffff;
+     /* background-color: wheat; */
+   float: right;
+    width: 50px;
+    text-align: center;
+     font-size: 12px;
+       height: 20px;
+}
+.back{
+  background-color: #0053e5;
+  color: #ffff;
+  border: 1px solid #0053e5;
+  border-radius: 2px;
+  
+}
+.back2{
+  background-color: #1d3257;
+  color: #ffff;
+  border: 1px solid #1890ff;
+  border-radius: 2px;
+  
 }
 </style>

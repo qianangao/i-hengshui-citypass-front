@@ -142,7 +142,7 @@ methods:{
 
     },
     polar: {
-        radius: 80,
+        radius: 90,
             center: ['50%', '50%'],
     },
  
@@ -175,12 +175,12 @@ methods:{
             name: 'Line 2',
             type: 'pie',
             clockWise: false,
-            radius: [10, 20],
+            radius: [30, 40],
             itemStyle: dataStyle,
             hoverAnimation: false,
 
             data: [{
-                    value: 10,
+                    value: 30,
                     name: '',
                     itemStyle: placeHolderStyle
                 },
@@ -205,7 +205,7 @@ methods:{
             itemStyle: dataStyle,
 
             data: [{
-                    value: 13,
+                    value: 100,
                     name: '',
                     itemStyle: placeHolderStyle
                 },
@@ -226,11 +226,11 @@ methods:{
             type: 'pie',
             clockWise: false,
             hoverAnimation: false,
-            radius: [25, 35],
+            radius: [30, 40],
             itemStyle: dataStyle,
 
             data: [{
-                    value: 11,
+                    value: 150,
                     name: '',
                     itemStyle: placeHolderStyle
                 },
