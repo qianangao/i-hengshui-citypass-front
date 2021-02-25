@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
+    <el-row class="el-center" :gutter="15">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-col :span="8">
       <el-form-item label="系统模块" prop="title">
         <el-input
           v-model="queryParams.title"
@@ -11,6 +13,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      </el-col>
+       <el-col :span="8">
       <el-form-item label="操作人员" prop="operName">
         <el-input
           v-model="queryParams.operName"
@@ -21,6 +25,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+       </el-col>
+     <el-col :span="8">
       <el-form-item label="类型" prop="businessType">
         <el-select
           v-model="queryParams.businessType"
@@ -37,6 +43,8 @@
           />
         </el-select>
       </el-form-item>
+       </el-col>
+       <el-col :span="8">
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
@@ -53,6 +61,8 @@
           />
         </el-select>
       </el-form-item>
+           </el-col>
+            <el-col :span="8">
       <el-form-item label="操作时间">
         <el-date-picker
           v-model="dateRange"
@@ -65,12 +75,15 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
+       </el-col>
+         <el-col :span="8">
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+       </el-col>
     </el-form>
-
+   </el-row>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
