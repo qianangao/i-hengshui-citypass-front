@@ -44,7 +44,7 @@ methods:{
   },
      // 获取用户数据
     getUserwork() {
-      commonLight('mouth').then((response) => {
+      commonLight(this.time).then((response) => {
           //  console.log(response.data)
         this.affair=response.data
         // console.log(this.affair)
