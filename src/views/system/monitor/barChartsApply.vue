@@ -37,7 +37,7 @@ export default {
     // 获取本周用户访问分布
     getUserVisit() {
       commonAll().then((response) => {
-        // console.log("response",response);
+        //  console.log("response",response);
         this.commonAll=response.data;
       let name = response.data.map(item => {
           return  item.name  
@@ -124,11 +124,11 @@ export default {
           axisLabel: {
               show: true,
               textStyle: {
-                  color: '#fff'
+                  color: 'rgba(1,196,249,1)'
               },
-                formatter:function(name){
+           formatter:function(name){
               var res = name
-          if (res.length > 1) {
+          if (res.length > 5) {
             res = res.substring(0, 5) + '..'
           }
           return res
@@ -152,7 +152,7 @@ export default {
           show: true,
           axisLabel: {
               textStyle: {
-                  color: '#ffffff',
+                  color: 'rgba(1,196,249,1)',
                   fontSize: '10'
               },
    

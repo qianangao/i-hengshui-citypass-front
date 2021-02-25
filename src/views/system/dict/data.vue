@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
+     <el-row class="el-center" :gutter="15">
     <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+      <el-col :span="7">
       <el-form-item label="字典名称" prop="dictType">
         <el-select v-model="queryParams.dictType" size="small">
           <el-option
@@ -11,6 +13,8 @@
           />
         </el-select>
       </el-form-item>
+      </el-col>
+        <el-col :span="7">
       <el-form-item label="字典标签" prop="dictLabel">
         <el-input
           v-model="queryParams.dictLabel"
@@ -20,6 +24,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+       </el-col>
+        <el-col :span="6">
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="数据状态" clearable size="small">
           <el-option
@@ -30,12 +36,15 @@
           />
         </el-select>
       </el-form-item>
+       </el-col>
+        <el-col :span="4">
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+        </el-col>
     </el-form>
-
+     </el-row>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button

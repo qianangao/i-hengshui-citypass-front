@@ -31,11 +31,11 @@
         rich: {
           d: {
             
-            color: '#fff'
+            color: 'rgba(1,196,249,1)'
           },
           b: {
            
-            color: '#fff'
+            color: 'rgba(1,196,249,1)'
           },
         }
       };
@@ -113,7 +113,7 @@ methods:{
             color: '#fff',
             lineStyle: {
                 width: 1,
-                color: '#fff',
+                color: '#95CE5C',
             }
         },
     },
@@ -142,7 +142,8 @@ methods:{
 
     },
     polar: {
-        radius: 90,
+      
+        radius: 80,
             center: ['50%', '50%'],
     },
  

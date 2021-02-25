@@ -44,7 +44,7 @@ methods:{
   },
      // 获取用户数据
     getUserwork() {
-      commonLight('mouth').then((response) => {
+      commonLight(this.time).then((response) => {
           //  console.log(response.data)
         this.affair=response.data
         // console.log(this.affair)
@@ -136,14 +136,14 @@ float: left;
 }
 .back{
   background-color: #0053e5;
-  color: #ffff;
+  color: #fff;
   border: 1px solid #0053e5;
   border-radius: 2px;
   
 }
 .back2{
   background-color: #1d3257;
-  color: #ffff;
+  color: #95CE5C;
   border: 1px solid #1890ff;
   border-radius: 2px;
   

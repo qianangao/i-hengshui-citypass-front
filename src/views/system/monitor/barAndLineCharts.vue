@@ -190,7 +190,7 @@ export default {
             name: '人数',
             min: 0,
             // max: 25,
-            interval: 5,
+            interval: 10,
             axisLabel: {
                 formatter: '{value}',
                 // 坐标轴刻度标签的相关设置
