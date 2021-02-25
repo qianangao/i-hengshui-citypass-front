@@ -4,7 +4,7 @@
       <!-- 文章查询条件 -->
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-col :span="8">
-          <el-form-item label="工程名称" prop="projectName">
+          <el-form-item label="项目名称" prop="projectName">
             <el-input class="inputQuerys" v-model="queryParams.projectName" placeholder="请输入工程名称" clearable size="small"/>
           </el-form-item>
         </el-col>
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="项目名称" align="center" prop="projectName" :show-overflow-tooltip="true"/>
        <el-table-column label="施工地点" align="center" prop="constructSite" :show-overflow-tooltip="true"/>
-      <el-table-column label="导入时间" width="180" prop="createTime" align="center">
+      <el-table-column label="项目时间" width="180" prop="publishDate" align="center">
         <!-- <template slot-scope="scope">
             <span>{{ parseTime(scope.row.importTime) }}</span>
         </template>-->
@@ -108,7 +108,7 @@
             </el-form-item>
           </el-col>
            <el-col :span="12">
-            <el-form-item label="编号"  prop="publishDate">
+            <el-form-item label="项目时间"  prop="publishDate">
               <el-input :disabled="true" v-model="showFrom.publishDate"/>
             </el-form-item>
           </el-col>
