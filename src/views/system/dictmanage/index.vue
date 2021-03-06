@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row class="el-center" :gutter="10">
+    <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-col :span="6">
@@ -296,6 +296,6 @@ export default {
 </script>
 <style scoped>
 .inputQuery{
-width: 170px;
+  width: 70%;
 }
 </style>

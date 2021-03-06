@@ -3,16 +3,16 @@
     <el-row class="el-center" :gutter="15">
       <!-- 文章查询条件 -->
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="项目名称" prop="projectName">
-            <el-input class="inputQuerys" v-model="queryParams.projectName" placeholder="请输入工程名称" clearable size="small"/>
+            <el-input class="inputQuery" v-model="queryParams.projectName" placeholder="请输入工程名称" clearable size="small"/>
           </el-form-item>
         </el-col>
      
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="施工时间" prop="dateRange">
             <el-date-picker
-              class="inputQuery"
+              style="width: 70%;"
               v-model="dateRange"
               type="daterange"
               value-format="yyyy-MM-dd "

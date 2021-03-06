@@ -1,72 +1,65 @@
 <template>
   <div class="app-container">
-      <el-row class="el-center" :gutter="15">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-     <el-col :span="8">
-      <el-form-item label="登录地址" prop="ipaddr">
-        <el-input
-          v-model="queryParams.ipaddr"
-          placeholder="请输入登录地址"
-          clearable
-          style="width: 240px;"
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-       </el-col>
-        <el-col :span="8">
-      <el-form-item label="用户名称" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户名称"
-          clearable
-          style="width: 240px;"
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+    <el-row class="el-center" :gutter="15">
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+        <el-col :span="6">
+          <el-form-item label="登录地址" prop="ipaddr">
+            <el-input
+              v-model="queryParams.ipaddr"
+              placeholder="请输入登录地址"
+              clearable
+              size="small"
+              style="width: 70%;"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
         </el-col>
-         <el-col :span="8">
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="登录状态"
-          clearable
-          size="small"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      </el-col>
-        <el-col :span="8">
-      <el-form-item label="登录时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      </el-col>
-      <el-col :span="8">
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-      </el-col>
-    </el-form>
-    
-     </el-row>
+        <el-col :span="6">
+          <el-form-item label="用户名称" prop="userName">
+            <el-input
+              v-model="queryParams.userName"
+              placeholder="请输入用户名称"
+              clearable
+              size="small"
+              style="width: 70%;"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="登录时间">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              style="width: 70%;"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="登录状态" prop="status">
+            <el-select v-model="queryParams.status" placeholder="登录状态" clearable size="small"  style="width: 70%;">
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -103,7 +96,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="访问编号" align="center" prop="infoId" />
       <el-table-column label="用户名称" align="center" prop="userName" />
-      <el-table-column label="地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="地址"
+        align="center"
+        prop="ipaddr"
+        width="130"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="描述" align="center" prop="msg" />
       <el-table-column label="访问时间" align="center" prop="accessTime" width="180">
@@ -166,7 +165,8 @@ export default {
     /** 查询登录日志列表 */
     getList() {
       this.loading = true;
-      list(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      list(this.addDateRange(this.queryParams, this.dateRange)).then(
+        response => {
           this.list = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -190,43 +190,60 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.infoId)
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.infoId);
+      this.multiple = !selection.length;
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const infoIds = row.infoId || this.ids;
-      this.$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除访问编号为"' + infoIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delLogininfor(infoIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 清空按钮操作 */
     handleClean() {
-        this.$confirm('是否确认清空所有登录日志数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认清空所有登录日志数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return cleanLogininfor();
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("清空成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/logininfor/export', {
-        ...this.queryParams
-      }, `logininfor_${new Date().getTime()}.xlsx`)
+      this.download(
+        "system/logininfor/export",
+        {
+          ...this.queryParams
+        },
+        `logininfor_${new Date().getTime()}.xlsx`
+      );
     }
   }
 };
 </script>
 
+<style>
+.info-input {
+  width: 70%;
+}
+</style>

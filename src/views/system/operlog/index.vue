@@ -1,89 +1,89 @@
 <template>
   <div class="app-container">
     <el-row class="el-center" :gutter="15">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-col :span="8">
-      <el-form-item label="系统模块" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          placeholder="请输入系统模块"
-          clearable
-          style="width: 240px;"
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      </el-col>
-       <el-col :span="8">
-      <el-form-item label="操作人员" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人员"
-          clearable
-          style="width: 240px;"
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-       </el-col>
-     <el-col :span="8">
-      <el-form-item label="类型" prop="businessType">
-        <el-select
-          v-model="queryParams.businessType"
-          placeholder="操作类型"
-          clearable
-          size="small"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-       </el-col>
-       <el-col :span="8">
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="操作状态"
-          clearable
-          size="small"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-           </el-col>
-            <el-col :span="8">
-      <el-form-item label="操作时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-       </el-col>
-         <el-col :span="8">
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-       </el-col>
-    </el-form>
-   </el-row>
+      <el-form :model="queryParams" ref="queryForm" v-show="showSearch">
+        <el-col :span="6">
+          <el-form-item label="系统模块" prop="title">
+            <el-input
+              v-model="queryParams.title"
+              placeholder="请输入系统模块"
+              clearable
+              size="small"
+              class="operation-input"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="操作人员" prop="operName">
+            <el-input
+              v-model="queryParams.operName"
+              placeholder="请输入操作人员"
+              clearable
+              size="small"
+              class="operation-input"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="操作类型" prop="businessType">
+            <el-select
+              v-model="queryParams.businessType"
+              placeholder="操作类型"
+              clearable
+              class="operation-input"
+              size="small"
+            >
+              <el-option
+                v-for="dict in typeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="操作状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="操作状态"
+              clearable
+              size="small"
+              class="operation-input"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="操作时间">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              class="operation-input"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -123,7 +123,13 @@
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat" />
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
       <el-table-column label="操作人员" align="center" prop="operName" />
-      <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="主机"
+        align="center"
+        prop="operIp"
+        width="130"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="操作状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作日期" align="center" prop="operTime" width="180">
         <template slot-scope="scope">
@@ -157,9 +163,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="操作模块：">{{ form.title }} / {{ typeFormat(form) }}</el-form-item>
-            <el-form-item
-              label="登录信息："
-            >{{ form.operName }} / {{ form.operIp }}</el-form-item>
+            <el-form-item label="登录信息：">{{ form.operName }} / {{ form.operIp }}</el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="请求地址：">{{ form.operUrl }}</el-form-item>
@@ -248,7 +252,8 @@ export default {
     /** 查询登录日志 */
     getList() {
       this.loading = true;
-      list(this.addDateRange(this.queryParams, this.dateRange)).then( response => {
+      list(this.addDateRange(this.queryParams, this.dateRange)).then(
+        response => {
           this.list = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -276,8 +281,8 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.operId)
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.operId);
+      this.multiple = !selection.length;
     },
     /** 详细按钮操作 */
     handleView(row) {
@@ -287,37 +292,54 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const operIds = row.operId || this.ids;
-      this.$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除日志编号为"' + operIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delOperlog(operIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 清空按钮操作 */
     handleClean() {
-        this.$confirm('是否确认清空所有操作日志数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认清空所有操作日志数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return cleanOperlog();
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("清空成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/operlog/export', {
-        ...this.queryParams
-      }, `operlog_${new Date().getTime()}.xlsx`)
+      this.download(
+        "system/operlog/export",
+        {
+          ...this.queryParams
+        },
+        `operlog_${new Date().getTime()}.xlsx`
+      );
     }
   }
 };
 </script>
 
+<style scoped>
+.operation-input {
+  width: 70%;
+}
+</style>

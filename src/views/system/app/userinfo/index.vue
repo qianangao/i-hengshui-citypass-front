@@ -1,21 +1,21 @@
 <template>
   <div class="app-container">
-    <el-row class="el-center" :gutter="10">
+    <el-row class="el-center" :gutter="15">
       <!-- 文章查询条件 -->
-      <el-form :model="queryParams" ref="queryForm" label-width="70px" @submit.native.prevent>
-        <el-col :span="8">
+      <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
+        <el-col :span="6">
           <el-form-item label="用户名" prop="userName">
-            <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
+            <el-input style="width: 70%;" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="手机号" prop="phone">
-            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入手机号" clearable size="small"/>
+            <el-input style="width: 70%;" v-model="queryParams.phone" placeholder="请输入手机号" clearable size="small"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="状态" prop="isIdentity">
-            <el-select class="inputQuery" popper-class="select-dow" v-model="queryParams.isIdentity" placeholder="请选择用户状态" clearable size="small">
+            <el-select style="width: 70%;" popper-class="select-dow" v-model="queryParams.isIdentity" placeholder="请选择用户状态" clearable size="small">
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.value"
@@ -24,10 +24,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <!-- <el-col :span="6">
           <el-form-item label="创建时间" prop="dateRange">
             <el-date-picker
-              class="inputQuery"
+              style="width: 70%;"
               v-model="dateRange"
               type="daterange"
               value-format="yyyy-MM-dd "
@@ -39,10 +39,10 @@
             ></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="登录时间" prop="Logintime">
             <el-date-picker
-              class="inputQuery"
+              style="width: 70%;"
               v-model="Logintime"
               type="daterange"
               value-format="yyyy-MM-dd "
@@ -53,8 +53,8 @@
               size="small"
             ></el-date-picker>
           </el-form-item>
-        </el-col>
-        <el-col :span="8">
+        </el-col> -->
+        <el-col :span="6">
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -222,7 +222,7 @@ export default {
   width: 100%;
 }
 .inputQuery {
-  width: 80%;
+  width: 70%;
 }
 /deep/.select-dow .el-select-dropdown__item:hover {
   width: 80% !important;
