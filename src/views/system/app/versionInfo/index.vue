@@ -13,7 +13,7 @@
               </el-select>
           </el-form-item>
         </el-col>
-         <el-col :span="8">
+         <el-col :span="6">
           <el-form-item label="创建时间" >
              <el-date-picker
                 v-model="dateRange"
@@ -23,7 +23,7 @@
                 :picker-options="pickerOptions"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                style="width: 240px"
+                style="width: 70%;"
                 size="small"
                 >
               </el-date-picker>

@@ -18,8 +18,8 @@
         <el-row class="el-center" :gutter="15">
           <!-- 用户查询条件 -->
           <el-form :model="queryParams" ref="queryForm" v-show="showSearch" @submit.native.prevent>
-            <el-col :span="7">
-              <el-form-item label="角色名称" prop="roleName" label-width="70px">
+            <el-col :span="6">
+              <el-form-item label="名称" prop="roleName">
                 <el-input
                   class="roleInput"
                   v-model="queryParams.roleName"
@@ -29,8 +29,8 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="7">
-              <el-form-item label="权限字符" prop="roleKey" label-width="70px">
+            <!-- <el-col :span="6">
+              <el-form-item label="权限" prop="roleKey" label-width="60px">
                 <el-input
                   class="roleInput"
                   v-model="queryParams.roleKey"
@@ -39,8 +39,8 @@
                   size="small"
                 />
               </el-form-item>
-            </el-col>
-            <el-col :span="5">
+            </el-col> -->
+            <el-col :span="6">
               <el-form-item label="状态" prop="status" v-if="checkPermi(['system:role:enable'])">
                 <el-select
                   v-model="queryParams.status"

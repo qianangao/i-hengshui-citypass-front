@@ -18,19 +18,19 @@
     <el-row class="el-center" :gutter="15">
       <!-- 用户查询条件 -->
       <el-form :model="queryParams" ref="queryForm" v-show="showSearch"  @submit.native.prevent>
-        <el-col :span="7">
-          <el-form-item label="用户名称" prop="userName" label-width="70px">
-            <el-input class="inputQuery" v-model="queryParams.userName" placeholder="请输入" clearable size="small"/>
+        <el-col :span="6">
+          <el-form-item style="width: 95%;" label="用户名称" prop="userName" label-width="70px">
+            <el-input v-model="queryParams.userName" placeholder="请输入" clearable size="small"/>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="手机号码" prop="phone" label-width="70px">
-            <el-input class="inputQuery" v-model="queryParams.phone" placeholder="请输入" clearable size="small"/>
+            <el-input style="width: 95%;" v-model="queryParams.phone" placeholder="请输入" clearable size="small"/>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item label="状态" prop="status" v-if="checkPermi(['system:user:export:enable'])">
-            <el-select class="inputQuery" v-model="queryParams.status" placeholder="请选择" clearable size="small">
+            <el-select style="width: 70%;" v-model="queryParams.status" placeholder="请选择" clearable size="small">
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -39,7 +39,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -644,7 +644,7 @@ export default {
   color: red;
 }
 .inputQuery {
-  width: 70%;
+  width: 75%;
 }
 .templateDownload {
   font-size: 12px;
