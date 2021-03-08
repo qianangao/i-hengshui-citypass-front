@@ -5,12 +5,12 @@
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-col :span="6">
         <el-form-item label="字典名称" prop="dictName">
-          <el-input class="inputQuery" v-model="queryParams.dictName" placeholder="请输入字典名称" clearable size="small" @keyup.enter.native="handleQuery"/>
+          <el-input class="inputQuery" v-model="queryParams.dictName" placeholder="请输入字典名称" clearable size="small"/>
         </el-form-item>
         </el-col>
         <el-col :span="6">
         <el-form-item label="字典类型" prop="dictType">
-          <el-input class="inputQuery" v-model="queryParams.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleQuery" />
+          <el-input class="inputQuery" v-model="queryParams.dictType" placeholder="请输入字典类型" clearable size="small"  />
         </el-form-item>
         </el-col>
         <el-col :span="6">

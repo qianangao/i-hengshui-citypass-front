@@ -3,6 +3,7 @@
     <el-row class="el-center" :gutter="15">
       <!-- 文章查询条件 -->
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
+        <el-row>
         <el-col :span="6">
           <el-form-item label="用户名" prop="userName">
             <el-input style="width: 70%;" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
@@ -24,7 +25,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- <el-col :span="6">
+        <el-col :span="6">
           <el-form-item label="创建时间" prop="dateRange">
             <el-date-picker
               style="width: 70%;"
@@ -39,6 +40,8 @@
             ></el-date-picker>
           </el-form-item>
         </el-col>
+         </el-row>
+          <el-row>
         <el-col :span="6">
           <el-form-item label="登录时间" prop="Logintime">
             <el-date-picker
@@ -53,13 +56,14 @@
               size="small"
             ></el-date-picker>
           </el-form-item>
-        </el-col> -->
+        </el-col>
         <el-col :span="6">
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-col>
+         </el-row>
       </el-form>
     </el-row>
     <!-- 文章表格数据 -->
@@ -174,6 +178,7 @@ export default {
       }
 
       appUserList(this.queryParams).then(response => {
+        console.log(this.queryParams)
         var appUserInfo = JSON.parse(Decrypt(response.data));
         this.articleList = appUserInfo.rows;
         this.total = appUserInfo.total;
@@ -199,6 +204,10 @@ export default {
       this.queryParams.title = undefined;
       this.dateRange = [];
       this.Logintime = [];
+       this.queryParams["createStartTime"] = undefined;
+        this.queryParams["createEndTime"] = undefined;
+      this.queryParams["loginStartTime"] = undefined;
+      this.queryParams["loginEndTime"] = undefined;
       this.resetForm("queryForm");
       this.handleQuery();
     },

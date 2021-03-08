@@ -55,24 +55,7 @@ export default {
         this.drawLine();
       });
     },
-    // getUseerwok() {
-    //   distributionWeek().then((response) => {
-    //     this.distributionWeek=response.data;
-    //     let title = response.data.map(item => {
-    //       return  item.title  
-    //     });
-    //    let visitsNum = response.data.map(item => {
-    //       return  item.visitsNum  
-    //     });
-    //      let peopleNum = response.data.map(item => {
-    //       return  item.peopleNum
-    //     });
-    //     this.peopleNum=peopleNum
-    //     this.visitsNum=visitsNum
-    //     this.title = title;
-    //     this.drawLine();
-    //   });
-    // },
+
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       this.myBarAndLine = echarts.init(document.getElementById("myBarAndLine"));
@@ -95,7 +78,7 @@ export default {
         // 图例组件
         legend: {
           show: true,
-          top: "0",
+          top: "5%",
           left: "5%",
           selectedMode: true,
           data: [
@@ -116,7 +99,7 @@ export default {
         grid: {
           left: "2%",
           right: "8%",
-          bottom: "16%",
+          bottom: "5%",
           containLabel: true //区域是否包含坐标轴的刻度标签
         },
         xAxis: [
