@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
      <el-row class="el-center" :gutter="15">
-    <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-col :span="7">
+    <el-form :model="queryParams" ref="queryForm" v-show="showSearch" >
+      <el-col :span="6">
       <el-form-item label="字典名称" prop="dictType">
-        <el-select v-model="queryParams.dictType" size="small">
+        <el-select class="inputQuery" v-model="queryParams.dictType" size="small">
           <el-option
             v-for="item in typeOptions"
             :key="item.dictId"
@@ -14,20 +14,21 @@
         </el-select>
       </el-form-item>
       </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
       <el-form-item label="字典标签" prop="dictLabel">
         <el-input
+        class="inputQuery"
           v-model="queryParams.dictLabel"
           placeholder="请输入字典标签"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
+         
         />
       </el-form-item>
        </el-col>
         <el-col :span="6">
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="数据状态" clearable size="small">
+        <el-select class="inputQuery" v-model="queryParams.status" placeholder="数据状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -37,7 +38,7 @@
         </el-select>
       </el-form-item>
        </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -352,3 +353,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.inputQuery{
+  width: 70%;
+}
+</style>
