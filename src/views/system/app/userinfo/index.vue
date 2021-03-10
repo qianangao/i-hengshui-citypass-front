@@ -5,8 +5,9 @@
       <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
         <el-row>
         <el-col :span="6">
-          <el-form-item label="用户名" prop="userName">
-            <el-input style="width: 70%;" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
+          <el-form-item label='用户名'  prop="userName" class="nameclass">
+             <label slot="label">&nbsp; 用&nbsp;户&nbsp;名&nbsp; &nbsp; &nbsp;</label>
+            <el-input style="width: 72%;" v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small"/>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -239,4 +240,5 @@ export default {
 /deep/.select-dow .el-select-dropdown__item:hover{
      width: 70% !important;
   }
+  
 </style>
