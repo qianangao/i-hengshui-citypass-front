@@ -163,6 +163,20 @@
             </el-form-item>
           </el-col>
         </el-row>
+         <el-row>
+          <el-col :span="22">
+            <el-form-item label="所属委办局">
+              <el-select v-model="form.deptId">
+                <el-option
+                  v-for="item in carryOptions"
+                  :key="item.deptId"
+                  :label="item.deptName"
+                  :value="item.deptId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
            <el-col :span="10">
             <el-form-item label="显示排序" prop="sortNum">
@@ -245,7 +259,7 @@
 </template>
 
 <script>
-import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg } from "@/api/app/menuinfo";
+import { listTable, listMenu, addMenu, getMenu, updataMenu, changeMenuStatus, uploadImg,commission } from "@/api/app/menuinfo";
 import settings from '@/settings.js';
 import { getToken } from "@/utils/auth";
 import { checkPermi, checkRole } from "@/utils/permission"; // 权限判断函数
@@ -341,25 +355,14 @@ export default {
       imageUrl: "",
       imageBigIcon: "",
       value:'',
-      carryOptions:[
-        {
-          value: '1',
-          label: '访客'
-        },
-        {
-          value: '0',
-          label: '未认证'
-        },
-        {
-          value: '2',
-          label: '已认证'
-        }
-      ]
+      carryOptions:[]
     };
   },
   created() {
     // 获取菜单列表
     this.getList();
+    // 委办局接入列表
+    this.getCommission();
     //  app菜单Code数据字典
     this.getDicts("app_menu_code").then(response => {
       this.appMenuCode = response.data;
@@ -384,6 +387,12 @@ export default {
         this.loading = false
       });
     },
+    // 委办局结构列表
+      getCommission() {
+      commission().then((response) => {
+        this.carryOptions=response.data
+      });
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -399,7 +408,8 @@ export default {
         ifHome: "1",
         ifCarryUser: "1",
         ifBigPicUrl:"1",
-        ifHot: "1"
+        ifHot: "1",
+         deptId:''
       };
       this.imageUrl = "";
       this.imageBigIcon = "";

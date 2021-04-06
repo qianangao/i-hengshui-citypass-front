@@ -57,7 +57,13 @@ export function changeMenuStatus(id, status) {
       data: data
     })
   }
-
+// 委办局接入
+export function commission() {
+  return request({
+    url: '/system/sys/app/dept/getDeptList',
+    method: 'get'
+  })
+}
 //   上传图标接口
 // export function uploadImg(data){
 //     return request({
