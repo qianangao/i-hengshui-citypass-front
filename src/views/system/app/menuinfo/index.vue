@@ -154,7 +154,7 @@
             <el-form-item label="访问方式">
               <el-select v-model="form.ifCarryUser">
                 <el-option
-                  v-for="item in carryOptions"
+                  v-for="item in carryOptionss"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -355,7 +355,22 @@ export default {
       imageUrl: "",
       imageBigIcon: "",
       value:'',
-      carryOptions:[]
+      carryOptions:[],
+           carryOptionss:[
+        {
+          value: '1',
+          label: '访客'
+        },
+        {
+          value: '0',
+          label: '未认证'
+        },
+        {
+          value: '2',
+          label: '已认证'
+        }
+      ]
+
     };
   },
   created() {
