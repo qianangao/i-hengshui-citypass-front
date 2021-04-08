@@ -31,7 +31,7 @@
       <el-table-column label="内容" prop="content" align="center" :show-overflow-tooltip='true'></el-table-column>
       <el-table-column label="反馈人" prop="userName" align="center"></el-table-column>
       <el-table-column label="反馈时间" prop="createTime" align="center"></el-table-column>
-      <el-table-column label="机构名称" prop="deptName" align="center"></el-table-column>
+      <!-- <el-table-column label="机构名称" prop="deptName" align="center"></el-table-column> -->
       <el-table-column label="反馈状态" prop="replyStatus" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.replyStatus === "0" ?"已回复":"未回复" }}</span>
